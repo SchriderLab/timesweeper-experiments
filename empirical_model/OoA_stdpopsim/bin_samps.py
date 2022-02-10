@@ -4,7 +4,7 @@ import sys
 
 
 def load_data(
-    infile="../empirical_model/Online Table 1 Newly reported ancient individuals.csv",
+    infile="../samp_data/Online_Table_1_Newly_reported_ancient_individuals.csv",
 ):
     """Gets and prints sample numbers from the mongolian paper."""
     raw_data = pd.read_csv(infile, header=0)
@@ -135,10 +135,10 @@ def main():
         gen_threshold,
         size_threshold,
     )
-    print("Sizes:", " ".join([str(i) for i in binned_sizes[::-1]]))
+    print("Sizes:", "[" + ", ".join([str(i) for i in binned_sizes[::-1]]) + "]")
     print(
         "Years before present (1950):",
-        " ".join([str(int(i * gen_time)) for i in binned_gens[::-1]]),
+        "[" + ", ".join([str(int(i * gen_time)) for i in binned_gens[::-1]]) + "]",
     )
 
 

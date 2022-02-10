@@ -1,4 +1,4 @@
-stdpopsim -e slim --slim-path /pine/scr/l/s/lswhiteh/timeSeriesSweeps-code/SLiM/build/slim\
+stdpopsim -e slim --slim-path /proj/dschridelab/lswhiteh/timesweeper/SLiM/build/slim \
     --slim-scaling-factor 5  \
     --slim-script \
     HomSap \

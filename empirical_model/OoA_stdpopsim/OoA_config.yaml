@@ -1,0 +1,10 @@
+slimfile: /proj/dschridelab/lswhiteh/timesweeper-experiments/empirical_model/OoA_stdpopsim/OoA3pop.slim
+pop: p2
+sample sizes: [5, 2, 1, 3, 3, 3, 1, 3, 4, 3, 3, 3, 4, 3, 4, 3, 3, 4, 8, 5]
+ploidy: 2
+years: [5550, 5175, 3050, 2825, 2525, 1775, 1425, 1375, 1325, 1250, 1150, 1125, 1025, 950, 900, 800, 500, 325, 300, 175]
+selection gen: 200 # Gens before first sampling
+selection coeff: 0.05
+sweep: hard
+mut rate: 1.29e-8
+output dir: /proj/dschridelab/lswhiteh/timesweeper-experiments/empirical_model/OoA_stdpopsim/sims

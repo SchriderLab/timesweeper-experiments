@@ -15,13 +15,13 @@ initialize() {
     // Scaling factor to speed up simulation.
     // See SLiM manual:
     // `5.5 Rescaling population sizes to improve simulation performance`.
-    defineConstant("Q", 1);
+    defineConstant("Q", 5.0);
 
-    defineConstant("burn_in", 10.0); // 73000 gens
+    defineConstant("burn_in", 10.0);
     defineConstant("generation_time", 25);
     defineConstant("mutation_rate", Q * 0);
-    defineConstant("chromosome_length", 100000); //12462531);
-    defineConstant("trees_file", "/tmp/tmpsk0_hbub.ts");
+    defineConstant("chromosome_length", 12462531);
+    defineConstant("trees_file", "/tmp/tmpm9silydh.ts");
     defineConstant("pop_names", c("YRI", "CEU", "CHB"));
 
     _recombination_rates = c(
@@ -93,12 +93,11 @@ initialize() {
     // Admixture pulses, one row for each pulse.
     defineConstant("admixture_pulses", c());
 
-
     // One row for each sampling episode.
     defineConstant("sampling_episodes", array(c(
         // pop, n_inds, time
-        c(0, 1, 2000),
-        c(1, 1, 1000),
+        c(0, 1, 0),
+        c(1, 1, 0),
         c(2, 1, 0)
     ), c(3, 3)));
 
@@ -214,10 +213,6 @@ function (void)end(void) {
     G = G_start + gdiff(T_start, _T);
     G_end = max(G);
 
-    cat("\n" + "G_start " + G_start);
-    cat("\n" + "Gend " + G_end);
-    cat("\n" + "T_start " + T_start + "\n");
-
     /*
      * Register events occurring at time T_start or more recently.
      */
@@ -331,7 +326,6 @@ function (void)end(void) {
         pop = drop(sampling_episodes[0,i]);
         n = sampling_episodes[1,i];
         g = G_start + gdiff(T_start, sampling_episodes[2,i]);
-        dbg(g + "\n");
 
         // Check that there will be at least n individuals for sampling.
         N_g = pop_size_at(G, pop, g);
@@ -358,3 +352,4 @@ function (void)end(void) {
         sim.simulationFinished();
     }
 }
+
