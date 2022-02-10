@@ -1,0 +1,10 @@
+*.bam
+*.gz
+*.out
+*.err
+*.vcf
+*.dump
+**/models/**
+**/hard/**
+**/neut/**
+**/soft/**
