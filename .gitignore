@@ -4,6 +4,7 @@
 *.err
 *.vcf
 *.dump
+*.npz
 **/models/**
 **/hard/**
 **/neut/**
