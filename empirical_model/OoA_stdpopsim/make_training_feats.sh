@@ -11,6 +11,9 @@
 #SBATCH --array=1-2501:100
 
 conda activate blinx
+conda deactivate
+conda activate blinx
+source activate blinx
 
 for i in hard neut soft
 do  
