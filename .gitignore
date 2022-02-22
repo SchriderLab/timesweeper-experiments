@@ -9,3 +9,7 @@
 **/hard/**
 **/neut/**
 **/soft/**
+.snakemake/
+bams/
+vcfs/
+hg19*

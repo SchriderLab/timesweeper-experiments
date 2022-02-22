@@ -1,0 +1,48 @@
+IDs, = glob_wildcards("bams/faw/{id}.bam")
+ref_fasta = "hg19.fa.bgz"
+
+rule all:
+    input:
+        "vcfs/ts_raw_calls.vcf"
+
+rule prep_bams:
+    input:
+        "bams/raw/{id}.bam"
+    output:
+        sortedfile="bams/sorted/{id}.sorted.bam",
+        index="bams/sorted/{id}.sorted.bam.bai"
+    threads: 4
+    shell:
+        """
+        samtools sort \
+            -@ {threads} \
+            {input} \
+            -o {output.sortedfile}
+        
+        samtools index \
+            -@ {threads} \
+            {output.sortedfile}
+        """
+        
+rule pileup:
+    input:
+        expand("bams/sorted/{id}.sorted.bam", id=IDs)
+    output:
+        "vcfs/ts_samps.vcf"
+    shell:
+        """
+        bcftools mpileup -Ou \
+            -f {ref_fasta} \
+            -o {output} \
+            {input} 
+        """
+
+rule call:
+    input:
+        "vcfs/ts_samps.vcf"
+    output:
+        "vcfs/ts_raw_calls.vcf"
+    shell:
+        """
+        samtools view -vcg - > {output}
+        """
