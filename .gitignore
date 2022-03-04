@@ -1,5 +1,6 @@
 *.bam
 *.gz
+*.bgz*
 *.out
 *.err
 *.vcf
