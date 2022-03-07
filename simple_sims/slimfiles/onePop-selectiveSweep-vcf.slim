@@ -133,8 +133,7 @@ s4 10000:15000 late()
         if (sim.generation > 10050)
         {
             cat("Sampling at generation " + sim.generation + "\n");
-            outFile = outDirName + sim.generation + ".vcf";
-            p1.outputVCFSample(sampleSizePerStep, replace=T, filePath=outFile);
+            p1.outputVCFSample(sampleSizePerStep,replace=T, filePath=outFile, append=T);
             cat("Done emitting sample\n");
         }
     }

@@ -1,0 +1,9 @@
+#General
+work dir: post_selection_timing
+ploidy: 2 #Each sample will be multiplied by this value when accessing vcf.
+sample sizes: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5] #Number of individual organisms, not chromosomes
+
+#Timesweeper
+input vcf: 
+afs model path: 
+hfs model path: 
