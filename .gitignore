@@ -14,3 +14,5 @@
 bams/
 vcfs/
 hg19*
+**/trained_models/
+*.pkl
