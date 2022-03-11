@@ -1,0 +1,8 @@
+sweep="soft"
+outFile="5tp_exp/vcfs/soft/2510.multivcf"
+dumpFile="5tp_exp/dumpfiles/soft/2510.dump"
+samplingInterval=40.0
+numSamples=5
+sampleSizePerStep=40
+physLen=500000
+seed=4015499881525747

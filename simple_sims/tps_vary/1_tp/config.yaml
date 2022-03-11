@@ -1,0 +1,10 @@
+#General
+work dir: 1tp_exp
+slimfile: sample-end-onePop-selectiveSweep-vcf.slim
+
+sample sizes: [200]
+ploidy: 2
+
+#Simulation
+reps: 2500
+slim path: /proj/dschridelab/lswhiteh/timesweeper/src/SLiM/build/slim

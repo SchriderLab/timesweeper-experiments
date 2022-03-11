@@ -1,0 +1,8 @@
+sweep="soft"
+outFile="2tp_exp/vcfs/soft/2020.multivcf"
+dumpFile="2tp_exp/dumpfiles/soft/2020.dump"
+samplingInterval=100.0
+numSamples=2
+sampleSizePerStep=100
+physLen=500000
+seed=6489435044243405

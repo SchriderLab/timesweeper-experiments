@@ -1,0 +1,8 @@
+sweep="soft"
+outFile="10tp_exp/vcfs/soft/2490.multivcf"
+dumpFile="10tp_exp/dumpfiles/soft/2490.dump"
+samplingInterval=20.0
+numSamples=10
+sampleSizePerStep=20
+physLen=500000
+seed=7489044337080731

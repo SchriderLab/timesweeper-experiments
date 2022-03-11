@@ -1,0 +1,8 @@
+sweep="soft"
+outFile="100tp_exp/vcfs/soft/1930.multivcf"
+dumpFile="100tp_exp/dumpfiles/soft/1930.dump"
+samplingInterval=2.0
+numSamples=100
+sampleSizePerStep=2
+physLen=500000
+seed=4310199327250911
