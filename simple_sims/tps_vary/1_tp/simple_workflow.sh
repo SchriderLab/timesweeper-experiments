@@ -16,6 +16,7 @@ source activate blinx
 srcdir=/proj/dschridelab/lswhiteh/timesweeper/src
 configfile=config.yaml
 
-python ${srcdir}/process_vcfs.py yaml ${configfile}
+#python make_merged.py
+#python ${srcdir}/process_vcfs.py yaml ${configfile}
 python ${srcdir}/make_training_features.py yaml ${configfile}
 python ${srcdir}/nets.py -n mongolian_samples yaml ${configfile}

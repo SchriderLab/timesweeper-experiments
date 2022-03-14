@@ -112,7 +112,7 @@ s4 10000:15000 late()
     m1.convertToSubstitution = F;
     m2.convertToSubstitution = F;
     
-    if (sim.generation==simEndTime)
+    if (sim.generation==simEndTime-1)
     {
 
         if (sweep == "hard" | sweep == "soft")
@@ -130,12 +130,10 @@ s4 10000:15000 late()
             }
         }
 
-        if (sim.generation > 10050)
-        {
-            cat("Sampling at generation " + sim.generation + "\n");
-            p1.outputVCFSample(sampleSizePerStep,replace=T, filePath=outFile, append=T);
-            cat("Done emitting sample\n");
-        }
+        cat("Sampling at generation " + sim.generation + "\n");
+        p1.outputVCFSample(sampleSizePerStep,replace=T, filePath=outFile, append=F);
+        cat("Done emitting sample\n");
+
     }
 }
 

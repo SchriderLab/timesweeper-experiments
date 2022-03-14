@@ -1,0 +1,8 @@
+sweep="soft"
+outFile="200gpost_exp/vcfs/soft/2280.multivcf"
+dumpFile="200gpost_exp/dumpfiles/soft/2280.dump"
+samplingInterval=10.0
+numSamples=20
+sampleSizePerStep=10
+physLen=500000
+seed=1672170191681860

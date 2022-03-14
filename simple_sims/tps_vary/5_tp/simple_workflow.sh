@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH --partition=general
-#SBATCH --mem=64G
-#SBATCH -c 32
-#SBATCH --time=1:00:00
-#SBATCH -J workflow
-#SBATCH -o logfiles/workflow.%A.%a.out
-#SBATCH -e logfiles/workflow.%A.%a.err
+#SBATCH --mem=16G
+#SBATCH -c 16
+#SBATCH --time=4:00:00
+#SBATCH -J 5tp-workflow
+#SBATCH -o logfiles/5tp_workflow.%A.%a.out
+#SBATCH -e logfiles/5tp_workflow.%A.%a.err
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=lswhiteh@email.unc.edu
 ##SBATCH --array=0-2500:10

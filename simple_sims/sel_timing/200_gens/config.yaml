@@ -1,0 +1,10 @@
+#General
+work dir: 200gpost_exp
+slimfile: onePop-selectiveSweep-vcf.slim
+
+sample sizes: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+ploidy: 2
+
+#Simulation
+reps: 2500
+slim path: /proj/dschridelab/lswhiteh/timesweeper/src/SLiM/build/slim

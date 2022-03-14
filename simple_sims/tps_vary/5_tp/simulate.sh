@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --partition=general
 #SBATCH --mem=8G
-#SBATCH -c 6
-#SBATCH --time=6:00:00
+#SBATCH -c 4
+#SBATCH --time=2:00:00
 #SBATCH -J 5tp_sim
 #SBATCH -o logfiles/sims/5tp.%A.%a.out
 #SBATCH -e logfiles/sims/5tp.%A.%a.err
