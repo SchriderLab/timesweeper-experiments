@@ -1,8 +1,8 @@
 sweep="soft"
-outFile="0gpost_exp/vcfs/soft/10.multivcf"
-dumpFile="0gpost_exp/dumpfiles/soft/10.dump"
+outFile="0gpost_exp/vcfs/soft/2420.multivcf"
+dumpFile="0gpost_exp/dumpfiles/soft/2420.dump"
 samplingInterval=10.0
 numSamples=20
 sampleSizePerStep=10
 physLen=500000
-seed=4136429140061695
+seed=3146099028790861

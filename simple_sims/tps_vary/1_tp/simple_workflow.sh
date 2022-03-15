@@ -2,7 +2,7 @@
 #SBATCH --partition=general
 #SBATCH --mem=64G
 #SBATCH -c 32
-#SBATCH --time=2:00:00
+#SBATCH --time=6:00:00
 #SBATCH -J workflow
 #SBATCH -o logfiles/workflow.%A.%a.out
 #SBATCH -e logfiles/workflow.%A.%a.err

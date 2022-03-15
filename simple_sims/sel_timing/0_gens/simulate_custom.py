@@ -197,7 +197,7 @@ def main():
             mp_args.append((slim_file, slim_path, d_block))
 
     pool = mp.Pool(processes=ua.threads)
-    pool.starmap(run_slim, mp_args, chunksize=2)
+    pool.starmap(run_slim, mp_args, chunksize=3)
 
     # Cleanup
     #shutil.rmtree(dumpfile_dir)

@@ -14,8 +14,8 @@ initialize()
     defineConstant("burnTime", 20*subpopSize);
     defineConstant("mutTime", burnTime);
     defineConstant("softTime", mutTime); 
-    defineConstant("simEndTime", mutTime+sweepDuration);
-    defineConstant("samplingTime", mutTime); 
+    defineConstant("simEndTime", mutTime+sweepDuration+1);
+    defineConstant("samplingTime", mutTime+1); 
     // introduced mutation's selection coefficient
     initializeMutationType("m2", 0.5, "f", selCoeff);
 
@@ -130,7 +130,7 @@ s4 10000:15000 late()
             }
         }
 
-        if (sim.generation >= 10000)
+        if (sim.generation >= samplingTime)
         {
             cat("Sampling at generation " + sim.generation + "\n");
             p1.outputVCFSample(sampleSizePerStep,replace=T, filePath=outFile, append=T);
