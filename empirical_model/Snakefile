@@ -1,0 +1,49 @@
+IDS, = glob_wildcards("vcfs/raw/{id}.vcf.gz")
+
+rule all:
+    input:
+        "vcfs/merged/ts_merged.filtered.calls.vcf.gz"
+
+rule call_vars:
+    input:
+        "vcfs/raw/{id}.vcf.gz"
+    output:
+        "vcfs/calls/{id}.called.vcf.gz"
+    threads: 4
+    shell:
+        """
+        bcftools call --threads {threads} -m -Oz {input} > {output}
+        """
+
+rule index:
+    input:
+        "vcfs/calls/{id}.called.vcf.gz"
+    output:
+        "vcfs/calls/{id}.called.vcf.gz.csi"
+    threads: 2
+    shell:
+        """
+        bcftools index --threads {threads} {input}
+        """
+
+rule merge:
+    input:
+        expand("vcfs/calls/{id}.called.vcf.gz", id=IDS)
+    output:
+        "vcfs/merged/ts_merged.calls.vcf.gz"
+    threads: workflow.cores
+    shell:
+        """
+        bcftools merge -Oz --threads {threads} --force-samples -0 {input} > {output}
+        """
+
+rule filter:
+    input:
+        "vcfs/merged/ts_merged.calls.vcf.gz"
+    output:
+        "vcfs/merged/ts_merged.filtered.calls.vcf.gz"
+    threads: workflow.cores
+    shell:
+        """
+        bcftools merge -Oz --threads {threads} --force-samples -0 {input} > {output}
+        """
