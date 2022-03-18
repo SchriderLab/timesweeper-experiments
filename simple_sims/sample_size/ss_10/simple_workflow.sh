@@ -18,4 +18,4 @@ configfile=ss10_config.yaml
 
 python ${srcdir}/process_vcfs.py yaml ${configfile}
 python ${srcdir}/make_training_features.py yaml ${configfile}
-python ${srcdir}/nets.py -n mongolian_samples yaml ${configfile}
+python ${srcdir}/nets.py -n Sample_Size_10 yaml ${configfile}
