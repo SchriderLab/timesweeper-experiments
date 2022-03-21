@@ -2,7 +2,8 @@ IDS, = glob_wildcards("vcfs/raw/{id}.vcf.gz")
 
 rule all:
     input:
-        "vcfs/merged/ts_merged.filtered.calls.vcf.gz"
+        "vcfs/merged/ts_merged_0s.calls.vcf.gz",
+        "vcfs/merged/ts_merged_missing.filtered.calls.vcf.gz"
 
 rule call_vars:
     input:
@@ -26,25 +27,37 @@ rule index:
         bcftools index --threads {threads} {input}
         """
 
-rule merge:
+rule merge_0s:
     input:
         vcfs = expand("vcfs/calls/{id}.called.vcf.gz", id=IDS),
         indexes = expand("vcfs/calls/{id}.called.vcf.gz.csi", id=IDS),
     output:
-        "vcfs/merged/ts_merged.calls.vcf.gz"
+        "vcfs/merged/ts_merged_0s.calls.vcf.gz"
     threads: workflow.cores
     shell:
         """
         bcftools merge -Oz --threads {threads} --force-samples -0 {input.vcfs} > {output}
         """
 
-rule filter:
+rule merge_missing:
     input:
-        "vcfs/merged/ts_merged.calls.vcf.gz"
+        vcfs = expand("vcfs/calls/{id}.called.vcf.gz", id=IDS),
+        indexes = expand("vcfs/calls/{id}.called.vcf.gz.csi", id=IDS),
     output:
-        "vcfs/merged/ts_merged.filtered.calls.vcf.gz"
+        "vcfs/merged/ts_merged_missing.calls.vcf.gz"
     threads: workflow.cores
     shell:
         """
-        bcftools merge -Oz --threads {threads} --force-samples -0 {input} > {output}
+        bcftools merge -Oz --threads {threads} --force-samples {input.vcfs} > {output}
+        """
+
+rule filter:
+    input:
+        "vcfs/merged/ts_merged_missing.calls.vcf.gz"
+    output:
+        "vcfs/merged/ts_merged_missing.filtered.calls.vcf.gz"
+    threads: workflow.cores
+    shell:
+        """
+        bcftools view -Oz -i 'F_MISSING<0.2' {input} > {output}
         """

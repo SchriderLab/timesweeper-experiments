@@ -16,3 +16,4 @@ vcfs/
 hg19*
 **/trained_models/
 *.pkl
+*preds.csv

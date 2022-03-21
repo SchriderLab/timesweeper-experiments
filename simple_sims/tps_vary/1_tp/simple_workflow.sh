@@ -18,5 +18,5 @@ configfile=config.yaml
 
 #python make_merged.py
 #python process_vcfs.py yaml ${configfile}
-python ${srcdir}/make_training_features.py yaml ${configfile}
-python ${srcdir}/nets.py -n 1tp yaml ${configfile}
+#python timeSeriesSweeps/src/make_training_features.py yaml ${configfile}
+python timeSeriesSweeps/src/nets.py -n 1tp yaml ${configfile}
