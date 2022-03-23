@@ -1,10 +1,24 @@
-IDS, = glob_wildcards("vcfs/raw/{id}.vcf.gz")
+IDS, = glob_wildcards("bams/sorted/{id}.sorted.bam")
 
 rule all:
     input:
-        "vcfs/merged/ts_merged_0s.calls.vcf.gz",
-        "vcfs/merged/ts_merged_missing.filtered.calls.vcf.gz"
+        expand("bams/stats/{id}.stats", id=IDS),
+        expand("vcfs/calls/stats/{id}.stats", id=IDS),
+        "vcfs/merged/ts_merged.filtered.calls.vcf.gz",
+        "vcfs/merged/ts_merged.filtered.stats",
+        "vcf-multiqc/multiqc_report.html",
+        "bam-multiqc/multiqc_report.html"
 
+rule bamstats:
+    input:
+        "bams/sorted/{id}.sorted.bam"
+    output:
+        "bams/stats/{id}.stats"
+    threads: 1
+    shell:
+        """
+        samtools stats {input} > {output}
+        """
 rule call_vars:
     input:
         "vcfs/raw/{id}.vcf.gz"
@@ -13,7 +27,8 @@ rule call_vars:
     threads: 4
     shell:
         """
-        bcftools call --threads {threads} -m -Oz {input} > {output}
+        bcftools call -m --threads {threads} {input} | \
+        bcftools filter -Oz -o {output} -i '%QUAL>20'
         """
 
 rule index:
@@ -26,25 +41,23 @@ rule index:
         """
         bcftools index --threads {threads} {input}
         """
-
-rule merge_0s:
+    
+rule vcfstats:
     input:
-        vcfs = expand("vcfs/calls/{id}.called.vcf.gz", id=IDS),
-        indexes = expand("vcfs/calls/{id}.called.vcf.gz.csi", id=IDS),
+        "vcfs/calls/{id}.called.vcf.gz"
     output:
-        "vcfs/merged/ts_merged_0s.calls.vcf.gz"
-    threads: workflow.cores
+        "vcfs/calls/stats/{id}.stats"
     shell:
         """
-        bcftools merge -Oz --threads {threads} --force-samples -0 {input.vcfs} > {output}
+        bcftools stats {input} > {output}
         """
 
-rule merge_missing:
+rule merge:
     input:
         vcfs = expand("vcfs/calls/{id}.called.vcf.gz", id=IDS),
         indexes = expand("vcfs/calls/{id}.called.vcf.gz.csi", id=IDS),
     output:
-        "vcfs/merged/ts_merged_missing.calls.vcf.gz"
+        "vcfs/merged/ts_merged.calls.vcf.gz"
     threads: workflow.cores
     shell:
         """
@@ -59,5 +72,37 @@ rule filter:
     threads: workflow.cores
     shell:
         """
-        bcftools view -Oz -i 'F_MISSING<0.2' {input} > {output}
+        bcftools view -Oz -i 'F_MISSING<0.5' {input} > {output}
+        """
+
+rule merged_vcfstats:
+    input:
+        "vcfs/merged/ts_merged.calls.vcf.gz"
+    output:
+        "vcfs/merged/ts_merged.raw.stats"
+    threads: 1
+    shell:
+        """
+        bcftools stats {input} > {output}
+        """
+
+rule filtered_vcfstats:
+    input:
+        "vcfs/merged/ts_merged.filtered.calls.vcf.gz",
+    output:
+        "vcfs/merged/ts_merged.filtered.stats"
+    threads: workflow.cores
+    shell:
+        """
+        bcftools stats --threads {threads} {input} > {output}
+        """
+
+rule multiqc:
+    output:
+        "vcf-multiqc/multiqc_report.html",
+        "bam-multiqc/multiqc_report.html"
+    shell:
+        """
+        multiqc vcfs/calls/ -o vcf-multiqc
+        multiqc bams/sorted/ -o bam-multiqc
         """

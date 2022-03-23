@@ -17,3 +17,4 @@ hg19*
 **/trained_models/
 *.pkl
 *preds.csv
+empirical_model/mongolian_samples/timesweeper_output/afs_preds.csv
