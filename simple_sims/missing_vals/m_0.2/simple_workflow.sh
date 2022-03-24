@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --partition=general
-#SBATCH --mem=4G
+#SBATCH --mem=16G
 #SBATCH -c 16
 #SBATCH --time=2:00:00
 #SBATCH -J workflow
@@ -18,3 +18,4 @@ configfile=config.yaml
 
 python ${srcdir}/make_training_features.py --missingness 0.2 yaml ${configfile}
 python ${srcdir}/nets.py -n m_0.2 yaml ${configfile}
+python ${srcdir}/plotting/plot_input_data.py -i missingness_0.2/training_data.pkl -s Missingness_0.2 -o missingness_0.2/images/
