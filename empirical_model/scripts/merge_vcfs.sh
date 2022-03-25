@@ -9,6 +9,6 @@
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=lswhiteh@email.unc.edu
 
-
+cd ../
 conda activate blinx
 snakemake -c all --rerun-incomplete

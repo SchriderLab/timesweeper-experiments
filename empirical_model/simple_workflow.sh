@@ -18,5 +18,6 @@ configfile=OoA_config.yaml
 
 #python ${srcdir}/simulate_stdpopsim.py --rep-range ${SLURM_ARRAY_TASK_ID} $((${SLURM_ARRAY_TASK_ID}+10)) yaml ${configfile}
 #python ${srcdir}/process_vcfs.py yaml ${configfile}
-python ${srcdir}/make_training_features.py yaml ${configfile}
-python ${srcdir}/nets.py -n mongolian_samples -m 0.7 yaml ${configfile}
+python ${srcdir}/make_training_features.py -m 0.2 yaml ${configfile}
+python ${srcdir}/nets.py -n mongolian_samples  yaml ${configfile}
+python ${srcdir}/plotting/plot_input_data.py -i mongolian_samples/training_data.pkl -n mongolian_samps_0.2 -o mongolian_samples/images/

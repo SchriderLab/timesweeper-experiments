@@ -4,8 +4,8 @@ rule all:
     input:
         expand("bams/stats/{id}.stats", id=IDS),
         expand("vcfs/calls/stats/{id}.stats", id=IDS),
-        "vcfs/merged/ts_merged.filtered.calls.vcf.gz",
-        "vcfs/merged/ts_merged.filtered.stats",
+        expand("vcfs/merged/ts_merged.{qual}.filtered.calls.vcf.gz", qual=[0,10]),
+        expand("vcfs/merged/ts_merged.{qual}.filtered.stats", qual=[0,10]),
         "vcf-multiqc/multiqc_report.html",
         "bam-multiqc/multiqc_report.html"
 
@@ -19,23 +19,35 @@ rule bamstats:
         """
         samtools stats {input} > {output}
         """
-rule call_vars:
+
+rule call_vars_10:
     input:
         "vcfs/raw/{id}.vcf.gz"
     output:
-        "vcfs/calls/{id}.called.vcf.gz"
+        "vcfs/calls/{id}.10.called.vcf.gz"
     threads: 4
     shell:
         """
         bcftools call -m --threads {threads} {input} | \
-        bcftools filter -Oz -o {output} -i '%QUAL>20'
+        bcftools filter -Oz -o {output} -i '%QUAL>10'
         """
 
+rule call_vars_0:
+    input:
+        "vcfs/raw/{id}.vcf.gz"
+    output:
+        "vcfs/calls/{id}.0.called.vcf.gz"
+    threads: 4
+    shell:
+        """
+        bcftools call -m --threads {threads} {input} | \
+        bcftools filter -Oz -o {output} -i '%QUAL>0'
+        """
 rule index:
     input:
-        "vcfs/calls/{id}.called.vcf.gz"
+        "vcfs/calls/{id}.{qual}.called.vcf.gz"
     output:
-        "vcfs/calls/{id}.called.vcf.gz.csi"
+        "vcfs/calls/{id}.{qual}.called.vcf.gz.csi"
     threads: 2
     shell:
         """
@@ -44,9 +56,9 @@ rule index:
     
 rule vcfstats:
     input:
-        "vcfs/calls/{id}.called.vcf.gz"
+        "vcfs/calls/{id}.{qual}.called.vcf.gz"
     output:
-        "vcfs/calls/stats/{id}.stats"
+        "vcfs/calls/stats/{id}.{qual}.stats"
     shell:
         """
         bcftools stats {input} > {output}
@@ -54,10 +66,10 @@ rule vcfstats:
 
 rule merge:
     input:
-        vcfs = expand("vcfs/calls/{id}.called.vcf.gz", id=IDS),
-        indexes = expand("vcfs/calls/{id}.called.vcf.gz.csi", id=IDS),
+        vcfs = expand("vcfs/calls/{id}.{{qual}}.called.vcf.gz", id=IDS),
+        indexes = expand("vcfs/calls/{id}.{{qual}}.called.vcf.gz.csi", id=IDS),
     output:
-        "vcfs/merged/ts_merged.calls.vcf.gz"
+        "vcfs/merged/ts_merged.{qual}.calls.vcf.gz"
     threads: workflow.cores
     shell:
         """
@@ -66,21 +78,21 @@ rule merge:
 
 rule filter:
     input:
-        "vcfs/merged/ts_merged_missing.calls.vcf.gz"
+        "vcfs/merged/ts_merged.{qual}.calls.vcf.gz"
     output:
-        "vcfs/merged/ts_merged_missing.filtered.calls.vcf.gz"
+        "vcfs/merged/ts_merged.{qual}.filtered.calls.vcf.gz"
     threads: workflow.cores
     shell:
         """
         bcftools view -Oz -i 'F_MISSING<0.5' {input} > {output}
         """
 
-rule merged_vcfstats:
+rule merged_raw_vcfstats:
     input:
-        "vcfs/merged/ts_merged.calls.vcf.gz"
+        "vcfs/merged/ts_merged.{qual}.calls.vcf.gz"
     output:
-        "vcfs/merged/ts_merged.raw.stats"
-    threads: 1
+        "vcfs/merged/ts_merged.{qual}.calls.stats"
+    threads: 8
     shell:
         """
         bcftools stats {input} > {output}
@@ -88,21 +100,21 @@ rule merged_vcfstats:
 
 rule filtered_vcfstats:
     input:
-        "vcfs/merged/ts_merged.filtered.calls.vcf.gz",
+        "vcfs/merged/ts_merged.{qual}.filtered.calls.vcf.gz"
     output:
-        "vcfs/merged/ts_merged.filtered.stats"
+        "vcfs/merged/ts_merged.{qual}.filtered.stats"
     threads: workflow.cores
     shell:
         """
         bcftools stats --threads {threads} {input} > {output}
         """
 
-rule multiqc:
-    output:
-        "vcf-multiqc/multiqc_report.html",
-        "bam-multiqc/multiqc_report.html"
-    shell:
-        """
-        multiqc vcfs/calls/ -o vcf-multiqc
-        multiqc bams/sorted/ -o bam-multiqc
-        """
+#rule multiqc:
+#    output:
+#        "vcf-multiqc/multiqc_report.html",
+#        "bam-multiqc/multiqc_report.html"
+#    shell:
+#        """
+#        multiqc vcfs/calls/ -o vcf-multiqc
+#        multiqc bams/sorted/ -o bam-multiqc
+#        """
