@@ -4,11 +4,14 @@
 #SBATCH -c 16
 #SBATCH --time=2-00:00:00
 #SBATCH -J merge_proc_vcf
-#SBATCH -o merge_proc_vcf.%A.out
-#SBATCH -e merge_proc_vcf.%A.err
+#SBATCH -o logfiles/merge_proc_vcf.%A.out
+#SBATCH -e logfiles/merge_proc_vcf.%A.err
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=lswhiteh@email.unc.edu
 
 cd ../
+
 conda activate blinx
+source activate blinx
+
 snakemake -c all --rerun-incomplete

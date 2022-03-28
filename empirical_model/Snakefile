@@ -6,8 +6,8 @@ rule all:
         expand("vcfs/calls/stats/{id}.stats", id=IDS),
         expand("vcfs/merged/ts_merged.{qual}.filtered.calls.vcf.gz", qual=[0,10]),
         expand("vcfs/merged/ts_merged.{qual}.filtered.stats", qual=[0,10]),
-        "vcf-multiqc/multiqc_report.html",
-        "bam-multiqc/multiqc_report.html"
+        #"vcf-multiqc/multiqc_report.html",
+        #"bam-multiqc/multiqc_report.html"
 
 rule bamstats:
     input:
