@@ -13,8 +13,3 @@ selection coeff bounds: [0.005, 0.5]
 mut rate: 1.29e-8
 slim path: /proj/dschridelab/lswhiteh/timesweeper/src/SLiM/build/slim
 gen time: 25
-
-#TS
-input vcf: /pine/scr/l/s/lswhiteh/timesweeper-experiments/empirical_model/vcfs/test_merged.vcf
-afs model path: /pine/scr/l/s/lswhiteh/timesweeper-experiments/empirical_model/mongolian_samples/trained_models/mongolian_samples_TimeSweeper_afs
-hfs model path: /pine/scr/l/s/lswhiteh/timesweeper-experiments/empirical_model/mongolian_samples/trained_models/mongolian_samples_TimeSweeper_hfs

@@ -1,5 +1,5 @@
 #https://darencard.net/blog/2017-01-13-missing-data-proportions-vcf/
-#Calc missingness per sample
+#Calc missingness per sample of file input on cmd line
 bcftools query -f '[%GT\t]\n' $1 | awk -v OFS="\t" '{for (i=1;i<=NF;i++) if ($i == "./.") sum[i]+=1 } END {for (i in sum) print i, sum[i] / NR }' | sort -k1,1n | cut -f 2
 
 #0.137419

@@ -9,8 +9,10 @@
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=lswhiteh@email.unc.edu
 
-for i in $(cut samp_data/filtered_samps.tsv -f9)
+cd ..
+mkdir -p bams/raw
+for i in $(cut samp_data/filtered/filtered_samps.tsv -f9)
 do
-    wget $i -t 0 &
+    wget -nc -P bams/raw/ $i -t 0 &
 done
 wait

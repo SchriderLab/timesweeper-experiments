@@ -1,13 +1,42 @@
-IDS, = glob_wildcards("bams/sorted/{id}.sorted.bam")
+import pandas as pd 
+
+qual_thresholds = [0,10, 20]
+
+sorted_samps =  pd.read_csv("samp_data/filtered/sorted_samples.csv")
+bamfiles = list(sorted_samps["submitted_ftp"])
+
+sorted_ids = [i.split("/")[-1].split(".bam")[0] for i in bamfiles]
+print(sorted_ids)
 
 rule all:
     input:
-        expand("bams/stats/{id}.stats", id=IDS),
-        expand("vcfs/calls/stats/{id}.stats", id=IDS),
-        expand("vcfs/merged/ts_merged.{qual}.filtered.calls.vcf.gz", qual=[0,10]),
-        expand("vcfs/merged/ts_merged.{qual}.filtered.stats", qual=[0,10]),
-        #"vcf-multiqc/multiqc_report.html",
-        #"bam-multiqc/multiqc_report.html"
+        expand("bams/stats/{id}.stats", id=sorted_ids),
+        expand("vcfs/calls/stats/{id}.stats", id=sorted_ids),
+        expand("vcfs/merged/ts_merged.{qual}.calls.vcf.gz", qual=qual_thresholds),
+        expand("vcfs/merged/ts_merged.{qual}.filtered.calls.vcf.gz", qual=qual_thresholds),
+        expand("vcfs/merged/ts_merged.{qual}.filtered.stats", qual=qual_thresholds),
+        expand("vcfs/merged/ts_merged.{qual}.calls.stats", qual=qual_thresholds),
+
+rule download_ref:
+    output:
+        expand("ref/GRCh37-lite.fa.{suff}", suff=["bgz", "bgz.fai", "bgz.gzi", "gz"])
+    shell:
+        """
+        wget -P ref/ https://ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh37/special_requests/GRCh37-lite.fa.gz
+        gzip -cd ref/GRCh37-lite.fa.gz | bgzip -ci -I ref/GRCh37-lite.fa.gzi  > ref/GRCh37-lite.fa.gz
+        samtools faidx ref/GRCh37-lite.fa.gz
+        """
+
+rule sort_bams:
+    input:
+        "bams/raw/{id}.bam"
+    output:
+        "bams/sorted/{id}.sorted.bam"
+    threads: 2
+    shell:
+        """
+        samtools sort -@ {threads} --write-index -o {output} {input}
+        """
 
 rule bamstats:
     input:
@@ -20,54 +49,54 @@ rule bamstats:
         samtools stats {input} > {output}
         """
 
-rule call_vars_10:
+rule pileup:
     input:
-        "vcfs/raw/{id}.vcf.gz"
+        bam="bams/sorted/{id}.sorted.bam",
+        ref="ref/GRCh37-lite.fa.bgz"
     output:
-        "vcfs/calls/{id}.10.called.vcf.gz"
-    threads: 4
+        "vcfs/raw/{id}.vcf.gz"
     shell:
         """
-        bcftools call -m --threads {threads} {input} | \
-        bcftools filter -Oz -o {output} -i '%QUAL>10'
+        bcftools mpileup -Oz -f {input.ref} {input.bam} > {output}
         """
 
-rule call_vars_0:
+rule call:
     input:
         "vcfs/raw/{id}.vcf.gz"
     output:
-        "vcfs/calls/{id}.0.called.vcf.gz"
+        "vcfs/calls/{id}.calls.vcf.gz"
     threads: 4
     shell:
         """
-        bcftools call -m --threads {threads} {input} | \
-        bcftools filter -Oz -o {output} -i '%QUAL>0'
+        bcftools call -m --threads {threads} {input} > {output}
         """
+
+rule filter_calls:
+    input:
+        "vcfs/calls/{id}.calls.vcf.gz"
+    output:
+        "vcfs/filtered/{id}.{qual}.calls.vcf.gz"
+    threads: 4
+    shell:
+        """
+        bcftools filter -Oz -i '%QUAL>{wildcards.qual}' {input} > {output}
+        """
+
 rule index:
     input:
-        "vcfs/calls/{id}.{qual}.called.vcf.gz"
+        "vcfs/filtered/{id}.{qual}.calls.vcf.gz"
     output:
-        "vcfs/calls/{id}.{qual}.called.vcf.gz.csi"
+        "vcfs/filtered/{id}.{qual}.calls.vcf.gz.csi"
     threads: 2
     shell:
         """
         bcftools index --threads {threads} {input}
         """
-    
-rule vcfstats:
-    input:
-        "vcfs/calls/{id}.{qual}.called.vcf.gz"
-    output:
-        "vcfs/calls/stats/{id}.{qual}.stats"
-    shell:
-        """
-        bcftools stats {input} > {output}
-        """
 
 rule merge:
     input:
-        vcfs = expand("vcfs/calls/{id}.{{qual}}.called.vcf.gz", id=IDS),
-        indexes = expand("vcfs/calls/{id}.{{qual}}.called.vcf.gz.csi", id=IDS),
+        vcfs = expand("vcfs/filtered/{id}.{{qual}}.calls.vcf.gz", id=sorted_ids),
+        indexes = expand("vcfs/filtered/{id}.{{qual}}.calls.vcf.gz.csi", id=sorted_ids),
     output:
         "vcfs/merged/ts_merged.{qual}.calls.vcf.gz"
     threads: workflow.cores
@@ -76,7 +105,7 @@ rule merge:
         bcftools merge -Oz --threads {threads} --force-samples {input.vcfs} > {output}
         """
 
-rule filter:
+rule filter_merged:
     input:
         "vcfs/merged/ts_merged.{qual}.calls.vcf.gz"
     output:
@@ -87,6 +116,16 @@ rule filter:
         bcftools view -Oz -i 'F_MISSING<0.5' {input} > {output}
         """
 
+rule vcfstats:
+    input:
+        "vcfs/calls/{id}.{qual}.calls.vcf.gz"
+    output:
+        "vcfs/calls/stats/{id}.{qual}.stats"
+    shell:
+        """
+        bcftools stats {input} > {output}
+        """
+        
 rule merged_raw_vcfstats:
     input:
         "vcfs/merged/ts_merged.{qual}.calls.vcf.gz"
@@ -98,7 +137,7 @@ rule merged_raw_vcfstats:
         bcftools stats {input} > {output}
         """
 
-rule filtered_vcfstats:
+rule merged_filtered_vcfstats:
     input:
         "vcfs/merged/ts_merged.{qual}.filtered.calls.vcf.gz"
     output:
@@ -108,13 +147,3 @@ rule filtered_vcfstats:
         """
         bcftools stats --threads {threads} {input} > {output}
         """
-
-#rule multiqc:
-#    output:
-#        "vcf-multiqc/multiqc_report.html",
-#        "bam-multiqc/multiqc_report.html"
-#    shell:
-#        """
-#        multiqc vcfs/calls/ -o vcf-multiqc
-#        multiqc bams/sorted/ -o bam-multiqc
-#        """
