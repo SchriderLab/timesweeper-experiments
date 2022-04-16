@@ -1,6 +1,6 @@
 import pandas as pd 
 
-qual_thresholds = [0,10, 20]
+qual_thresholds = [0, 10, 20]
 
 sorted_samps =  pd.read_csv("samp_data/filtered/sorted_samples.csv")
 bamfiles = list(sorted_samps["submitted_ftp"])
@@ -16,7 +16,7 @@ rule all:
         expand("vcfs/merged/ts_merged.{qual}.filtered.calls.vcf.gz", qual=qual_thresholds),
         expand("vcfs/merged/ts_merged.{qual}.filtered.stats", qual=qual_thresholds),
         expand("vcfs/merged/ts_merged.{qual}.calls.stats", qual=qual_thresholds),
-
+        expand("vcfs/filtered/stats/{id}.{qual}.stats", id=sorted_ids, qual=qual_thresholds),
 rule download_ref:
     output:
         expand("ref/GRCh37-lite.fa.{suff}", suff=["bgz", "bgz.fai", "bgz.gzi", "gz"])
@@ -99,7 +99,7 @@ rule merge:
         indexes = expand("vcfs/filtered/{id}.{{qual}}.calls.vcf.gz.csi", id=sorted_ids),
     output:
         "vcfs/merged/ts_merged.{qual}.calls.vcf.gz"
-    threads: workflow.cores
+    threads: 32
     shell:
         """
         bcftools merge -Oz --threads {threads} --force-samples {input.vcfs} > {output}
@@ -110,17 +110,21 @@ rule filter_merged:
         "vcfs/merged/ts_merged.{qual}.calls.vcf.gz"
     output:
         "vcfs/merged/ts_merged.{qual}.filtered.calls.vcf.gz"
-    threads: workflow.cores
+    threads: int(workflow.cores/3)
     shell:
         """
-        bcftools view -Oz -i 'F_MISSING<0.5' {input} > {output}
+        bcftools view \
+        --threads={threads} -Oz \
+        --min-ac=1 \
+        --no-update \
+        {input} > {output}
         """
 
 rule vcfstats:
     input:
-        "vcfs/calls/{id}.{qual}.calls.vcf.gz"
+        "vcfs/filtered/{id}.{qual}.calls.vcf.gz"
     output:
-        "vcfs/calls/stats/{id}.{qual}.stats"
+        "vcfs/filtered/stats/{id}.{qual}.stats"
     shell:
         """
         bcftools stats {input} > {output}
