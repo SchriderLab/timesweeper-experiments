@@ -21,3 +21,4 @@ empirical_model/mongolian_samples/timesweeper_output/afs_preds.csv
 simple_sims/tps_vary/1_tp/timeSeriesSweeps
 *bed
 *wig
+*:*.png
