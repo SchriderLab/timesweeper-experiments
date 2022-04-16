@@ -1,0 +1,10 @@
+sweep="soft"
+outFile="./ts_simulans/vcfs/soft/2.multivcf"
+dumpFile="./ts_simulans/dumpfiles/soft/2.dump"
+samplingInterval=8
+selCoeff=0.028184587222620672
+recombRate=1.961973211502146e-08
+numSamples=7
+sampleSizePerStep=100
+physLen=500000
+seed=4741102902190772
