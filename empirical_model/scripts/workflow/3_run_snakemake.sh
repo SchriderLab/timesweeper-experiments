@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --partition=general
 #SBATCH --mem=64G
-#SBATCH -c 32
+#SBATCH -c 64
 #SBATCH --time=2-00:00:00
 #SBATCH -J merge_proc_vcf
 #SBATCH -o /pine/scr/l/s/lswhiteh/timesweeper-experiments/empirical_model/scripts/logfiles/snakemake.%A.out

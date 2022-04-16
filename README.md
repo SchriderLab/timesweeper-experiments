@@ -2,7 +2,7 @@
 
 Repo for experiments for the TimeSweeper manuscript.
 
-**Note:** All code here was run using the `blinx.yml` conda environment found in the Timesweeper repo https://github.com/SchriderLab/Timesweeper
+**Note:** All code here was run using the `blinx.yml` conda environment found in the Timesweeper repo **!add link when public**
 
 ## Empirical Analysis
 
