@@ -19,6 +19,6 @@ srcdir=/proj/dschridelab/lswhiteh/timesweeper/timesweeper
 configfile=OoA_config.yaml
 
 #python ${srcdir}/process_vcfs.py yaml ${configfile}
-python ${srcdir}/make_training_features.py -m 0.43 yaml ${configfile}
-python ${srcdir}/nets.py -n mongolian_samps_43  yaml ${configfile}
-python ${srcdir}/plotting/plot_input_data.py -i mongolian_samples/training_data.pkl -n mongolian_samps_0.43 -o mongolian_samples/images/
+python ${srcdir}/make_training_features.py -m 0.3 yaml ${configfile}
+python ${srcdir}/nets.py -n mongolian_samps_3  yaml ${configfile}
+python ${srcdir}/plotting/plot_input_data.py -i mongolian_samples/training_data.pkl -n mongolian_samps_0.3 -o mongolian_samples/images/
