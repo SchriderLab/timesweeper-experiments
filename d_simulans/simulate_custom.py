@@ -46,7 +46,7 @@ def make_d_block(sweep, outFile, dumpfile, verbose=False):
 
     num_sample_points = 7
     inds_per_tp = 100  # Diploid inds
-    physLen = 500000
+    physLen = 100000
 
     d_block = f"""
     -d sweep=\"{sweep}\" \
@@ -55,7 +55,7 @@ def make_d_block(sweep, outFile, dumpfile, verbose=False):
     -d samplingInterval={int(60/num_sample_points)} \
     -d numSamples={num_sample_points} \
     -d recombRate={recomb_rate} \
-    -d selCoeff={randomize_selCoeff(0.01, 0.1)}
+    -d selCoeff={randomize_selCoeff(0.02, 0.2)}
     -d sampleSizePerStep={inds_per_tp} \
     -d physLen={physLen} \
     -d seed={int(rng.uniform(0, 1e16))} \
@@ -178,7 +178,7 @@ def main(ua):
     vcf_dir = f"{work_dir}/vcfs"
     dumpfile_dir = f"{work_dir}/dumpfiles"
 
-    sweeps = ["neut", "hard", "soft"]
+    sweeps = ["neut", "soft"]
 
     for i in [vcf_dir, dumpfile_dir]:
         for sweep in sweeps:
@@ -207,8 +207,8 @@ def main(ua):
     pool = mp.Pool(processes=ua.threads)
     pool.starmap(run_slim, mp_args, chunksize=5)
 
-    # Log the constant params just in case, just use last one
-    with open(f"{work_dir}/slim_params.txt", "w") as paramsfile:
+    # Log the constant params
+    with open(f"{work_dir}/slim_params_{sweep}_{rep}.txt", "w") as paramsfile:
         cleaned_block = "\n".join([i.strip() for i in d_block.split() if "-d" not in i])
         paramsfile.writelines(cleaned_block)
 

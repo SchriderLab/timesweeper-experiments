@@ -22,3 +22,4 @@ simple_sims/tps_vary/1_tp/timeSeriesSweeps
 *bed
 *wig
 *:*.png
+*params*.txt

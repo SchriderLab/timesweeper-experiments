@@ -3,7 +3,7 @@
 initialize()
 {
     //remove these constants from your version since this stuff should all be set on the command line
-    defineConstant("subpopSize", 1000);
+    defineConstant("subpopSize", 10000);
     defineConstant("mutLoc", asInteger(physLen/2));
     initializeMutationRate(5e-9);
     initializeMutationType("m1", 0.5, "f", 0.0);
@@ -11,7 +11,7 @@ initialize()
     initializeGenomicElement(g1, 0, physLen-1);
     initializeRecombinationRate(recombRate);
     
-    defineConstant("sweepDuration", 60); //NOTE: everything will work so long as samplingInterval*numSamples is less than this value; so whatever the max value of that product will be of all the combinations you are using, just make sure this is >= to that
+    defineConstant("sweepDuration", 60); 
     defineConstant("burnTime", 20*subpopSize);
     defineConstant("mutTime", burnTime);
     defineConstant("softTime", mutTime); 
@@ -79,6 +79,7 @@ s2 1000:10000 late()
 }
 s3 2000 late()
 {
+    p1.setSubpopulationSize(1000);
     if (sweep == "soft")
     {
         muts = sim.mutationsOfType(m1);
@@ -113,9 +114,8 @@ s4 10000:15000 late()
     m1.convertToSubstitution = F;
     m2.convertToSubstitution = F;
     
-    if ((sim.generation-samplingTime) % samplingInterval == 0)
+    if (sim.generation % 10 == 0)
     {
-
         if (sweep == "hard" | sweep == "soft")
         {   
             muts = sim.mutationsOfType(m2);
