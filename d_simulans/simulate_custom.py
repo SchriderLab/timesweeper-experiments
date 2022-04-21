@@ -42,36 +42,68 @@ def make_d_block(sweep, outFile, dumpfile, verbose=False):
     rng = np.random.default_rng(
         np.random.seed(int.from_bytes(os.urandom(4), byteorder="little"))
     )
+
     recomb_rate = rng.uniform(0, 2e-8)
 
     num_sample_points = 7
     inds_per_tp = 100  # Diploid inds
     physLen = 100000
+    burnPopSize = 250000
+    selPopSize = 1000
+    selCoeff = randomize_selCoeff(0.02, 0.2)
 
-    d_block = f"""
+    Q = 100
+    d_block_burn = f"""
     -d sweep=\"{sweep}\" \
     -d outFile=\"{outFile}\" \
     -d dumpFile=\"{dumpfile}\" \
     -d samplingInterval={int(60/num_sample_points)} \
+    -d burnPopSize={int(burnPopSize/Q)} \
+    -d selPopSize={int(selPopSize/Q)} \
+    -d mutationRate={Q*5e-9} \
+    -d recombRate={recomb_rate * Q} \
+    -d selCoeff={selCoeff * Q} \
+    -d Q={Q} \
     -d numSamples={num_sample_points} \
-    -d recombRate={recomb_rate} \
-    -d selCoeff={randomize_selCoeff(0.02, 0.2)}
     -d sampleSizePerStep={inds_per_tp} \
     -d physLen={physLen} \
     -d seed={int(rng.uniform(0, 1e16))} \
     """
+
+    Q = 1
+    d_block_sel = f"""
+    -d sweep=\"{sweep}\" \
+    -d outFile=\"{outFile}\" \
+    -d dumpFile=\"{dumpfile}\" \
+    -d samplingInterval={int(60/num_sample_points)} \
+    -d burnPopSize={int(burnPopSize/100)} \
+    -d selPopSize={int(selPopSize/Q)} \
+    -d mutationRate={Q*5e-9} \
+    -d recombRate={recomb_rate * Q} \
+    -d selCoeff={selCoeff * Q} \
+    -d Q={Q} \
+    -d numSamples={num_sample_points} \
+    -d sampleSizePerStep={inds_per_tp} \
+    -d physLen={physLen} \
+    -d seed={int(rng.uniform(0, 1e16))} \
+    """
+
     if verbose:
-        logger.info(f"Using the following constants with SLiM: {d_block}")
+        logger.info(f"Using the following constants with SLiM: {d_block_burn}")
 
-    return d_block
+    return d_block_burn, d_block_sel
 
 
-def run_slim(slimfile, d_block):
-    cmd = f"slim {d_block} {slimfile}"
+def run_slim(slimfile, d_block_burn, d_block_sel):
+    cmd1 = f"slim {d_block_burn} {slimfile}.burn"
+    cmd2 = f"slim {d_block_sel} {slimfile}.selection"
 
     try:
-        slimlog = subprocess.check_output(cmd.split())
-        logger.info(slimlog)
+        slimlog1 = subprocess.check_output(cmd1.split())
+        logger.info(slimlog1)
+        slimlog2 = subprocess.check_output(cmd2.split())
+        logger.info(slimlog2)
+
     except subprocess.CalledProcessError as e:
         logger.error(e.output)
 
@@ -177,10 +209,11 @@ def main(ua):
     work_dir = work_dir
     vcf_dir = f"{work_dir}/vcfs"
     dumpfile_dir = f"{work_dir}/dumpfiles"
+    params_dir = f"{work_dir}/params"
 
     sweeps = ["neut", "soft"]
 
-    for i in [vcf_dir, dumpfile_dir]:
+    for i in [vcf_dir, dumpfile_dir, params_dir]:
         for sweep in sweeps:
             os.makedirs(f"{i}/{sweep}", exist_ok=True)
 
@@ -193,23 +226,23 @@ def main(ua):
 
     for rep in replist:
         for sweep in sweeps:
-            outFile = f"{vcf_dir}/{sweep}/{rep}.multivcf"
-            dumpFile = f"{dumpfile_dir}/{sweep}/{rep}.dump"
+            if not os.path.exists(f"{vcf_dir}/{sweep}/{rep}.multivcf"):
+                outFile = f"{vcf_dir}/{sweep}/{rep}.multivcf"
+                dumpFile = f"{dumpfile_dir}/{sweep}/{rep}.dump"
 
-            # Grab those constants to feed to SLiM
-            if rep == 0:
-                d_block = make_d_block(sweep, outFile, dumpFile, True)
-            else:
-                d_block = make_d_block(sweep, outFile, dumpFile, False)
+                # Grab those constants to feed to SLiM
+                d_block_burn, d_block_sel = make_d_block(sweep, outFile, dumpFile, True)
 
-            mp_args.append((slim_file, d_block))
+                mp_args.append((slim_file, d_block_burn, d_block_sel))
 
     pool = mp.Pool(processes=ua.threads)
     pool.starmap(run_slim, mp_args, chunksize=5)
 
     # Log the constant params
-    with open(f"{work_dir}/slim_params_{sweep}_{rep}.txt", "w") as paramsfile:
-        cleaned_block = "\n".join([i.strip() for i in d_block.split() if "-d" not in i])
+    with open(f"{params_dir}/{sweep}/slim_params_{rep}.txt", "w") as paramsfile:
+        cleaned_block = "\n".join(
+            [i.strip() for i in d_block_sel.split() if "-d" not in i]
+        )
         paramsfile.writelines(cleaned_block)
 
     # Cleanup
