@@ -1,8 +1,0 @@
-sweep="soft"
-outFile="1tp_exp/vcfs/soft/2480.multivcf"
-dumpFile="1tp_exp/dumpfiles/soft/2480.dump"
-samplingInterval=200.0
-numSamples=1
-sampleSizePerStep=200
-physLen=500000
-seed=3146215129918413

@@ -1,8 +1,0 @@
-sweep="soft"
-outFile="25gpost_exp/vcfs/soft/2510.multivcf"
-dumpFile="25gpost_exp/dumpfiles/soft/2510.dump"
-samplingInterval=10.0
-numSamples=20
-sampleSizePerStep=10
-physLen=500000
-seed=1901519511503861

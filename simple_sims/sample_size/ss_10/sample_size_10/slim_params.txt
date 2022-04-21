@@ -1,8 +1,0 @@
-sweep="soft"
-outFile="sample_size_10/vcfs/soft/2240.multivcf"
-dumpFile="sample_size_10/dumpfiles/soft/2240.dump"
-samplingInterval=10.0
-numSamples=20
-sampleSizePerStep=10
-physLen=500000
-seed=5427434749534021
