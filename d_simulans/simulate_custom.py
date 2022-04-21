@@ -51,6 +51,7 @@ def make_d_block(sweep, outFile, dumpfile, verbose=False):
     burnPopSize = 250000
     selPopSize = 1000
     selCoeff = randomize_selCoeff(0.02, 0.2)
+    seed = int(rng.uniform(0, 1e16))
 
     Q = 100
     d_block_burn = f"""
@@ -67,7 +68,7 @@ def make_d_block(sweep, outFile, dumpfile, verbose=False):
     -d numSamples={num_sample_points} \
     -d sampleSizePerStep={inds_per_tp} \
     -d physLen={physLen} \
-    -d seed={int(rng.uniform(0, 1e16))} \
+    -d seed={seed} \
     """
 
     Q = 1
@@ -85,7 +86,7 @@ def make_d_block(sweep, outFile, dumpfile, verbose=False):
     -d numSamples={num_sample_points} \
     -d sampleSizePerStep={inds_per_tp} \
     -d physLen={physLen} \
-    -d seed={int(rng.uniform(0, 1e16))} \
+    -d seed={seed} \
     """
 
     if verbose:

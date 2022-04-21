@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --partition=general
-#SBATCH --mem=4G
-#SBATCH -c 2
+#SBATCH --mem=2G
+#SBATCH -c 1
 #SBATCH --time=8:00:00
 #SBATCH -J workflow
 #SBATCH -o logfiles/sim.%A.%a.out
