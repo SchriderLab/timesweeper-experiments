@@ -23,3 +23,5 @@ simple_sims/tps_vary/1_tp/timeSeriesSweeps
 *wig
 *:*.png
 *params*.txt
+d_simulans/aftInputs*
+*.tsv
