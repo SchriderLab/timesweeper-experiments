@@ -227,14 +227,13 @@ def main(ua):
 
     for rep in replist:
         for sweep in sweeps:
-            if not os.path.exists(f"{vcf_dir}/{sweep}/{rep}.multivcf"):
-                outFile = f"{vcf_dir}/{sweep}/{rep}.multivcf"
-                dumpFile = f"{dumpfile_dir}/{sweep}/{rep}.dump"
+            outFile = f"{vcf_dir}/{sweep}/{rep}.multivcf"
+            dumpFile = f"{dumpfile_dir}/{sweep}/{rep}.dump"
 
-                # Grab those constants to feed to SLiM
-                d_block_burn, d_block_sel = make_d_block(sweep, outFile, dumpFile, True)
+            # Grab those constants to feed to SLiM
+            d_block_burn, d_block_sel = make_d_block(sweep, outFile, dumpFile, True)
 
-                mp_args.append((slim_file, d_block_burn, d_block_sel))
+            mp_args.append((slim_file, d_block_burn, d_block_sel))
 
     pool = mp.Pool(processes=ua.threads)
     pool.starmap(run_slim, mp_args, chunksize=5)
