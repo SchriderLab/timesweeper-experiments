@@ -7,4 +7,3 @@ ploidy: 2
 
 #Simulation
 reps: 2500
-slim path: /proj/dschridelab/lswhiteh/timesweeper/src/SLiM/build/slim

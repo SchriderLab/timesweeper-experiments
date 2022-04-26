@@ -14,7 +14,7 @@ conda activate blinx
 source activate blinx
 
 srcdir=/proj/dschridelab/lswhiteh/timesweeper/src
-configfile=ss2_config.yaml
+configfile=config.yaml
 
 python ${srcdir}/process_vcfs.py yaml ${configfile}
 python ${srcdir}/make_training_features.py yaml ${configfile}
