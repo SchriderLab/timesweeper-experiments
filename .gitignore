@@ -12,7 +12,7 @@
 **/soft/**
 .snakemake/
 bams/
-vcfs/
+*vcfs/
 hg19*
 **/trained_models/
 *.pkl

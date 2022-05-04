@@ -1,5 +1,6 @@
 #!/bin/bash
-#SBATCH --partition=general
+#SBATCH --partition=dschridelab
+#SBATCH --constraint=rhel8 
 #SBATCH --mem=8G
 #SBATCH -c 6
 #SBATCH --time=6:00:00
@@ -13,5 +14,4 @@ conda init bash
 conda activate blinx
 source activate blinx
 
-configfile=ss20_config.yaml
-python simulate_custom.py --rep-range ${SLURM_ARRAY_TASK_ID} $((${SLURM_ARRAY_TASK_ID}+10)) yaml ${configfile}
+python simulate_custom.py --rep-range ${SLURM_ARRAY_TASK_ID} $((${SLURM_ARRAY_TASK_ID}+10)) yaml config.yaml

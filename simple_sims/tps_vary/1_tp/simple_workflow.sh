@@ -1,5 +1,6 @@
 #!/bin/bash
-#SBATCH --partition=general
+#SBATCH --partition=dschridelab
+#SBATCH --constraint=rhel8
 #SBATCH --mem=64G
 #SBATCH -c 32
 #SBATCH --time=6-00:00:00
@@ -16,7 +17,7 @@ source activate blinx
 srcdir=/proj/dschridelab/lswhiteh/timesweeper/src
 configfile=config.yaml
 
-#python make_merged.py
-#python process_vcfs.py yaml ${configfile}
-#python timeSeriesSweeps/src/make_training_features.py yaml ${configfile}
-python timeSeriesSweeps/src/nets.py -n 1tp yaml ${configfile}
+python make_merged.py
+python process_vcfs.py yaml ${configfile}
+python timeSeriesSweeps/src/make_training_features.py yaml ${configfile}
+python timeSeriesSweeps/src/nets.py -i training_data.pkl -n 1tp yaml ${configfile}

@@ -1,5 +1,6 @@
 #!/bin/bash
-#SBATCH --partition=general
+#SBATCH --partition=dschridelab
+#SBATCH --constraint=rhel8
 #SBATCH --mem=32G
 #SBATCH -c 24
 #SBATCH --time=4:00:00
@@ -20,5 +21,5 @@ configfile=OoA_config.yaml
 
 #python ${srcdir}/process_vcfs.py yaml ${configfile}
 python ${srcdir}/make_training_features.py -m 0.3 yaml ${configfile}
-python ${srcdir}/nets.py -n mongolian_samps_3  yaml ${configfile}
+python ${srcdir}/nets.py -i training_data.pkl -n mongolian_samps_3  yaml ${configfile}
 python ${srcdir}/plotting/plot_input_data.py -i mongolian_samples/training_data.pkl -n mongolian_samps_0.3 -o mongolian_samples/images/

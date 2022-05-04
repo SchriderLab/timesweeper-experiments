@@ -1,1 +1,2 @@
 Used simulations from /pine/scr/l/s/lswhiteh/timesweeper-experiments/simple_sims/sample_size/ss_10/sample_size_10/vcfs
+Run the process-vcf stage of those before running these, missingness is only added at the final stage before training

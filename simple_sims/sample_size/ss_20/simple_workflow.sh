@@ -1,6 +1,7 @@
 #!/bin/bash
-#SBATCH --partition=general
-#SBATCH --mem=64G
+#SBATCH --partition=dschridelab
+#SBATCH --constraint=rhel8 
+#SBATCH --mem=32G
 #SBATCH -c 16
 #SBATCH --time=24:00:00
 #SBATCH -J workflow
@@ -13,9 +14,9 @@ conda init bash
 conda activate blinx
 source activate blinx
 
-srcdir=/proj/dschridelab/lswhiteh/timesweeper/src
-configfile=ss20_config.yaml
+srcdir=/proj/dschridelab/lswhiteh/timesweeper/timesweeper
+configfile=config.yaml
 
 python ${srcdir}/process_vcfs.py yaml ${configfile}
 python ${srcdir}/make_training_features.py yaml ${configfile}
-python ${srcdir}/nets.py -n mongolian_samples yaml ${configfile}
+python ${srcdir}/nets.py -i training_data.pkl -n mongolian_samples yaml ${configfile}

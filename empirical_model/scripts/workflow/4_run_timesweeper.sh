@@ -1,5 +1,6 @@
 #!/bin/bash
-#SBATCH --partition=general
+#SBATCH --partition=dschridelab
+#SBATCH --constraint=rhel8
 #SBATCH --mem=16G
 #SBATCH --ntasks=1
 #SBATCH -c 4

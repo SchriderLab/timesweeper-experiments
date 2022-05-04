@@ -1,5 +1,6 @@
 #!/bin/bash
-#SBATCH --partition=general
+#SBATCH --partition=dschridelab
+#SBATCH --constraint=rhel8 
 #SBATCH --mem=8G
 #SBATCH -c 6
 #SBATCH --time=6:00:00

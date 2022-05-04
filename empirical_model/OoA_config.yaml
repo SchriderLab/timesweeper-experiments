@@ -11,5 +11,5 @@ reps: 2500
 selection gen: 200 # Gens before first sampling
 selection coeff bounds: [0.005, 0.5]
 mut rate: 1.29e-8
-slim path: /proj/dschridelab/lswhiteh/timesweeper/src/SLiM/build/slim
+slim path: slim
 gen time: 25

@@ -1,7 +1,7 @@
 #General
 work dir: sample_size_2
 slimfile: ../../slimfiles/onePop-selectiveSweep-vcf.slim
-
+slim path: slim
 sample sizes: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
 ploidy: 2
 
