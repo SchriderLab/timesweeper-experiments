@@ -12,7 +12,15 @@ logger = logging.getLogger("simple_simulate")
 logger.setLevel("INFO")
 
 
-def randomize_selCoeff(lower_bound=0.005, upper_bound=0.5):
+def read_config(yaml_file):
+    """Reads in the YAML config file."""
+    with open(yaml_file, "r") as infile:
+        yamldata = yaml.safe_load(infile)
+
+    return yamldata
+
+
+def randomize_selCoeff(lower_bound=0.02, upper_bound=0.2):
     """Draws selection coefficient from log normal dist to vary selection strength."""
     rng = np.random.default_rng(
         np.random.seed(int.from_bytes(os.urandom(4), byteorder="little"))
@@ -22,14 +30,6 @@ def randomize_selCoeff(lower_bound=0.005, upper_bound=0.5):
     rand_log = rng.uniform(log_low, log_upper, 1)
 
     return 10 ** rand_log[0]
-
-
-def read_config(yaml_file):
-    """Reads in the YAML config file."""
-    with open(yaml_file, "r") as infile:
-        yamldata = yaml.safe_load(infile)
-
-    return yamldata
 
 
 def make_d_block(sweep, outFile, dumpfile, verbose=False):
@@ -50,7 +50,7 @@ def make_d_block(sweep, outFile, dumpfile, verbose=False):
     physLen = 100000
     burnPopSize = 250000
     selPopSize = 1000
-    selCoeff = randomize_selCoeff(0.02, 0.2)
+    selCoeff = randomize_selCoeff()
     seed = int(rng.uniform(0, 1e16))
 
     Q = 100

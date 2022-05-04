@@ -2,13 +2,13 @@
 #SBATCH --partition=general
 #SBATCH --mem=2G
 #SBATCH -c 1
-#SBATCH --time=8:00:00
+#SBATCH --time=2:00:00
 #SBATCH -J workflow
-#SBATCH -o logfiles/sim.%A.%a.out
-#SBATCH -e logfiles/sim.%A.%a.err
+#SBATCH -o logfiles/sims/sim.%A.%a.out
+#SBATCH -e logfiles/sims/sim.%A.%a.err
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=lswhiteh@email.unc.edu
-#SBATCH --array=0-2500
+#SBATCH --array=0-7500
 conda init bash
 conda activate blinx
 source activate blinx

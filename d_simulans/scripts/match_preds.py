@@ -32,10 +32,12 @@ aft_df = pd.concat(nn_list)
 fit_df = pd.concat(fit_list)
 
 print(aft_df)
+fit_df = fit_df[fit_df["Inv_pval"] > 0.1]
 print(fit_df)
-preds_merged = aft_df.merge(fit_df, on=["Chrom", "BP"])
+
+preds_merged = aft_df.merge(fit_df, on=["Chrom", "BP", "Rep"], how="left")
 all_merged = preds_merged.merge(
-    exp_pvals, left_on=["Chrom", "BP"], right_on=["Chromosome", "position"]
+    exp_pvals, left_on=["Chrom", "BP"], right_on=["Chromosome", "position"], how="outer"
 )
 
 all_merged.to_csv("all_merged.tsv", header=True, index=False)

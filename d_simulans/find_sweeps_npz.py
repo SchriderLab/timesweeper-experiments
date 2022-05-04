@@ -1,6 +1,5 @@
 import argparse as ap
 import logging
-import math
 import os
 
 from itertools import cycle
@@ -11,8 +10,6 @@ from tensorflow.keras.models import load_model
 from tqdm import tqdm
 
 from timesweeper.utils.frequency_increment_test import fit
-from timesweeper.utils import hap_utils as hu
-from timesweeper.utils import snp_utils as su
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
@@ -119,7 +116,7 @@ def write_fit(fit_list, outfile):
     inv_pval = [1 - i for i in pval]
 
     predictions = pd.DataFrame({"Chrom": chrom, "BP": bps, "Inv_pval": inv_pval})
-    predictions = predictions[predictions["Inv_pval"] < 0.1]
+    # predictions = predictions[predictions["Inv_pval"] > 0.9]
 
     predictions.sort_values(["Chrom", "BP"], inplace=True)
     predictions.to_csv(
@@ -154,7 +151,7 @@ def write_preds(results_list, outfile, benchmark):
         }
     )
 
-    predictions = predictions[predictions["Neut_Score"] < 0.8]
+    # predictions = predictions[predictions["Neut_Score"] < 0.5]
 
     predictions.sort_values(["Chrom", "BP"], inplace=True)
 
@@ -180,6 +177,13 @@ def parse_ua():
         "--input-file",
         dest="input_file",
         help="NPZ file with allele frequencies already processed in proper shape.",
+        required=True,
+    )
+    uap.add_argument(
+        "-o",
+        "--out-dir",
+        dest="outdir",
+        help="Directory to write output to.",
         required=True,
     )
     uap.add_argument(
@@ -218,24 +222,28 @@ def read_config(yaml_file):
 
 
 def main(ua):
-    yaml_data = read_config(ua.yaml_file)
-    (work_dir, outdir, aft_model) = (
-        yaml_data["work dir"],
-        yaml_data["work dir"],
+    outdir, aft_model = (
+        ua.outdir,
         load_nn(ua.aft_model),
     )
 
-    outdir = f"{work_dir}/timesweeper_output"
-    if not os.path.exists(outdir):
-        os.makedirs(outdir)
+    try:
+        if not os.path.exists(outdir):
+            os.makedirs(outdir)
+    except:
+        #running in high-parallel sometimes it errors when trying to check/create simultaneously
+        pass
 
     # Load in everything
+    logger.info(f"Loading data from {ua.input_file}")
     chrom, rep = parse_npz_name(ua.input_file)
     ts_aft, locs = load_npz(ua.input_file)
 
     # aft
+    logger.info("Predicting with AFT")
     aft_predictions = run_aft_windows(ts_aft, locs, chrom, aft_model)
     write_preds(aft_predictions, f"{outdir}/aft_{chrom}_{rep}_preds.csv", ua.benchmark)
+    logger.info(f"Done, results written to {outdir}/aft_{chrom}_{rep}_preds.csv")
 
     # FIT
     fit_predictions = run_fit_windows(ts_aft, locs, chrom)
