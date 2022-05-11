@@ -2,14 +2,14 @@
 #SBATCH --partition=dschridelab
 #SBATCH --constraint=rhel8
 #SBATCH --mem=8G
-#SBATCH -c 16
+#SBATCH -c 8
 #SBATCH --time=8:00:00
 #SBATCH -J workflow
 #SBATCH -o logfiles/workflow.%A.%a.out
 #SBATCH -e logfiles/workflow.%A.%a.err
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=lswhiteh@email.unc.edu
-#SBATCH --array=0-2500:10
+#SBATCH --array=0-2500:5
 conda init bash
 conda activate blinx
 source activate blinx

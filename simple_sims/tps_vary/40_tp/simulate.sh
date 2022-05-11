@@ -14,5 +14,5 @@ conda init bash
 conda activate blinx
 source activate blinx
 
-configfile=40tp_config.yaml
+configfile=config.yaml
 python simulate_custom.py --rep-range ${SLURM_ARRAY_TASK_ID} $((${SLURM_ARRAY_TASK_ID}+10)) yaml ${configfile}

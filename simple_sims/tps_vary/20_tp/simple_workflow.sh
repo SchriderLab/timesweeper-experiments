@@ -19,4 +19,4 @@ configfile=config.yaml
 
 python ${srcdir}/process_vcfs.py yaml ${configfile}
 python ${srcdir}/make_training_features.py yaml ${configfile}
-python ${srcdir}/nets.py -i training_data.pkl -n mongolian_samples yaml ${configfile}
+python ${srcdir}/nets.py -i training_data.pkl -n 20tp yaml ${configfile}
