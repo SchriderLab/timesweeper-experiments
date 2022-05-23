@@ -14,10 +14,9 @@ conda init bash
 conda activate blinx
 source activate blinx
 
-srcdir=/proj/dschridelab/lswhiteh/timesweeper/src
+srcdir=/proj/dschridelab/lswhiteh/timesweeper/timesweeper
 configfile=config.yaml
 
-python make_merged.py
-python process_vcfs.py yaml ${configfile}
-python timeSeriesSweeps/src/make_training_features.py yaml ${configfile}
-python timeSeriesSweeps/src/nets.py -i training_data.pkl -n 1tp yaml ${configfile}
+#python make_merged.py
+timesweeper condense -o training_data.pkl yaml ${configfile}
+timesweeper train -i training_data.pkl -n 1tp yaml ${configfile}

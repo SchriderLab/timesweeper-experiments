@@ -19,25 +19,25 @@ cd ..
 srcdir=/proj/dschridelab/lswhiteh/timesweeper/timesweeper
 configfile=d_simulans_config.yaml
 
-#python ${srcdir}/process_vcfs.py yaml ${configfile}
+#timesweeper process yaml ${configfile}
 
 #0 threshold
-python ${srcdir}/make_training_features.py \
+timesweeper condense \
     -o ts_simulans/d_simulans_log_uni_0_thresh_vel.pkl \
     yaml ${configfile}
     
-python ${srcdir}/nets.py \
+timesweeper train \
     -i ts_simulans/d_simulans_log_uni_0_thresh_vel.pkl \
     -n d_simulans_log_uni_0_thresh_vel \
     yaml ${configfile}
 
 #25 threshold
-python ${srcdir}/make_training_features.py \
+timesweeper condense \
     -f 0.25 \
     -o ts_simulans/d_simulans_log_uni_25_thresh_vel.pkl \
     yaml ${configfile}
     
-python ${srcdir}/nets.py \
+timesweeper train \
     -i ts_simulans/d_simulans_log_uni_25_thresh_vel.pkl \
     -n d_simulans_log_uni_25_thresh_vel \
     yaml ${configfile}

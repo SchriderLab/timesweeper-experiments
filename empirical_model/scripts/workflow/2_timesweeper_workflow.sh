@@ -19,7 +19,7 @@ cd /pine/scr/l/s/lswhiteh/timesweeper-experiments/empirical_model
 srcdir=/proj/dschridelab/lswhiteh/timesweeper/timesweeper
 configfile=OoA_config.yaml
 
-python ${srcdir}/process_vcfs.py yaml ${configfile}
-python ${srcdir}/make_training_features.py yaml ${configfile}
-python ${srcdir}/nets.py -i training_data.pkl -n mongolian_samps_3  yaml ${configfile}
+timesweeper process yaml ${configfile}
+timesweeper condense -o training_data.pkl yaml ${configfile}
+timesweeper train -i training_data.pkl -n mongolian_samps_3  yaml ${configfile}
 python ${srcdir}/plotting/plot_input_data.py -i mongolian_samples/training_data.pkl -n mongolian_samps_0.3 -o mongolian_samples/images/

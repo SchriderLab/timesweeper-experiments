@@ -2,14 +2,14 @@ import argparse
 import os
 from glob import glob
 from pathlib import Path
-
+import re
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn.metrics import roc_curve, precision_recall_curve, auc
 
 # Adapt the single-plots from plotting.plotting_utils to iteratively plot curves
-def plot_roc(datums, exp_name, outfile):
+def plot_roc(datums, schema, outdir):
     """Plot ROC curve by binarizing neutral/sweep."""
 
     for name, data in datums.items():
@@ -17,9 +17,10 @@ def plot_roc(datums, exp_name, outfile):
         sweep_idxs = np.transpose(np.array((data["true"] > 0)).nonzero())
         sweep_labs = np.array(data["true"])[sweep_idxs]
 
-        sweep_labs[sweep_labs == 1] = 0
-        sweep_labs[sweep_labs == 2] = 1
+        #sweep_labs[sweep_labs == 1] = 0
+        #sweep_labs[sweep_labs == 2] = 1
 
+        """
         if len(np.unique(data["true"])) > 2:
             soft_probs = data["soft_scores"]
 
@@ -30,12 +31,13 @@ def plot_roc(datums, exp_name, outfile):
                 swp_tpr,
                 label=f"{name.capitalize()} SDN vs SSV: {swp_auc_val:.4}",
             )
+        """
 
         # Coerce all softs into sweep binary pred
-        labs = data["true"]
+        labs = np.array(data["true"])
         labs[labs > 1] = 1
         pred_probs = np.sum(
-            np.array([data["hard_scores"], data["soft_scores"]]), axis=1
+            np.array([data["hard_scores"], data["soft_scores"]]).T, axis=1
         )
 
         # Plot ROC Curve
@@ -45,15 +47,15 @@ def plot_roc(datums, exp_name, outfile):
             fpr, tpr, label=f"{name.capitalize()} Neutral vs Sweep AUC: {auc_val:.4}"
         )
 
-    plt.title(f"ROC Curve {exp_name}")
+    plt.title(f"ROC Curve {schema}")
     plt.xlabel("FPR")
     plt.ylabel("TPR")
     plt.legend()
-    plt.savefig(outfile)
+    plt.savefig(f"{outdir}/{schema.replace(' ', '_')}_roc_curve.png")
     plt.clf()
 
 
-def plot_prec_recall(datums, schema, outfile):
+def plot_prec_recall(datums, schema, outdir):
     """Plot PR curve by binarizing neutral/sweep."""
     for name, data in datums.items():
 
@@ -64,6 +66,7 @@ def plot_prec_recall(datums, schema, outfile):
         sweep_labs[sweep_labs == 1] = 0
         sweep_labs[sweep_labs == 2] = 1
 
+        """
         if len(np.unique(data["true"])) > 2:
             soft_probs = data[data["true"] > 0]["soft_scores"]
 
@@ -72,12 +75,13 @@ def plot_prec_recall(datums, schema, outfile):
             )
             swp_auc_val = auc(swp_rec, swp_prec)
             plt.plot(swp_rec, swp_prec, label=f"{name.capitalize()} SDN vs SSV AUC: {swp_auc_val:.2}")
+        """
 
         # Coerce all softs into sweep binary pred
-        labs = data["true"]
+        labs = np.array(data["true"])
         labs[labs > 1] = 1
         pred_probs = np.sum(
-            np.array([data["hard_scores"], data["soft_scores"]]), axis=1
+            np.array([data["hard_scores"], data["soft_scores"]]).T, axis=1
         )
 
         # Plot PR Curve for binarized labs
@@ -89,9 +93,20 @@ def plot_prec_recall(datums, schema, outfile):
     plt.legend()
     plt.xlabel("Recall")
     plt.ylabel("Precision")
-    plt.savefig(outfile)
+    plt.savefig(f"{outdir}/{schema.replace(' ', '_')}_pr_curve.png")
     plt.clf()
 
+#Natural sort from https://stackoverflow.com/questions/5967500/how-to-correctly-sort-a-string-with-a-number-inside
+def atoi(text):
+    return int(text) if text.isdigit() else text
+
+def natural_keys(text):
+    '''
+    alist.sort(key=natural_keys) sorts in human order
+    http://nedbatchelder.com/blog/200712/human_sorting.html
+    (See Toothy's implementation in the comments)
+    '''
+    return [ atoi(c) for c in re.split(r'(\d+)', text) ]
 
 def main():
     ap = argparse.ArgumentParser()
@@ -113,28 +128,29 @@ def main():
     )
     ap.add_argument(
         "-o",
-        "--output",
-        dest="outfile",
+        "--output-dir",
+        dest="outdir",
         required=True,
         type=Path,
-        help="Path to .png file to write as plot.",
+        help="Path to write .png files to write as plot.",
     )
     args = ap.parse_args()
 
+    if not os.path.exists(args.outdir):
+        os.makedirs(args.outdir)
+        
     # Glob in testing predictions
     datums = {}
     for t_file in glob(
         os.path.join(args.in_dir, "*", "*", "test_predictions", "*TimeSweeper_aft_test_predictions.csv"),
         recursive=True,
     ):
-        run_name = os.path.split(t_file)[1].split("Timesweeper")[0]
+        run_name = re.split(r"_[tT]imeSweeper", os.path.split(t_file)[1])[0]
         data = pd.read_csv(t_file, header=0)
         datums[run_name] = data
 
-    print(datums)
-
-    plot_roc(datums, args.exp_name, args.outfile)
-    plot_prec_recall(datums, args.exp_name, args.outfile)
+    plot_roc(datums, args.exp_name, args.outdir)
+    plot_prec_recall(datums, args.exp_name, args.outdir)
 
 
 if __name__ == "__main__":

@@ -17,6 +17,6 @@ source activate blinx
 srcdir=/proj/dschridelab/lswhiteh/timesweeper/timesweeper
 configfile=config.yaml
 
-python ${srcdir}/process_vcfs.py yaml ${configfile}
-python ${srcdir}/make_training_features.py yaml ${configfile}
-python ${srcdir}/nets.py -i training_data.pkl -n 5tp yaml ${configfile}
+timesweeper process yaml ${configfile}
+timesweeper condense -o training_data.pkl yaml ${configfile}
+timesweeper train -i training_data.pkl -n 5tp yaml ${configfile}

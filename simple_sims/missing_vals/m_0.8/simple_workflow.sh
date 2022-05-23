@@ -17,6 +17,6 @@ source activate blinx
 srcdir=/proj/dschridelab/lswhiteh/timesweeper/timesweeper
 configfile=config.yaml
 
-python ${srcdir}/make_training_features.py --missingness 0.8 yaml ${configfile}
-python ${srcdir}/nets.py -i training_data.pkl -n m_0.8 yaml ${configfile}
+timesweeper condense --missingness 0.8 yaml ${configfile}
+timesweeper train -i training_data.pkl -n m_0.8 yaml ${configfile}
 python ${srcdir}/plotting/plot_input_data.py -i missingness_0.8/training_data.pkl -n Missingness_0.8 -o missingness_0.8/images/
