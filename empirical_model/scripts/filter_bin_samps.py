@@ -69,7 +69,7 @@ def bin_times(years, bin_window):
 
 def bin_samps(samp_sizes, gens_sampled, gen_threshold, size_threshold):
     """
-    Bins a list of ints into condensed bins where the minimum value is equal to <size_threshold>.
+    Bins a list of ints into condense --hftd bins where the minimum value is equal to <size_threshold>.
     Each bin must also not be larger than <gen_threshold>.
 
     Args:

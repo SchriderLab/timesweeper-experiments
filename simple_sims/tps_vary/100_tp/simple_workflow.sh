@@ -15,8 +15,9 @@ conda activate blinx
 source activate blinx
 
 srcdir=/proj/dschridelab/lswhiteh/timesweeper/timesweeper
-configfile=100tp_config.yaml
+configfile=config.yaml
 
 timesweeper process yaml ${configfile}
-timesweeper condense -o training_data.pkl yaml ${configfile}
-timesweeper train -i training_data.pkl -n 100tp yaml ${configfile}
+timesweeper condense --hft -o training_data.pkl yaml ${configfile}
+timesweeper train -i training_data.pkl --hft -n TPs_100 yaml ${configfile}
+timesweeper plot_training -i training_data.pkl -n TPs_100 -o input_images

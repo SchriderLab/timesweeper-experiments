@@ -1,0 +1,61 @@
+python summarizeReplicationResults.py unif_vel_0_thresh 0.99 False ts
+chosen threshold for unif_vel_0_thresh: (99.0th percentile): 0.962
+processing rep 1
+observed: 44, expected: 8.949999999999992
+processing rep 2
+observed: 97, expected: 8.929999999999993
+processing rep 3
+observed: 44, expected: 8.939999999999992
+processing rep 4
+observed: 43, expected: 8.95999999999999
+processing rep 5
+observed: 37, expected: 8.909999999999993
+processing rep 6
+observed: 43, expected: 8.989999999999991
+processing rep 7
+observed: 30, expected: 8.999999999999991
+processing rep 8
+observed: 20, expected: 8.869999999999992
+processing rep 9
+observed: 52, expected: 8.979999999999992
+processing rep 10
+observed: 47, expected: 8.979999999999992
+
+python summarizeReplicationResults.py unif_vel_0_thresh 0.99 False FET
+chosen threshold for unif_vel_0_thresh: (99.0th percentile): 11.998240505399966
+processing rep 1
+observed: 11, expected: 8.239999999999995
+processing rep 2
+observed: 86, expected: 8.399999999999999
+processing rep 3
+observed: 144, expected: 8.46
+processing rep 4
+observed: 43, expected: 7.769999999999994
+processing rep 5
+observed: 17, expected: 8.739999999999991
+processing rep 6
+observed: 18, expected: 8.109999999999996
+processing rep 7
+observed: 46, expected: 8.509999999999994
+processing rep 8
+observed: 8, expected: 7.699999999999999
+processing rep 9
+observed: 18, expected: 8.339999999999996
+processing rep 10
+observed: 21, expected: 8.189999999999996
+
+python
+>>> fetrep = [11,86,144,43,17,18,46,8,18,21]
+>>> tsrep = [44,97,44,43,37,43,30,20,52,47]
+>>> import numpy as np
+>>> np.mean(fetrep)
+41.2
+>>> np.mean(tsrep)
+45.7
+>>> np.median(fetrep)
+19.5
+>>> np.median(tsrep)
+43.5
+>>>
+
+"this is showing, for each rep, how many of the top 100 hits (by tsScore on top, FET score on bottom) are replicated. Again, number can be >100 because I count the total number of replications which can be up to 9 per hit if all other reps recover it"

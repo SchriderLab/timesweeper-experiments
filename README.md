@@ -2,9 +2,14 @@
 
 Repo for experiments for the TimeSweeper manuscript.
 
-**Note:** All code here was run using the `blinx.yml` conda environment found in the Timesweeper repo **!add link when public**
+The source code for the Timesweeper package can be found here: https://github.com/SchriderLab/Timesweeper
 
-## Empirical Analysis
+**Note:** All code here was run using the `blinx.yml` conda environment found in the Timesweeper repo
+
+
+## Neolithic Mongolian Analysis - Not in manuscript and incomplete
+
+Note: This analysis was dropped due to the low quality of the sequencing data. 
 
 - Link to paper: https://www.nature.com/articles/s41586-021-03336-2
 - Supplementary tables found in `/samp_data/raw/Online_table*` were downloaded from the online article in the Supplementary section.
