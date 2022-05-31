@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 # Load data
 df = pd.read_csv(
-    "summarized_hits.txt",
+    "/pine/scr/l/s/lswhiteh/timesweeper-experiments/d_simulans/replication/summarized_hits.txt",
     header=None,
     sep="\t",
     names=["chrom", "bp", "ts_score", "fet_score", "freqs"],
