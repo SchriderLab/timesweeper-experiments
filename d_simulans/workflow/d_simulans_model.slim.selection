@@ -129,12 +129,12 @@ s4 10000:15000 late()
 
         if (sim.generation == samplingTime) {
             cat("Sampling at generation " + sim.generation + "\n");
-            p1.outputVCFSample(sampleSizePerStep,replace=T, filePath=outFile, append=F);
+            p1.outputVCFSample(sampleSizePerStep,replace=F, filePath=outFile, append=F);
             cat("Done emitting sample\n");            
         }
         else {
             cat("Sampling at generation " + sim.generation + "\n");
-            p1.outputVCFSample(sampleSizePerStep,replace=T, filePath=outFile, append=T);
+            p1.outputVCFSample(sampleSizePerStep,replace=F, filePath=outFile, append=T);
             cat("Done emitting sample\n");
         }
     }

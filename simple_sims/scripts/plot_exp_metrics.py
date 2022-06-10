@@ -17,8 +17,8 @@ def plot_roc(datums, schema, outdir):
         sweep_idxs = np.transpose(np.array((data["true"] > 0)).nonzero())
         sweep_labs = np.array(data["true"])[sweep_idxs]
 
-        #sweep_labs[sweep_labs == 1] = 0
-        #sweep_labs[sweep_labs == 2] = 1
+        # sweep_labs[sweep_labs == 1] = 0
+        # sweep_labs[sweep_labs == 2] = 1
 
         """
         if len(np.unique(data["true"])) > 2:
@@ -44,7 +44,7 @@ def plot_roc(datums, schema, outdir):
         fpr, tpr, thresh = roc_curve(labs, pred_probs)
         auc_val = auc(fpr, tpr)
         plt.plot(
-            fpr, tpr, label=f"{name.capitalize()} Neutral vs Sweep AUC: {auc_val:.4}"
+            fpr, tpr, label=f"{name.capitalize()} Neutral vs Sweep AUC: {auc_val:.2}"
         )
 
     plt.title(f"ROC Curve {schema}")
@@ -87,7 +87,9 @@ def plot_prec_recall(datums, schema, outdir):
         # Plot PR Curve for binarized labs
         prec, rec, thresh = precision_recall_curve(labs, pred_probs)
         auc_val = auc(rec, prec)
-        plt.plot(rec, prec, label=f"{name.capitalize()} Neutral vs Sweep AUC: {auc_val:.2}")
+        plt.plot(
+            rec, prec, label=f"{name.capitalize()} Neutral vs Sweep AUC: {auc_val:.2}"
+        )
 
     plt.title(f"PR Curve {schema}")
     plt.legend()
@@ -96,17 +98,6 @@ def plot_prec_recall(datums, schema, outdir):
     plt.savefig(f"{outdir}/{schema.replace(' ', '_')}_pr_curve.png")
     plt.clf()
 
-#Natural sort from https://stackoverflow.com/questions/5967500/how-to-correctly-sort-a-string-with-a-number-inside
-def atoi(text):
-    return int(text) if text.isdigit() else text
-
-def natural_keys(text):
-    '''
-    alist.sort(key=natural_keys) sorts in human order
-    http://nedbatchelder.com/blog/200712/human_sorting.html
-    (See Toothy's implementation in the comments)
-    '''
-    return [ atoi(c) for c in re.split(r'(\d+)', text) ]
 
 def main():
     ap = argparse.ArgumentParser()
@@ -138,16 +129,24 @@ def main():
 
     if not os.path.exists(args.outdir):
         os.makedirs(args.outdir)
-        
+
     # Glob in testing predictions
     datums = {}
     for t_file in glob(
-        os.path.join(args.in_dir, "*", "*", "test_predictions", "*TimeSweeper_aft_test_predictions.csv"),
+        os.path.join(
+            args.in_dir,
+            "*",
+            "*",
+            "test_predictions",
+            "*Timesweeper_aft_test_predictions.csv",
+        ),
         recursive=True,
     ):
-        run_name = re.split(r"_[tT]imeSweeper", os.path.split(t_file)[1])[0]
-        data = pd.read_csv(t_file, header=0)
-        datums[run_name] = data
+        if "1_tp" not in t_file:
+            run_name = re.split(r"_[tT]imesweeper", os.path.split(t_file)[1])[0]
+            print(run_name)
+            data = pd.read_csv(t_file, header=0)
+            datums[run_name] = data
 
     plot_roc(datums, args.exp_name, args.outdir)
     plot_prec_recall(datums, args.exp_name, args.outdir)

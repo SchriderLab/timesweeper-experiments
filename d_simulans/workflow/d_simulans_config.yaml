@@ -1,5 +1,5 @@
 #General
-work dir: ./ts_simulans
+work dir: ./ts_simulans_redo
 ploidy: 2 #Each sample will be multiplied by this value when accessing vcf.
 sample sizes: [100, 100, 100, 100, 100, 100, 100] #Number of individual organisms, not chromosomes
 seed: 42

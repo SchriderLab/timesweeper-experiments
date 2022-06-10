@@ -9,7 +9,7 @@
 #SBATCH -e logfiles/sims/sim.%A.%a.err
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=lswhiteh@email.unc.edu
-#SBATCH --array=0-7500
+#SBATCH --array=0-2500
 conda init bash
 conda activate blinx
 source activate blinx
@@ -17,4 +17,5 @@ source activate blinx
 configfile=d_simulans_config.yaml
 cd ..
 
-python simulate_custom.py --rep-range ${SLURM_ARRAY_TASK_ID} ${SLURM_ARRAY_TASK_ID} yaml ${configfile}
+#using custom 2-stage burn/selection launcher
+python workflow/simulate_custom.py --rep-range ${SLURM_ARRAY_TASK_ID} ${SLURM_ARRAY_TASK_ID} yaml ${configfile}

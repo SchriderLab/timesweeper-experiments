@@ -46,9 +46,12 @@ all_merged = aft_df.merge(
 all_merged.to_csv("all_merged.tsv", sep="\t", header=True, index=False)
 """
 
-all_merged = pd.read_csv("all_merged.tsv", sep="\t")
+all_merged = pd.read_csv(
+    "/pine/scr/l/s/lswhiteh/timesweeper-experiments/d_simulans/results/all_merged.tsv",
+    sep="\t",
+)
 
-all_merged = all_merged.replace('na', np.NaN)
+all_merged = all_merged.replace("na", np.NaN)
 all_merged = all_merged.dropna()
 
 all_merged["fet"] = all_merged["fet"].astype(float)
@@ -58,7 +61,7 @@ print("Calculating correlation")
 corr = all_merged[["fet", "Soft_Score"]].corr("spearman")
 print(f"Spearman's Correlation: \n {corr}")
 
-#top = all_merged.nlargest(100000, "Soft_Score")
+# top = all_merged.nlargest(100000, "Soft_Score")
 
 plot = False
 if plot:
@@ -78,41 +81,48 @@ bins = list(np.around(np.arange(0, 1.05, 0.05), 2))
 bins.insert(-1, 0.99)
 
 ts_res_bins = []
-for i in tqdm(range(len(bins)-1), desc="Summing over bins"):
-    _df = all_merged[(all_merged["Soft_Score"] > bins[i]) & (all_merged["Soft_Score"] <= bins[i+1])]
+for i in tqdm(range(len(bins) - 1), desc="Summing over bins"):
+    _df = all_merged[
+        (all_merged["Soft_Score"] > bins[i]) & (all_merged["Soft_Score"] <= bins[i + 1])
+    ]
+    sp = _df["fet"].corr(_df["Soft_Score"], "spearman")
+
     ts_res_bins.append(
         {
-        "bin": (bins[i], bins[i+1]), 
-        "num_calls": len(_df),
-        "max_fet": _df["fet"].max(),
-        "min_fet": _df["fet"].min(),
-        "mean_fet": _df["fet"].mean(), 
-        "med_fet": _df["fet"].median(), 
-        "variance": _df["fet"].var(), 
-        "std": _df["fet"].std()
+            "bin": (bins[i], bins[i + 1]),
+            "num_calls": len(_df),
+            "spearman": sp,
+            "max_fet": _df["fet"].max(),
+            "min_fet": _df["fet"].min(),
+            "mean_fet": _df["fet"].mean(),
+            "med_fet": _df["fet"].median(),
+            "variance": _df["fet"].var(),
+            "std": _df["fet"].std(),
         }
-    ) 
+    )
 
-res_df = pd.DataFrame(ts_res_bins)
-res_df.to_csv("ts_res.tsv", sep="\t", index=False, float_format="%.3f")
+ts_res_df = pd.DataFrame(ts_res_bins)
+ts_res_df.to_csv("fet_by_ts.tsv", sep="\t", index=False, float_format="%.3f")
 
 bins = list(np.arange(0, 121, 5))
-
+print(bins)
 fet_res_bins = []
-for i in range(len(bins)-1):
-    _df = all_merged[(all_merged["fet"] > bins[i]) & (all_merged["fet"] <= bins[i+1])]
+for i in range(len(bins) - 1):
+    _df = all_merged[(all_merged["fet"] > bins[i]) & (all_merged["fet"] <= bins[i + 1])]
+    sp = _df["fet"].corr(_df["Soft_Score"], "spearman")
     fet_res_bins.append(
         {
-        "bin": (bins[i], bins[i+1]), 
-        "num_calls": len(_df),
-        "max_Soft_Score": _df["Soft_Score"].max(),
-        "min_Soft_Score": _df["Soft_Score"].min(),
-        "mean_Soft_Score": _df["Soft_Score"].mean(), 
-        "med_Soft_Score": _df["Soft_Score"].median(), 
-        "variance": _df["Soft_Score"].var(), 
-        "std": _df["Soft_Score"].std()
+            "bin": (bins[i], bins[i + 1]),
+            "num_calls": len(_df),
+            "spearman": sp,
+            "max_Soft_Score": _df["Soft_Score"].max(),
+            "min_Soft_Score": _df["Soft_Score"].min(),
+            "mean_Soft_Score": _df["Soft_Score"].mean(),
+            "med_Soft_Score": _df["Soft_Score"].median(),
+            "variance": _df["Soft_Score"].var(),
+            "std": _df["Soft_Score"].std(),
         }
-    ) 
+    )
 
 fet_res_df = pd.DataFrame(fet_res_bins)
-res_df.to_csv("fet_res.tsv", sep="\t", index=False, float_format="%.3f")
+fet_res_df.to_csv("ts_by_fet.tsv", sep="\t", index=False, float_format="%.3f")

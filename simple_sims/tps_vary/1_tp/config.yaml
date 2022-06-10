@@ -1,6 +1,6 @@
 #General
 work dir: 1tp_exp
-slimfile: sample-end-onePop-selectiveSweep-vcf.slim
+slimfile: /pine/scr/l/s/lswhiteh/timesweeper-experiments/simple_sims/tps_vary/1_tp/sample-end-onePop-selectiveSweep-vcf.slim
 
 sample sizes: [200]
 ploidy: 2
