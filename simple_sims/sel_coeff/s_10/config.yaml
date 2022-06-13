@@ -1,0 +1,10 @@
+#General
+work dir: sel_coeff_0.1
+slimfile: ../../slimfiles/onePop-selectiveSweep-vcf-noselcoeff.slim
+
+sample sizes: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+ploidy: 2
+
+#Simulation
+reps: 2500
+slim path: slim

@@ -19,7 +19,7 @@ cd /pine/scr/l/s/lswhiteh/timesweeper-experiments/empirical_model
 srcdir=/proj/dschridelab/lswhiteh/timesweeper/timesweeper
 configfile=OoA_config.yaml
 
-#timesweeper process yaml ${configfile}
+timesweeper process yaml ${configfile}
 timesweeper condense --hft -o training_data.pkl yaml ${configfile}
 timesweeper train -i training_data.pkl --hft -n Neo_Mongolians yaml ${configfile}
 timesweeper plot_training -i training_data.pkl -n Neo_Mongolians -o input_images

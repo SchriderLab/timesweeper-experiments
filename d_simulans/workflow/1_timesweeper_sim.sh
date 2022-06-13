@@ -18,4 +18,4 @@ configfile=d_simulans_config.yaml
 cd ..
 
 #using custom 2-stage burn/selection launcher
-python workflow/simulate_custom.py --rep-range ${SLURM_ARRAY_TASK_ID} ${SLURM_ARRAY_TASK_ID} yaml ${configfile}
+python simulate_custom.py --rep-range ${SLURM_ARRAY_TASK_ID} ${SLURM_ARRAY_TASK_ID} yaml ${configfile}
