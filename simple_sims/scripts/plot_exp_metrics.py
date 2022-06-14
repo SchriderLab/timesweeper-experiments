@@ -51,7 +51,7 @@ def plot_roc(datums, schema, outdir):
     plt.xlabel("FPR")
     plt.ylabel("TPR")
     plt.legend()
-    plt.savefig(f"{outdir}/{schema.replace(' ', '_')}_roc_curve.png")
+    plt.savefig(f"{outdir}/{schema.replace(' ', '_')}_roc_curve.pdf")
     plt.clf()
 
 
@@ -95,7 +95,7 @@ def plot_prec_recall(datums, schema, outdir):
     plt.legend()
     plt.xlabel("Recall")
     plt.ylabel("Precision")
-    plt.savefig(f"{outdir}/{schema.replace(' ', '_')}_pr_curve.png")
+    plt.savefig(f"{outdir}/{schema.replace(' ', '_')}_pr_curve.pdf")
     plt.clf()
 
 
@@ -123,7 +123,7 @@ def main():
         dest="outdir",
         required=True,
         type=Path,
-        help="Path to write .png files to write as plot.",
+        help="Path to write .pdf files to write as plot.",
     )
     args = ap.parse_args()
 

@@ -19,10 +19,10 @@ cd ..
 srcdir=/proj/dschridelab/lswhiteh/timesweeper/timesweeper
 configfile=d_simulans_config.yaml
 
-#timesweeper process yaml ${configfile}
+##timesweeper process yaml ${configfile}
 
 #0 threshold
-timesweeper condense --hft \
+#timesweeper condense --hft \
     -o ts_simulans/d_simulans_log_uni_0_thresh_vel.pkl \
     yaml ${configfile}
     
@@ -32,7 +32,7 @@ timesweeper train \
     yaml ${configfile}
 
 #25 threshold
-timesweeper condense --hft \
+#timesweeper condense --hft \
     -f 0.25 \
     -o ts_simulans/d_simulans_log_uni_25_thresh_vel.pkl \
     yaml ${configfile}
