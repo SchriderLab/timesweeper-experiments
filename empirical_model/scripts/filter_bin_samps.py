@@ -31,7 +31,7 @@ def load_data(
     # print(bp_dates)
     # plt.hist(pd.to_numeric(bp_dates["avg_cov"]), 20)
     # plt.title("Average Coverage for Passing Samples")
-    # plt.savefig("coverage.png")
+    # plt.savefig("coverage.pdf")
 
     actual_dates = []
     for i in bp_dates.itertuples():

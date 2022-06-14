@@ -54,4 +54,4 @@ ax.set_ylim([min(df["minuslog10pvalue"]), 2])
 ax.set_xlabel("Chrom")
 
 # show the graph
-plt.savefig("manhattan_plot_m02.png")
+plt.savefig("manhattan_plot_m02.pdf")

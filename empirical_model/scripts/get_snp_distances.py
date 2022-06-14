@@ -35,5 +35,5 @@ for chunk in vcf_iter:
     plt.yscale("log")
     plt.xlabel("Distance Bins (50)")
     plt.ylabel("log10(occurances)")
-    plt.savefig("dists_0_7_filtered.png")
+    plt.savefig("dists_0_7_filtered.pdf")
 

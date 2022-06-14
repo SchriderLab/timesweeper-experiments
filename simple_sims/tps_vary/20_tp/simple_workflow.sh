@@ -18,6 +18,6 @@ srcdir=/proj/dschridelab/lswhiteh/timesweeper/timesweeper
 configfile=config.yaml
 
 #timesweeper process yaml ${configfile}
-#timesweeper condense --hft -o training_data.pkl yaml ${configfile}
-timesweeper train -i training_data.pkl --hft -n TPs_20 yaml ${configfile}
+##timesweeper condense --hft -o training_data.pkl yaml ${configfile}
+#timesweeper train -i training_data.pkl --hft -n TPs_20 yaml ${configfile}
 timesweeper plot_training -i training_data.pkl -n TPs_20 -o input_images

@@ -20,4 +20,4 @@ axes.errorbar(
 
 
 fig.set_size_inches(10, 5)
-plt.savefig("scores.png")
+plt.savefig("scores.pdf")

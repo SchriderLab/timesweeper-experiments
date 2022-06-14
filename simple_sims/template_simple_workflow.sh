@@ -17,7 +17,7 @@ source activate blinx
 configfile=config.yaml
 
 #timesweeper process yaml ${configfile}
-#timesweeper condense --hft -o training_data.pkl yaml ${configfile}
-timesweeper train -i training_data.pkl --hft -n <schema_name> ${configfile}
+##timesweeper condense --hft -o training_data.pkl yaml ${configfile}
+#timesweeper train -i training_data.pkl --hft -n <schema_name> ${configfile}
 timesweeper plot_training -i training_data.pkl -n <schema_name> -o input_images
 

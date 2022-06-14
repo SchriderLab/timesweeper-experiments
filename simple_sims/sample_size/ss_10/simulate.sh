@@ -9,7 +9,7 @@
 #SBATCH -e logfiles/sims/ss10.%A.%a.err
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=lswhiteh@email.unc.edu
-#SBATCH --array=0-2500:10
+#SBATCH --array=0-90:10
 conda init bash
 conda activate blinx
 source activate blinx

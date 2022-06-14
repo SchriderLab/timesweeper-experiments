@@ -72,7 +72,7 @@ if plot:
         plt.xlabel("TS")
         plt.ylabel("FET")
         plt.title("FET vs Timesweeper")
-        plt.savefig(f"fet_v_timesweeper_{_}.png")
+        plt.savefig(f"fet_v_timesweeper_{_}.pdf")
         plt.clf()
 
 
