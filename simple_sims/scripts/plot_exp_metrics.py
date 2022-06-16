@@ -142,11 +142,10 @@ def main():
         ),
         recursive=True,
     ):
-        if "1_tp" not in t_file:
-            run_name = re.split(r"_[tT]imesweeper", os.path.split(t_file)[1])[0]
-            print(run_name)
-            data = pd.read_csv(t_file, header=0)
-            datums[run_name] = data
+        run_name = re.split(r"_[tT]imesweeper", os.path.split(t_file)[1])[0]
+        print(run_name)
+        data = pd.read_csv(t_file, header=0)
+        datums[run_name] = data
 
     plot_roc(datums, args.exp_name, args.outdir)
     plot_prec_recall(datums, args.exp_name, args.outdir)
