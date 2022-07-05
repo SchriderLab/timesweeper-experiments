@@ -26,3 +26,4 @@ simple_sims/tps_vary/1_tp/timeSeriesSweeps
 d_simulans/FreqInputs*
 *.tsv
 d_simulans/test_pvals
+*.tar

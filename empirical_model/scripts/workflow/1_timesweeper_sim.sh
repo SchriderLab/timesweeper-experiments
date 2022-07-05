@@ -1,8 +1,8 @@
 #!/bin/bash
-#SBATCH --partition=dschridelab
+#SBATCH --partition=general
 #SBATCH --constraint=rhel8
-#SBATCH --mem=4G
-#SBATCH -c 4
+#SBATCH --mem=8G
+#SBATCH -c 2
 #SBATCH --time=4:00:00
 #SBATCH -J workflow
 #SBATCH -o /pine/scr/l/s/lswhiteh/timesweeper-experiments/empirical_model/scripts/workflow/logfiles/sims/simulate.%A.%a.out
@@ -16,7 +16,6 @@ source activate blinx
 
 cd /pine/scr/l/s/lswhiteh/timesweeper-experiments/empirical_model
 
-srcdir=/proj/dschridelab/lswhiteh/timesweeper/timesweeper
-configfile=OoA_config.yaml
+configfile=/pine/scr/l/s/lswhiteh/timesweeper-experiments/empirical_model/OoA_constant_sampling_config.yaml
 
-timesweeper sim_stdpopsim --rep-range ${SLURM_ARRAY_TASK_ID} $((${SLURM_ARRAY_TASK_ID}+1)) yaml ${configfile}
+timesweeper sim_stdpopsim --rep-range ${SLURM_ARRAY_TASK_ID} $((${SLURM_ARRAY_TASK_ID} + 1)) yaml ${configfile}
