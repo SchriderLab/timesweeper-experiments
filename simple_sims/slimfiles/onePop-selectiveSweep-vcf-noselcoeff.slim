@@ -143,7 +143,7 @@ s5 15000 late()
     sim.simulationFinished();
 }
 
-1 {
+1 early() {
     // save this run's identifier, used to save and restore
     defineConstant("simID", getSeed());
     

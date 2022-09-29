@@ -93,7 +93,7 @@ def plot_confusion_matrix(
     plt.clf()
 
 
-lablist = ["Neutral", "SSV", "SDN"]
+lablist = ["Neutral", "SSV"]
 data_dir = sys.argv[1]
 
 for ifile in glob(f"{sys.argv[1]}/*.csv"):

@@ -20,6 +20,7 @@ def read_config(yaml_file):
 
     return yamldata
 
+
 def randomize_selCoeff_uni(lower_bound=0.0, upper_bound=0.05):
     """Draws selection coefficient from log uniform dist to vary selection strength."""
     rng = np.random.default_rng(
@@ -40,7 +41,6 @@ def make_d_block(sweep, outFile, dumpfile, verbose=False):
     num_sample_points = 20
     inds_per_tp = 10  # Diploid inds
     physLen = 500000
-
 
     selCoeff = randomize_selCoeff_uni()
 

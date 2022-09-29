@@ -1,0 +1,6 @@
+Shape of AFT samples before mean (samples, snps, timepoints): (2285, 201, 20)
+Shape of AFT samples before mean (samples, snps, timepoints): (2373, 201, 20)
+Shape of AFT samples before mean (samples, snps, timepoints): (2352, 201, 20)
+NEUT shape after mean: (201, 20)
+SOFT shape after mean: (201, 20)
+HARD shape after mean: (201, 20)

@@ -1,6 +1,11 @@
 #General
-work dir: sample_size_10_benchmark
+work dir: sample_size_10
 slimfile: ../../simple_sims/slimfiles/onePop-selectiveSweep-vcf-noselcoeff.slim
+
+mut types: [2]
+scenarios: ["neut", "hard", "soft"]
+
+win_size: 51
 
 sample sizes: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
 ploidy: 2

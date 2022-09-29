@@ -9,11 +9,11 @@
 #SBATCH -e logfiles/sims/ss10.%A.%a.err
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=lswhiteh@email.unc.edu
-#SBATCH --array=0-2490:10
+#SBATCH --array=0-4990:10
 
 #conda init bash
 #conda activate blinx
 #source activate blinx
 
 configfile=config.yaml
-python simulate_custom.py yaml ${configfile}
+python simulate_custom.py --rep-range ${SLURM_ARRAY_TASK_ID} $((${SLURM_ARRAY_TASK_ID}+10)) yaml ${configfile}
