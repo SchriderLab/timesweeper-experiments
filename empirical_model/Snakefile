@@ -6,17 +6,17 @@ sorted_samps =  pd.read_csv("samp_data/filtered/sorted_samples.csv")
 bamfiles = list(sorted_samps["submitted_ftp"])
 
 sorted_ids = [i.split("/")[-1].split(".bam")[0] for i in bamfiles]
-print(sorted_ids)
+#print(sorted_ids)
 
 rule all:
     input:
         expand("bams/stats/{id}.stats", id=sorted_ids),
-        expand("vcfs/calls/stats/{id}.stats", id=sorted_ids),
         expand("vcfs/merged/ts_merged.{qual}.calls.vcf.gz", qual=qual_thresholds),
         expand("vcfs/merged/ts_merged.{qual}.filtered.calls.vcf.gz", qual=qual_thresholds),
         expand("vcfs/merged/ts_merged.{qual}.filtered.stats", qual=qual_thresholds),
         expand("vcfs/merged/ts_merged.{qual}.calls.stats", qual=qual_thresholds),
-        expand("vcfs/filtered/stats/{id}.{qual}.stats", id=sorted_ids, qual=qual_thresholds),
+        expand("vcfs/filtered/stats/{id}.{qual}.stats", id=sorted_ids, qual=qual_thresholds)
+
 rule download_ref:
     output:
         expand("ref/GRCh37-lite.fa.{suff}", suff=["bgz", "bgz.fai", "bgz.gzi", "gz"])
