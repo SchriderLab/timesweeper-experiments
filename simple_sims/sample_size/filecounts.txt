@@ -1,0 +1,12 @@
+   8909 ss_10
+   1619 ss_20
+     15 ss_5
+     14 ss_2
+     14 ss_1
+      1 slurm-60977652.out
+      1 slurm-60976486.out
+      1 samp_sizes_experiment_params.tsv
+      1 Sample_Size_roc_curve.pdf
+      1 Sample_Size_pr_curve.pdf
+      1 filecounts.txt
+      1 7227065	.

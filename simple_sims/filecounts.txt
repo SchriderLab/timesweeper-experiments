@@ -1,0 +1,12 @@
+ 291295 tps_vary
+  91054 sample_size
+    708 sel_coeff
+    275 sel_timing
+    121 win_sizes
+     28 num_replicates
+      8 slimfiles
+      1 template_simulate.sh
+      1 template_simple_workflow.sh
+      1 slurm-61297357.out
+      1 filecounts.txt
+      1 2186052193	.

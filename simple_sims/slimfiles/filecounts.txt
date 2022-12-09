@@ -1,0 +1,8 @@
+      1 twoPop-selectiveSweep.slim
+      1 twoPop-adaptiveIntrogression.slim
+      1 slurm-60976489.out
+      1 onePop-selectiveSweep-vcf.slim
+      1 onePop-selectiveSweep-vcf-noselcoeff.slim
+      1 onePop-adaptiveIntrogression.slim
+      1 filecounts.txt
+      1 27	.

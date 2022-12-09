@@ -1,0 +1,11 @@
+    617 win_size_sims
+     10 Win_size_51
+      2 logfiles
+      1 slurm-60977388.out
+      1 slurm-60977353.out
+      1 simulate.sh
+      1 simple_workflow.sh
+      1 k51_training_data.pkl
+      1 filecounts.txt
+      1 config.yaml
+      1 45398668	.

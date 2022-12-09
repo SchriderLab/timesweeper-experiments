@@ -32,3 +32,4 @@ modded.*.slim
 mongolian_model
 mongolian_model
 spectralHMM/
+*.png

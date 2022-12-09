@@ -1,0 +1,10 @@
+  30478 samp_size_sims
+   1606 logfiles
+      6 sample_size_20
+      1 slurm-60977600.out
+      1 simulate.sh
+      1 simple_workflow.sh
+      1 filecounts.txt
+      1 config.yaml
+      1 60585770	.
+      1 20ss_training_data.pkl

@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --partition=general
 #SBATCH --constraint=rhel8
-#SBATCH --mem=8G
+#SBATCH --mem=16G
 #SBATCH -c 6
 #SBATCH --time=6:00:00
 #SBATCH -J 40tp_sim
@@ -9,7 +9,7 @@
 #SBATCH -e logfiles/sims/40tp.%A.%a.err
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=lswhiteh@email.unc.edu
-#SBATCH --array=0-30000:50
+#SBATCH --array=0-10000:50
 conda init bash
 conda activate blinx
 source activate blinx

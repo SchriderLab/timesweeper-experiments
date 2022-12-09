@@ -1,0 +1,12 @@
+  91917 25_gens
+  91795 0_gens
+  30594 200_gens
+  30594 100_gens
+    269 50_gens
+     29 neg50_gens
+     29 neg200_gens
+     29 neg100_gens
+      7 images
+      1 slurm-60976488.out
+      1 filecounts.txt
+      1 6092054	.

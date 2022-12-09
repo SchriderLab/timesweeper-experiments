@@ -13,8 +13,8 @@
 conda activate blinx
 source activate blinx
 
-
-timesweeper condense --hft -o 40tp_training_data.pkl -y config.yaml --subsample-tps 40 --og-tps 100
-timesweeper train -i 40tp_training_data.pkl -d aft -n 40_Timepoint -y config.yaml
-timesweeper train -i 40tp_training_data.pkl -d hft -n 40_Timepoint -y config.yaml
-timesweeper plot_training -i 40tp_training_data.pkl -n 40_Timepoint -o 40_Timepoint/images
+#timesweeper summarize -n 40_Timepoints -y config.yaml
+timesweeper condense --hft -o 40tp_training_data.pkl -y config.yaml
+timesweeper train -i 40tp_training_data.pkl -d aft -n 40_Timepoints -y config.yaml
+timesweeper train -i 40tp_training_data.pkl -d hft -n 40_Timepoints -y config.yaml
+timesweeper plot_training -i 40tp_training_data.pkl -n 40_Timepoints -o 40_tp_sims/images/inputs

@@ -9,14 +9,14 @@
 #SBATCH -e logfiles/workflow.%A.%a.err
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=lswhiteh@email.unc.edu
-##SBATCH --array=0-30000:50
+##SBATCH --array=0-10000:50
 conda init bash
 conda activate blinx
 source activate blinx
 
 
 
-#
-##timesweeper condense --hft -o training_data.pkl -y config.yaml
-#timesweeper train -i training_data.pkl --hft -n Post_Sel_25 -y config.yaml
-timesweeper plot_training -i training_data.pkl -n Post_Sel_25 -o input_images
+timesweeper condense --hft -o 25gens_training_data.pkl -y config.yaml
+timesweeper train -i 25gens_training_data.pkl -d aft -n 0_Gens_Post -y config.yaml
+timesweeper train -i 25gens_training_data.pkl -d hft -n 0_Gens_Post -y config.yaml
+timesweeper plot_training -i 25gens_training_data.pkl -n 0_Gens_Post -o 25_Gens_Post/images

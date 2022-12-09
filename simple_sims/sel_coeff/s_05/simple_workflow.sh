@@ -13,7 +13,7 @@
 conda activate blinx
 
 
-timesweeper condense --hft -o 005selcoeff_training_data.pkl -y config.yaml
+timesweeper condense --hft -o 005selcoeff_training_data.pkl -y config.yaml --subsample-reps 10000
 timesweeper train -i 005selcoeff_training_data.pkl -d aft -n Sel_Coeff_0.05 -y config.yaml
 timesweeper train -i 005selcoeff_training_data.pkl -d hft -n Sel_Coeff_0.05 -y config.yaml
 timesweeper plot_training -i 005selcoeff_training_data.pkl -n Sel_Coeff_0.05 -o Sel_Coeff_0.05/images

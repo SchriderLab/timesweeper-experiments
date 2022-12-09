@@ -31,7 +31,7 @@ timesweeper condense --hft \
     -y config.yaml
 
 #25 threshold
-##timesweeper condense --hft \
+#timesweeper condense --hft \
     -f 0.25 \
     -o ts_simulans/d_simulans_log_uni_25_thresh_vel.pkl \
     -y config.yaml

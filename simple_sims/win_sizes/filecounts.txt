@@ -1,0 +1,12 @@
+   3038 k51
+     16 k501
+     16 k3
+     16 k201
+     16 k11
+     16 k101
+     16 k1
+      1 win_sizes_experiment_params.tsv
+      1 slurm-60976491.out
+      1 README.md
+      1 filecounts.txt
+      1 90822705	.

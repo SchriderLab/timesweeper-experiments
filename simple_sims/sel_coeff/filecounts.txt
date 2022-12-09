@@ -1,0 +1,12 @@
+    141 s_05
+    140 s_50
+    140 s_10
+    140 s_01
+    140 s_005
+      1 vcfs.tar.gz
+      1 slurm-60979308.out
+      1 slurm-60976487.out
+      1 Selection_Coefficient_roc_curve.pdf
+      1 Selection_Coefficient_pr_curve.pdf
+      1 filecounts.txt
+      1 226892872	.

@@ -9,13 +9,10 @@
 #SBATCH -e logfiles/workflow.%A.%a.err
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=lswhiteh@email.unc.edu
-##SBATCH --array=0-30000:50
+##SBATCH --array=0-10000:50
 conda init bash
 conda activate blinx
 source activate blinx
-
-
-
 
 timesweeper condense --hft -o k11_training_data.pkl -y config.yaml
 timesweeper train -i k11_training_data.pkl -d aft -n Win_size_11 -y config.yaml
