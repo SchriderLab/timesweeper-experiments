@@ -1,7 +1,15 @@
 #General
-work dir: sample_size_5
-slimfile: ../../slimfiles/onePop-selectiveSweep-vcf.slim
+work dir: samp_size_sims
+slimfile: ../../slimfiles/onePop-selectiveSweep-vcf-noselcoeff.slim
 slim path: slim
+
+
+mut types: [2]
+scenarios: ["neut", "sdn", "ssv"]
+win_size: 51
+num_sample_points : 20
+inds_per_tp : 5  # Diploid inds
+physLen : 5000000
 
 sample sizes: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
 ploidy: 2

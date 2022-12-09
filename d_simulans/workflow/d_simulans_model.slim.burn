@@ -14,13 +14,13 @@ initialize()
     defineConstant("sweepDuration", asInteger(60/Q)); 
     defineConstant("burnTime", 20*subpopSize);
     defineConstant("mutTime", burnTime);
-    defineConstant("softTime", mutTime); 
+    defineConstant("ssvTime", mutTime); 
     defineConstant("simEndTime", mutTime+sweepDuration);
     defineConstant("samplingTime", simEndTime-sweepDuration); //samplingInterval*numSamples=200
     // introduced mutation's selection coefficient
     initializeMutationType("m2", 0.5, "f", selCoeff);
 
-    defineConstant("softRestartTime", mutTime-subpopSize);
+    defineConstant("ssvRestartTime", mutTime-subpopSize);
     
 }
 s1 1000 late()
@@ -39,5 +39,5 @@ s1 1000 late()
     // set up our subpop
     sim.addSubpop("p1", subpopSize);
     
-    sim.rescheduleScriptBlock(s1, start=mutTime, end=mutTime); //  introducing hard mut
+    sim.rescheduleScriptBlock(s1, start=mutTime, end=mutTime); //  introducing sdn mut
 }

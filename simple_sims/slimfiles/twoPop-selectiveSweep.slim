@@ -10,9 +10,9 @@ initialize()
 	defineConstant("splitTime", burnTime);
 	defineConstant("migTime", burnTime+2*subpopSize);
 	defineConstant("mutTime", migTime-1);
-	defineConstant("softTime", mutTime+100);
-	defineConstant("samplingTime", softTime);
-	defineConstant("simEndTime", softTime+200);
+	defineConstant("ssvTime", mutTime+100);
+	defineConstant("samplingTime", ssvTime);
+	defineConstant("simEndTime", ssvTime+200);
 	
 	initializeMutationRate(1e-7);
 	initializeMutationType("m1", 0.5, "f", 0.0);
@@ -21,7 +21,7 @@ initialize()
 	initializeRecombinationRate(1e-7);
 	
 	// introduced mutation's initial selection coefficient
-	if (sweep == "soft")
+	if (sweep == "ssv")
 	{
 		initializeMutationType("m2", 0.5, "f", 0);
 	}
@@ -42,7 +42,7 @@ s1 500
 
 s2 1000 late()
 {
-	if (sweep == "hard" | sweep == "soft")
+	if (sweep == "sdn" | sweep == "ssv")
 	{
 		// save the state of the simulation	
 		//cat("SAVING TO " + dumpFileName + "\n");
@@ -57,7 +57,7 @@ s2 1000 late()
 
 s3 1000:10000 late()
 {
-	if (sweep == "hard" | sweep == "soft")
+	if (sweep == "sdn" | sweep == "ssv")
 	{
 		fixed = (sum(sim.substitutions.mutationType == m2) == 1);
 		
@@ -91,7 +91,7 @@ s3 1000:10000 late()
 
 s4 2000
 {
-    if (sweep == "soft")
+    if (sweep == "ssv")
     {
         muts = sim.mutationsOfType(m2);
         if (size(muts))
@@ -118,7 +118,7 @@ s5 10000 late()
 
 s6 10000:15000 late()
 {
-	if (sweep == "hard" | sweep == "soft")
+	if (sweep == "sdn" | sweep == "ssv")
 	{
 		if (sim.countOfMutationsOfType(m2) == 0)
 		{
@@ -136,7 +136,7 @@ s7 10000:15000 late()
 {
 	if ((sim.generation-samplingTime) % samplingInterval == 0)
 	{
-		if (sweep == "hard" | sweep == "soft")
+		if (sweep == "sdn" | sweep == "ssv")
 		{
 			muts = sim.mutationsOfType(m2);
 			if (size(muts) > 0)
@@ -177,7 +177,7 @@ s8 15000 late()
 	sim.rescheduleScriptBlock(s1, start=splitTime, end=splitTime); //  splitting pop
 	sim.rescheduleScriptBlock(s2, start=mutTime, end=mutTime); //  introducing mut
 	sim.rescheduleScriptBlock(s3, start=mutTime, end=simEndTime); // checking on mut in p1
-	sim.rescheduleScriptBlock(s4, start=softTime, end=softTime); // switching mut from neut to pos if necessary
+	sim.rescheduleScriptBlock(s4, start=ssvTime, end=ssvTime); // switching mut from neut to pos if necessary
 	sim.rescheduleScriptBlock(s5, start=migTime, end=migTime); // allowing mig -- currently turned off for population-specific sweeps
 	sim.rescheduleScriptBlock(s6, start=migTime, end=simEndTime); // reporting on fixation
 	sim.rescheduleScriptBlock(s7, start=samplingTime, end=simEndTime); // sampling

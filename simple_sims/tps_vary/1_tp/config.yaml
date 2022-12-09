@@ -1,6 +1,14 @@
 #General
-work dir: 1tp_exp
-slimfile: /pine/scr/l/s/lswhiteh/timesweeper-experiments/simple_sims/tps_vary/1_tp/sample-end-onePop-selectiveSweep-vcf.slim
+work dir: tp_sims
+slimfile: ../../slimfiles/onePop-selectiveSweep-vcf-noselcoeff.slim
+
+mut types: [2]
+scenarios: ["neut", "sdn", "ssv"]
+win_size: 51
+
+num_sample_points : 1
+inds_per_tp : 200  # Diploid inds
+physLen : 5000000
 
 sample sizes: [200]
 ploidy: 2

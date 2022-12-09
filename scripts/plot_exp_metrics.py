@@ -13,7 +13,7 @@ def plot_roc(datums, schema, outdir):
     """Plot ROC curve by binarizing neutral/sweep."""
 
     for name, data in datums.items():
-        # Plot hard/soft distinction
+        # Plot sdn/ssv distinction
         sweep_idxs = np.transpose(np.array((data["true"] > 0)).nonzero())
         sweep_labs = np.array(data["true"])[sweep_idxs]
 
@@ -22,9 +22,9 @@ def plot_roc(datums, schema, outdir):
 
         """
         if len(np.unique(data["true"])) > 2:
-            soft_probs = data["soft_scores"]
+            ssv_probs = data["ssv_scores"]
 
-            swp_fpr, swp_tpr, thresh = roc_curve(sweep_labs, soft_probs)
+            swp_fpr, swp_tpr, thresh = roc_curve(sweep_labs, ssv_probs)
             swp_auc_val = auc(swp_fpr, swp_tpr)
             plt.plot(
                 swp_fpr,
@@ -33,11 +33,11 @@ def plot_roc(datums, schema, outdir):
             )
         """
 
-        # Coerce all softs into sweep binary pred
+        # Coerce all ssvs into sweep binary pred
         labs = np.array(data["true"])
         labs[labs > 1] = 1
         pred_probs = np.sum(
-            np.array([data["hard_scores"], data["soft_scores"]]).T, axis=1
+            np.array([data["sdn_scores"], data["ssv_scores"]]).T, axis=1
         )
 
         # Plot ROC Curve
@@ -59,7 +59,7 @@ def plot_prec_recall(datums, schema, outdir):
     """Plot PR curve by binarizing neutral/sweep."""
     for name, data in datums.items():
 
-        # Plot hard/soft distinction
+        # Plot sdn/ssv distinction
         sweep_idxs = np.transpose(np.array((data["true"] > 0)).nonzero())
         sweep_labs = np.array(data["true"])[sweep_idxs]
 
@@ -68,20 +68,20 @@ def plot_prec_recall(datums, schema, outdir):
 
         """
         if len(np.unique(data["true"])) > 2:
-            soft_probs = data[data["true"] > 0]["soft_scores"]
+            ssv_probs = data[data["true"] > 0]["ssv_scores"]
 
             swp_prec, swp_rec, swp_thresh = precision_recall_curve(
-                sweep_labs.flatten(), soft_probs
+                sweep_labs.flatten(), ssv_probs
             )
             swp_auc_val = auc(swp_rec, swp_prec)
             plt.plot(swp_rec, swp_prec, label=f"{name.capitalize()} SDN vs SSV AUC: {swp_auc_val:.2}")
         """
 
-        # Coerce all softs into sweep binary pred
+        # Coerce all ssvs into sweep binary pred
         labs = np.array(data["true"])
         labs[labs > 1] = 1
         pred_probs = np.sum(
-            np.array([data["hard_scores"], data["soft_scores"]]).T, axis=1
+            np.array([data["sdn_scores"], data["ssv_scores"]]).T, axis=1
         )
 
         # Plot PR Curve for binarized labs

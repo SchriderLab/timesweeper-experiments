@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --partition=dschridelab
+#SBATCH --partition=general
 #SBATCH --constraint=rhel8
 #SBATCH --mem=24G
 #SBATCH -c 24
@@ -16,28 +16,27 @@ source activate blinx
 
 cd ..
 
-srcdir=/proj/dschridelab/lswhiteh/timesweeper/timesweeper
-configfile=d_simulans_config.yaml
+configfile=d_simulans_config.-y
 
-##timesweeper process yaml ${configfile}
+##
 
 #0 threshold
 timesweeper condense --hft \
     -o ts_simulans/d_simulans_log_uni_0_thresh_vel.pkl \
-    yaml ${configfile}
+    -y config.yaml
     
 #timesweeper train \
     -i ts_simulans/d_simulans_log_uni_0_thresh_vel.pkl \
     -n d_simulans_log_uni_0_thresh_vel \
-    yaml ${configfile}
+    -y config.yaml
 
 #25 threshold
 ##timesweeper condense --hft \
     -f 0.25 \
     -o ts_simulans/d_simulans_log_uni_25_thresh_vel.pkl \
-    yaml ${configfile}
+    -y config.yaml
     
 #timesweeper train \
     -i ts_simulans/d_simulans_log_uni_25_thresh_vel.pkl \
     -n d_simulans_log_uni_25_thresh_vel \
-    yaml ${configfile}
+    -y config.yaml

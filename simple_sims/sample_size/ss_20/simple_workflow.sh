@@ -1,23 +1,21 @@
 #!/bin/bash
-#SBATCH --partition=dschridelab
+#SBATCH --partition=general
 #SBATCH --constraint=rhel8 
-#SBATCH --mem=32G
+#SBATCH --mem=64G
 #SBATCH -c 16
 #SBATCH --time=24:00:00
-#SBATCH -J workflow
+#SBATCH -J ss20workflow
 #SBATCH -o logfiles/workflow.%A.%a.out
 #SBATCH -e logfiles/workflow.%A.%a.err
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=lswhiteh@email.unc.edu
-##SBATCH --array=0-2500:10
+##SBATCH --array=0-30000:50
 conda init bash
 conda activate blinx
 source activate blinx
 
-srcdir=/proj/dschridelab/lswhiteh/timesweeper/timesweeper
-configfile=config.yaml
 
-#timesweeper process yaml ${configfile}
-##timesweeper condense --hft -o training_data.pkl yaml ${configfile}
-#timesweeper train -i training_data.pkl --hft -n Sample_Size_20 yaml ${configfile}
-timesweeper plot_training -i training_data.pkl -n Sample_Size_20 -o sample_size_20/images
+timesweeper condense --hft -o 20ss_training_data.pkl -y config.yaml
+timesweeper train -i 20ss_training_data.pkl -d aft -n Sample_Size_20 -y config.yaml
+timesweeper train -i 20ss_training_data.pkl -d hft -n Sample_Size_20 -y config.yaml
+timesweeper plot_training -i 20ss_training_data.pkl -n Sample_Size_20 -o sample_size_20/images

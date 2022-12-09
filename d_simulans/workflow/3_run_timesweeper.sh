@@ -8,13 +8,13 @@ for i in aftInputsVelocity/*3R*
         --time=2:00:00 \
         --mem=16G \
         -c 4 \
-        --partition=dschridelab \
+        --partition=general \
         --constraint=rhel8 \
         --wrap="source activate blinx; conda activate blinx; \
             python find_sweeps_npz.py -i $i \
             -o unif_vel_0_thresh \
             --aft-model /pine/scr/l/s/lswhiteh/timesweeper-experiments/d_simulans/ts_simulans/trained_models/d_simulans_0_thresh_velocity_TimeSweeper_aft \
-            yaml d_simulans_config.yaml" 
+            -y d_simulans_config.-y" 
     done
 
 #25 thresh
@@ -23,13 +23,13 @@ for i in aftInputsVelocity/*
         --time=1:00:00 \
         --mem=8G \
         -c 4 \
-        --partition=dschridelab \
+        --partition=general \
         --constraint=rhel8 \
         --wrap="source activate blinx; conda activate blinx; \
             python find_sweeps_npz.py -i $i \
             -o unif_vel_25_thresh \
             --aft-model /pine/scr/l/s/lswhiteh/timesweeper-experiments/d_simulans/ts_simulans/trained_models/d_simulans_25_thresh_velocity_TimeSweeper_aft \
-            yaml d_simulans_config.yaml" 
+            -y d_simulans_config.-y" 
     done
 
 ### Vel - rounded
@@ -39,13 +39,13 @@ for i in aftInputsVelocityRounded/*
         --time=1:00:00 \
         --mem=8G \
         -c 4 \
-        --partition=dschridelab \
+        --partition=general \
         --constraint=rhel8 \
         --wrap="source activate blinx; conda activate blinx; \
             python find_sweeps_npz.py -i $i \
             -o unif_vel_0_thresh_rounded \
             --aft-model /pine/scr/l/s/lswhiteh/timesweeper-experiments/d_simulans/ts_simulans/trained_models/d_simulans_0_thresh_velocity_TimeSweeper_aft \
-            yaml d_simulans_config.yaml" 
+            -y d_simulans_config.-y" 
     done
     
 #25 thresh
@@ -54,13 +54,13 @@ for i in aftInputsVelocityRounded/*
         --time=1:00:00 \
         --mem=8G \
         -c 4 \
-        --partition=dschridelab \
+        --partition=general \
         --constraint=rhel8 \
         --wrap="source activate blinx; conda activate blinx; \
             python find_sweeps_npz.py -i $i \
             -o unif_vel_25_thresh_rounded \
             --aft-model /pine/scr/l/s/lswhiteh/timesweeper-experiments/d_simulans/ts_simulans/trained_models/d_simulans_25_thresh_velocity_TimeSweeper_aft \
-            yaml d_simulans_config.yaml" 
+            -y d_simulans_config.-y" 
     done
 
 ####Unif
@@ -71,13 +71,13 @@ for i in aftInputs/*
         --time=1:00:00 \
         --mem=8G \
         -c 4 \
-        --partition=dschridelab \
+        --partition=general \
         --constraint=rhel8 \
         --wrap="source activate blinx; conda activate blinx; \
             python find_sweeps_npz.py -i $i \
             -o unif_last_0_thresh \
             --aft-model /pine/scr/l/s/lswhiteh/timesweeper-experiments/d_simulans/ts_simulans/trained_models/d_simulans_0_thresh_last_TimeSweeper_aft \
-            yaml d_simulans_config.yaml" 
+            -y d_simulans_config.-y" 
     done
 
 for i in aftInputs/*
@@ -85,13 +85,13 @@ for i in aftInputs/*
         --time=1:00:00 \
         --mem=8G \
         -c 4 \
-        --partition=dschridelab \
+        --partition=general \
         --constraint=rhel8 \
         --wrap="source activate blinx; conda activate blinx; \
             python find_sweeps_npz.py -i $i \
             -o unif_vel_25_thresh \
             --aft-model /pine/scr/l/s/lswhiteh/timesweeper-experiments/d_simulans/ts_simulans/trained_models/d_simulans_25_thresh_vel_TimeSweeper_aft \
-            yaml d_simulans_config.yaml" 
+            -y d_simulans_config.-y" 
     done
 
 ###############################################
@@ -106,13 +106,13 @@ for i in aftInputsVelocity/*
         --time=1:00:00 \
         --mem=8G \
         -c 4 \
-        --partition=dschridelab \
+        --partition=general \
         --constraint=rhel8 \
         --wrap="source activate blinx; conda activate blinx; \
             python find_sweeps_npz.py -i $i \
             -o logunif_vel_0_thresh \
             --aft-model /pine/scr/l/s/lswhiteh/timesweeper-experiments/d_simulans/ts_simulans/trained_models/d_simulans_log_uni_0_thresh_vel_TimeSweeper_aft \
-            yaml d_simulans_config.yaml" 
+            -y d_simulans_config.-y" 
     done
 
 #25 thresh
@@ -121,13 +121,13 @@ for i in aftInputsVelocity/*
         --time=1:00:00 \
         --mem=8G \
         -c 4 \
-        --partition=dschridelab \
+        --partition=general \
         --constraint=rhel8 \
         --wrap="source activate blinx; conda activate blinx; \
             python find_sweeps_npz.py -i $i \
             -o logunif_vel_25_thresh \
             --aft-model /pine/scr/l/s/lswhiteh/timesweeper-experiments/d_simulans/ts_simulans/trained_models/d_simulans_log_uni_25_thresh_vel_TimeSweeper_aft \
-            yaml d_simulans_config.yaml" 
+            -y d_simulans_config.-y" 
     done
 
 ### Vel - rounded
@@ -137,13 +137,13 @@ for i in aftInputsVelocityRounded/*
         --time=1:00:00 \
         --mem=8G \
         -c 4 \
-        --partition=dschridelab \
+        --partition=general \
         --constraint=rhel8 \
         --wrap="source activate blinx; conda activate blinx; \
             python find_sweeps_npz.py -i $i \
             -o logunif_vel_0_thresh_rounded \
             --aft-model /pine/scr/l/s/lswhiteh/timesweeper-experiments/d_simulans/ts_simulans/trained_models/d_simulans_log_uni_0_thresh_vel_TimeSweeper_aft \
-            yaml d_simulans_config.yaml" 
+            -y d_simulans_config.-y" 
     done
     
 #25 thresh
@@ -152,13 +152,13 @@ for i in aftInputsVelocityRounded/*
         --time=1:00:00 \
         --mem=8G \
         -c 4 \
-        --partition=dschridelab \
+        --partition=general \
         --constraint=rhel8 \
         --wrap="source activate blinx; conda activate blinx; \
             python find_sweeps_npz.py -i $i \
             -o logunif_vel_25_thresh_rounded \
             --aft-model /pine/scr/l/s/lswhiteh/timesweeper-experiments/d_simulans/ts_simulans/trained_models/d_simulans_log_uni_25_thresh_vel_TimeSweeper_aft \
-            yaml d_simulans_config.yaml" 
+            -y d_simulans_config.-y" 
     done
 
 ####LogUnif
@@ -169,13 +169,13 @@ for i in aftInputs/*
         --time=1:00:00 \
         --mem=8G \
         -c 4 \
-        --partition=dschridelab \
+        --partition=general \
         --constraint=rhel8 \
         --wrap="source activate blinx; conda activate blinx; \
             python find_sweeps_npz.py -i $i \
             -o logunif_last_0_thresh \
             --aft-model /pine/scr/l/s/lswhiteh/timesweeper-experiments/d_simulans/ts_simulans/trained_models/d_simulans_log_uni_0_thresh_last_TimeSweeper_aft \
-            yaml d_simulans_config.yaml" 
+            -y d_simulans_config.-y" 
     done
 
 for i in aftInputs/*
@@ -183,11 +183,11 @@ for i in aftInputs/*
         --time=1:00:00 \
         --mem=8G \
         -c 4 \
-        --partition=dschridelab \
+        --partition=general \
         --constraint=rhel8 \
         --wrap="source activate blinx; conda activate blinx; \
             python find_sweeps_npz.py -i $i \
             -o logunif_vel_25_thresh \
             --aft-model /pine/scr/l/s/lswhiteh/timesweeper-experiments/d_simulans/ts_simulans/trained_models/d_simulans_log_uni_25_thresh_vel_TimeSweeper_aft \
-            yaml d_simulans_config.yaml" 
+            -y d_simulans_config.-y" 
     done

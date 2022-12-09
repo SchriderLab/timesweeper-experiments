@@ -181,8 +181,8 @@ def main(ua):
     get consistent results to plug into the rest of the workflow.
 
     The two things you *will* need to specify in your '-d' args to SLiM (and somewhere in the slim script) are:
-    - sweep [str] One of "neut", "hard", or "soft". If you're testing only a neut/hard model, 
-        make the soft a dummy switch for the neutral scenario.
+    - sweep [str] One of "neut", "sdn", or "ssv". If you're testing only a neut/sdn model, 
+        make the ssv a dummy switch for the neutral scenario.
     - outFile [path] You will need to define this as a population outputVCFSample input, with replace=F and append=T. 
         This does *not* need to be specified by you in the custom -d block, it will be standardized to work with the rest of the pipeline using work_dir.
         example line for slim script: `p1.outputVCFSample(sampleSizePerStep, replace=F, append=T, filePath=outFile);`
@@ -212,7 +212,7 @@ def main(ua):
     dumpfile_dir = f"{work_dir}/dumpfiles"
     params_dir = f"{work_dir}/params"
 
-    sweeps = ["neut", "soft"]
+    sweeps = ["neut", "ssv"]
 
     for i in [vcf_dir, dumpfile_dir, params_dir]:
         for sweep in sweeps:

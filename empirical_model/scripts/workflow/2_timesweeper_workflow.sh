@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --partition=dschridelab
+#SBATCH --partition=general
 #SBATCH --constraint=rhel8
 #SBATCH --mem=32G
 #SBATCH -c 24
@@ -16,10 +16,9 @@ source activate blinx
 
 cd /pine/scr/l/s/lswhiteh/timesweeper-experiments/empirical_model
 
-srcdir=/proj/dschridelab/lswhiteh/timesweeper/timesweeper
-configfile=OoA_constant_sampling_config.yaml
+configfile=OoA_constant_sampling_config.-y
 
-timesweeper process yaml ${configfile}
-timesweeper condense --hft -o training_data_constant_uni_sel.pkl yaml ${configfile}
-timesweeper train -i training_data_constant_uni_sel.pkl --hft -n OoA_Constant_uni_sel yaml ${configfile}
+
+timesweeper condense --hft -o training_data_constant_uni_sel.pkl -y config.yaml
+timesweeper train -i training_data_constant_uni_sel.pkl --hft -n OoA_Constant_uni_sel -y config.yaml
 timesweeper plot_training -i training_data_constant_uni_sel.pkl -n OoA_Constant_uni_sel -o input_images

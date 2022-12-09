@@ -9,13 +9,13 @@ df = pd.read_csv(
     names=["chrom", "bp", "ts_score", "fet_score", "freqs"],
 )
 
-# df = df[df["Soft_Score"] > 0.8]
+# df = df[df["SSV_Score"] > 0.8]
 
 fig, axes = plt.subplots(1, 1)
 
 axes.set_title("AFT Sweep Score vs FET")
 axes.errorbar(
-    range(len(groups)), groups["Soft_Score"].mean(), yerr=groups["Soft_Score"].std()
+    range(len(groups)), groups["SSV_Score"].mean(), yerr=groups["SSV_Score"].std()
 )
 
 

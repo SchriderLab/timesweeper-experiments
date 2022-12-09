@@ -7,9 +7,9 @@
 *.dump
 *.npz
 **/models/**
-**/hard/**
+**/sdn/**
 **/neut/**
-**/soft/**
+**/ssv/**
 .snakemake/
 bams/
 *vcfs/
@@ -28,3 +28,7 @@ d_simulans/FreqInputs*
 d_simulans/test_pvals
 *.tar
 *.csv
+modded.*.slim
+mongolian_model
+mongolian_model
+spectralHMM/

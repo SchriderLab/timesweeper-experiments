@@ -74,7 +74,7 @@ gens = list(range(0, total_gens, int(total_gens/n_timepoints)))
 
 trues = []
 pvals = []
-for swp in ["neut", "soft", "hard"]:
+for swp in ["neut", "ssv", "sdn"]:
     for rep in data_dict[swp].keys():
         if swp == "neut":
             trues.append(0)

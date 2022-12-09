@@ -14,18 +14,18 @@ initialize()
     defineConstant("sweepDuration", asInteger(60/Q)); 
     defineConstant("burnTime", 20*burnPopSize);
     defineConstant("mutTime", burnTime);
-    defineConstant("softTime", mutTime); 
+    defineConstant("ssvTime", mutTime); 
     defineConstant("simEndTime", mutTime+sweepDuration);
     defineConstant("samplingTime", simEndTime-sweepDuration); //samplingInterval*numSamples=200
     // introduced mutation's selection coefficient
     initializeMutationType("m2", 0.5, "f", selCoeff);
 
-    defineConstant("softRestartTime", mutTime-burnPopSize);
+    defineConstant("ssvRestartTime", mutTime-burnPopSize);
     
 }
 s1 1000 late()
 {  
-    if (sweep == "hard")
+    if (sweep == "sdn")
     {
         // introduce the sweep mutation
         target = sample(p1.genomes, 1);
@@ -36,7 +36,7 @@ s1 1000 late()
 
 s2 1000:10000 late()
 {
-    if (sweep == "hard" | (sweep == "soft" & sim.generation > softTime))
+    if (sweep == "sdn" | (sweep == "ssv" & sim.generation > ssvTime))
     {
         fixed = (sum(sim.substitutions.mutationType == m2) == 1);
         if (fixed)
@@ -51,13 +51,13 @@ s2 1000:10000 late()
             {
                 cat(simID + ": LOST at gen " + sim.generation + " - RESTARTING\n");
 
-                // Go back to generation 1000 or softGen
+                // Go back to generation 1000 or ssvGen
                 sim.readFromPopulationFile(dumpFile);
 
                 // Start a newly seeded run
                 setSeed(rdunif(1, 0, asInteger(2^32) - 1));
             
-                if (sweep == "hard")
+                if (sweep == "sdn")
                 {
                     // re-introduce the sweep mutation
                     target = sample(p1.genomes, 1);
@@ -65,7 +65,7 @@ s2 1000:10000 late()
                     target.addNewDrawnMutation(m2, mutLoc);
                 }
 
-                // Don't need this for soft bc setting back to before we introduce selection for that one
+                // Don't need this for ssv bc setting back to before we introduce selection for that one
 
 
                 cat("Sampling index gen has been reset to " + sim.generation + "\n");
@@ -76,7 +76,7 @@ s2 1000:10000 late()
 s3 2000 late()
 {
     p1.setSubpopulationSize(selPopSize);
-    if (sweep == "soft")
+    if (sweep == "ssv")
     {
         muts = sim.mutationsOfType(m1);
         if (size(muts))
@@ -112,7 +112,7 @@ s4 10000:15000 late()
     
     if (sim.generation % 10 == 0)
     {
-        if (sweep == "hard" | sweep == "soft")
+        if (sweep == "sdn" | sweep == "ssv")
         {   
             muts = sim.mutationsOfType(m2);
             if (size(muts) > 0)
@@ -154,13 +154,13 @@ s5 15000 late()
 
     
     //schedule our events
-    if (sweep == "soft")
+    if (sweep == "ssv")
     {
-        sim.rescheduleScriptBlock(s1, start=mutTime, end=mutTime); //  introducing hard mut
+        sim.rescheduleScriptBlock(s1, start=mutTime, end=mutTime); //  introducing sdn mut
     }
 
     sim.rescheduleScriptBlock(s2, start=mutTime, end=simEndTime); // checking on mut in p1
-    sim.rescheduleScriptBlock(s3, start=softTime, end=softTime); // switching mut from neut to pos if soft
+    sim.rescheduleScriptBlock(s3, start=ssvTime, end=ssvTime); // switching mut from neut to pos if ssv
     sim.rescheduleScriptBlock(s4, start=samplingTime, end=simEndTime); // sampling
     sim.rescheduleScriptBlock(s5, start=simEndTime, end=simEndTime); // wrapping up
 }

@@ -55,20 +55,20 @@ all_merged = all_merged.replace("na", np.NaN)
 all_merged = all_merged.dropna()
 
 all_merged["fet"] = all_merged["fet"].astype(float)
-all_merged["Soft_Score"] = all_merged["Soft_Score"].astype(float)
+all_merged["SSV_Score"] = all_merged["SSSVScore"].astype(float)
 
 print("Calculating correlation")
-corr = all_merged[["fet", "Soft_Score"]].corr("spearman")
+corr = all_merged[["fet", "SSV_Score"]].corr("spearman")
 print(f"Spearman's Correlation: \n {corr}")
 
-# top = all_merged.nlargest(100000, "Soft_Score")
+# top = all_merged.nlargest(100000, "SSV_Score")
 
 plot = False
 if plot:
     for _ in range(10):
         r = random.sample(range(len(all_merged)), 10000)
-        _df = all_merged[["fet", "Soft_Score"]].iloc[r, :]
-        plt.scatter(x=_df["Soft_Score"].astype(float), y=_df["fet"].astype(float))
+        _df = all_merged[["fet", "SSV_Score"]].iloc[r, :]
+        plt.scatter(x=_df["SSV_Score"].astype(float), y=_df["fet"].astype(float))
         plt.xlabel("TS")
         plt.ylabel("FET")
         plt.title("FET vs Timesweeper")
@@ -83,9 +83,9 @@ bins.insert(-1, 0.99)
 ts_res_bins = []
 for i in tqdm(range(len(bins) - 1), desc="Summing over bins"):
     _df = all_merged[
-        (all_merged["Soft_Score"] > bins[i]) & (all_merged["Soft_Score"] <= bins[i + 1])
+        (all_merged["SSV_Score"] > bins[i]) & (all_merged["SSSVScore"] <= bins[i + 1])
     ]
-    sp = _df["fet"].corr(_df["Soft_Score"], "spearman")
+    sp = _df["fet"].corr(_df["SSV_Score"], "spearman")
 
     ts_res_bins.append(
         {
@@ -109,18 +109,18 @@ print(bins)
 fet_res_bins = []
 for i in range(len(bins) - 1):
     _df = all_merged[(all_merged["fet"] > bins[i]) & (all_merged["fet"] <= bins[i + 1])]
-    sp = _df["fet"].corr(_df["Soft_Score"], "spearman")
+    sp = _df["fet"].corr(_df["SSV_Score"], "spearman")
     fet_res_bins.append(
         {
             "bin": (bins[i], bins[i + 1]),
             "num_calls": len(_df),
             "spearman": sp,
-            "max_Soft_Score": _df["Soft_Score"].max(),
-            "min_Soft_Score": _df["Soft_Score"].min(),
-            "mean_Soft_Score": _df["Soft_Score"].mean(),
-            "med_Soft_Score": _df["Soft_Score"].median(),
-            "variance": _df["Soft_Score"].var(),
-            "std": _df["Soft_Score"].std(),
+            "max_SSV_Score": _df["SSSVScore"].max(),
+            "min_SSV_Score": _df["SSSVScore"].min(),
+            "mean_SSV_Score": _df["SSSVScore"].mean(),
+            "med_SSV_Score": _df["SSSVScore"].median(),
+            "variance": _df["SSV_Score"].var(),
+            "std": _df["SSV_Score"].std(),
         }
     )
 

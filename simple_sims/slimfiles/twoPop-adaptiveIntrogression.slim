@@ -31,7 +31,7 @@ s1 500
 
 s2 1000 late()
 {
-	if (sweep == "hard")
+	if (sweep == "sdn")
 	{
 		// save the state of the simulation	
 		cat("SAVING TO " + dumpFileName + "\n");
@@ -46,7 +46,7 @@ s2 1000 late()
 
 s3 1000:10000 late()
 {
-	if (sweep == "hard")
+	if (sweep == "sdn")
 	{
 		fixed = (sum(sim.substitutions.mutationType == m2) == 1);
 		
@@ -89,7 +89,7 @@ s4 10000 late()
 
 s5 10000:15000 late()
 {
-	if (sweep == "hard")
+	if (sweep == "sdn")
 	{
 		if (sim.countOfMutationsOfType(m2) == 0)
 		{
@@ -107,7 +107,7 @@ s6 10000:15000 late()
 {
 	if (((sim.generation-migTime) % samplingInterval == 0) & (sim.generation > migTime))
 		{
-			if (sweep == "hard")
+			if (sweep == "sdn")
 			{
 				muts = sim.mutationsOfType(m2);
 				if (size(muts) > 0)

@@ -1,1 +1,0 @@
-python /proj/dschridelab/lswhiteh/timesweeper/timesweeper/plotting/plot_windows.py vcfs/

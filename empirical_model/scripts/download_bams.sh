@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --partition=dschridelab
+#SBATCH --partition=general
 #SBATCH --constraint=rhel8
 #SBATCH --mem=4G
 #SBATCH --ntasks=8

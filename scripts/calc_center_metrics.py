@@ -108,7 +108,7 @@ prob_threshes = np.arange(0.5, 1.05, 0.05)
 for i in prob_threshes:
     preds[i] = []
 
-for swp in ["neut", "soft", "hard"]:
+for swp in ["neut", "ssv", "sdn"]:
     for i in glob(
         f"/pine/scr/l/s/lswhiteh/timesweeper-experiments/misspec/OoA_on_Simple/results/{swp}/*/aft_preds.csv",
         recursive=True,

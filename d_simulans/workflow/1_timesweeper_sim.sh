@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --partition=dschridelab
+#SBATCH --partition=general
 #SBATCH --constraint=rhel8
 #SBATCH --mem=2G
 #SBATCH -c 1
@@ -14,7 +14,7 @@ conda init bash
 conda activate blinx
 source activate blinx
 
-configfile=d_simulans_config.yaml
+configfile=d_simulans_config.-y
 
 #using custom 2-stage burn/selection launcher
-python simulate_custom.py --rep-range ${SLURM_ARRAY_TASK_ID} ${SLURM_ARRAY_TASK_ID} yaml ${configfile}
+timesweeper sim_custom --rep-range ${SLURM_ARRAY_TASK_ID} ${SLURM_ARRAY_TASK_ID} -y config.yaml

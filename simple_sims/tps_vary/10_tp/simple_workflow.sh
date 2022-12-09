@@ -1,23 +1,20 @@
 #!/bin/bash
-#SBATCH --partition=dschridelab
-#SBATCH --constraint=rhel8
-#SBATCH --mem=64G
-#SBATCH -c 32
+#SBATCH --partition=general
+#SBATCH --constraint=rhel8 
+#SBATCH --mem=128G
+#SBATCH -c 16
 #SBATCH --time=24:00:00
-#SBATCH -J workflow
+#SBATCH -J tp10workflow
 #SBATCH -o logfiles/workflow.%A.%a.out
 #SBATCH -e logfiles/workflow.%A.%a.err
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=lswhiteh@email.unc.edu
-##SBATCH --array=0-2500:10
-conda init bash
-conda activate blinx
 source activate blinx
 
-srcdir=/proj/dschridelab/lswhiteh/timesweeper/timesweeper
-configfile=config.yaml
+conda activate blinx
 
-#timesweeper process yaml ${configfile}
-##timesweeper condense --hft -o training_data.pkl yaml ${configfile}
-#timesweeper train -i training_data.pkl --hft -n TPs_10 yaml ${configfile}
-timesweeper plot_training -i training_data.pkl -n TPs_10 -o input_images
+
+timesweeper condense --hft -o 10tp_training_data.pkl -y config.yaml --subsample-tps 10 --og-tps 100
+timesweeper train -i 10tp_training_data.pkl -d aft -n 10_Timepoint -y config.yaml
+timesweeper train -i 10tp_training_data.pkl -d hft -n 10_Timepoint -y config.yaml
+timesweeper plot_training -i 10tp_training_data.pkl -n 10_Timepoint -o 10_Timepoint/images

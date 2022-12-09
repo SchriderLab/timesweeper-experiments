@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --partition=dschridelab
+#SBATCH --partition=general
 #SBATCH --constraint=rhel8
 #SBATCH --mem=16G
 #SBATCH -c 32
@@ -9,15 +9,14 @@
 #SBATCH -e logfiles/workflow.%A.%a.err
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=lswhiteh@email.unc.edu
-##SBATCH --array=0-2500:10
+##SBATCH --array=0-30000:50
 conda init bash
 conda activate blinx
 source activate blinx
 
-srcdir=/proj/dschridelab/lswhiteh/timesweeper/timesweeper
-configfile=config.yaml
 
-#timesweeper process yaml ${configfile}
-##timesweeper condense --hft -o training_data.pkl yaml ${configfile}
-#timesweeper train -i training_data.pkl --hft -n Post_Sel_50 yaml ${configfile}
+
+#
+##timesweeper condense --hft -o training_data.pkl -y config.yaml
+#timesweeper train -i training_data.pkl --hft -n Post_Sel_50 -y config.yaml
 timesweeper plot_training -i training_data.pkl -n Post_Sel_50 -o input_images

@@ -1,0 +1,18 @@
+#General
+work dir: neg50gens
+slimfile: ../../slimfiles/onePop-selectiveSweep-vcf-noselcoeff.slim
+slim path: slim
+
+
+mut types: [2]
+scenarios: ["neut", "sdn", "ssv"]
+win_size: 51
+num_sample_points : 20
+inds_per_tp : 10  # Diploid inds
+physLen : 5000000
+
+sample sizes: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+ploidy: 2
+
+#Simulation
+reps: 30000

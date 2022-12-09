@@ -26,9 +26,9 @@ def runComps(tsCallFileName, inputFileName, compFileName):
                 if first:
                     first = False
                 else:
-                    chrom, pos, classPred, neutProb, softProb, winS, winE = line.strip().split("\t")
+                    chrom, pos, classPred, neutProb, ssvProb, winS, winE = line.strip().split("\t")
                     pos = int(pos)
-                    tsScores[(chrom, pos)] = float(softProb)
+                    tsScores[(chrom, pos)] = float(ssvProb)
     except Exception as err:
         print('Error reading tsCallFile:', err)
         return

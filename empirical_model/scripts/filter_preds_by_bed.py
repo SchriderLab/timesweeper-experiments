@@ -16,7 +16,7 @@ final_preds.sort_values(by="Neut Score", inplace=True)
 
 # final_preds.drop_duplicates([7], inplace=True)
 # final_preds = final_preds[
-#    ["Chrom", "BP", "Class", "Neut Score", "Hard Score", "Soft Score", 0, 1, 2, 7]
+#    ["Chrom", "BP", "Class", "Neut Score", "sdn Score", "SSV Score", 0, 1, 2, 7]
 # ]
 
 

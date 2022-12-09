@@ -1,10 +1,18 @@
 #General
-work dir: sel_coeff_0.005
-slimfile: ../../slimfiles/onePop-selectiveSweep-vcf-noselcoeff.slim
+work dir: 0.005_selcoeff
+slimfile: onePop-selectiveSweep-s0.005.slim
+slim path: slim
+
+
+mut types: [2]
+scenarios: ["neut", "sdn", "ssv"]
+win_size: 51
+num_sample_points : 20
+inds_per_tp : 10  # Diploid inds
+physLen : 5000000
 
 sample sizes: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
 ploidy: 2
 
 #Simulation
-reps: 2500
-slim path: slim
+reps: 30000

@@ -16,6 +16,6 @@ source activate blinx
 
 cd /pine/scr/l/s/lswhiteh/timesweeper-experiments/empirical_model
 
-configfile=/pine/scr/l/s/lswhiteh/timesweeper-experiments/empirical_model/OoA_constant_sampling_config.yaml
+configfile=/pine/scr/l/s/lswhiteh/timesweeper-experiments/empirical_model/OoA_constant_sampling_config.-y
 
-timesweeper sim_stdpopsim --rep-range ${SLURM_ARRAY_TASK_ID} $((${SLURM_ARRAY_TASK_ID} + 1)) yaml ${configfile}
+timesweeper sim_stdpopsim --rep-range ${SLURM_ARRAY_TASK_ID} $((${SLURM_ARRAY_TASK_ID} + 1)) -y config.yaml

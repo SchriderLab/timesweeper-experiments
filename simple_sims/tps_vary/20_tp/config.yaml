@@ -1,6 +1,14 @@
 #General
-work dir: 20tp_exp
-slimfile: ../../slimfiles/onePop-selectiveSweep-vcf.slim
+work dir: tp_sims
+slimfile: ../../slimfiles/onePop-selectiveSweep-vcf-noselcoeff.slim
+
+mut types: [2]
+scenarios: ["neut", "sdn", "ssv"]
+win_size: 51
+
+num_sample_points : 20
+inds_per_tp : 10  # Diploid inds
+physLen : 5000000
 
 sample sizes: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
 ploidy: 2
