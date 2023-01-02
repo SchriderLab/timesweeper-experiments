@@ -14,8 +14,9 @@ conda init bash
 conda activate blinx
 source activate blinx
 
+timesweeper summarize -n neg100_Gens_Post -y config.yaml
 
 timesweeper condense --hft -o neg100gens_training_data.pkl -y config.yaml
-timesweeper train -i neg100gens_training_data.pkl -d aft -n 0_Gens_Post -y config.yaml
-timesweeper train -i neg100gens_training_data.pkl -d hft -n 0_Gens_Post -y config.yaml
-timesweeper plot_training -i neg100gens_training_data.pkl -n 0_Gens_Post -o neg100_Gens_Post/images
+timesweeper train -i neg100gens_training_data.pkl -d aft -n neg100_Gens_Post -y config.yaml
+timesweeper train -i neg100gens_training_data.pkl -d hft -n neg100_Gens_Post -y config.yaml
+timesweeper plot_training -i neg100gens_training_data.pkl -n neg100_Gens_Post -o neg100_Gens_Post/images

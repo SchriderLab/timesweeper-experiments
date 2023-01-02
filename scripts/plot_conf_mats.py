@@ -1,6 +1,7 @@
 import matplotlib
 from sklearn.metrics import confusion_matrix
 import sys
+
 matplotlib.use("Agg")
 import itertools
 import os
@@ -9,6 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from glob import glob
+
 
 def plot_confusion_matrix(
     working_dir, cm, target_names, title="Confusion matrix", cmap=None, normalize=False
@@ -89,19 +91,18 @@ def plot_confusion_matrix(
     plt.ylabel("True label")
     plt.xlabel(f"Predicted label\naccuracy={accuracy:0.4f}; misclass={misclass:0.4f}")
 
-    plt.savefig(os.path.join(working_dir, title + ".pdf"))
+    plt.savefig(os.path.join(working_dir, title + ".tiff"))
+    plt.savefig(os.path.join(working_dir, title + ".png"))
     plt.clf()
 
 
-lablist = ["Neutral", "SSV"]
+lablist = ["Neutral", "SDN", "SSV"]
 data_dir = sys.argv[1]
 
 for ifile in glob(f"{sys.argv[1]}/*.csv"):
-    print(ifile)
     data = pd.read_csv(ifile)
     out_dir = os.path.dirname(ifile) + "/../images"
     filename = os.path.basename(ifile).split("_test")[0]
-    print(filename)
 
     conf_mat = confusion_matrix(data["true"], data["pred"])
     plot_confusion_matrix(

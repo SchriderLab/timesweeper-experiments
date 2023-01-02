@@ -14,7 +14,7 @@ conda init bash
 conda activate blinx
 source activate blinx
 
-timesweeper condense --hft -o k101_training_data.pkl -y config.yaml
+#timesweeper condense --hft -o k101_training_data.pkl -y config.yaml
 timesweeper train -i k101_training_data.pkl -d aft -n Win_size_101 -y config.yaml
 timesweeper train -i k101_training_data.pkl -d hft -n Win_size_101 -y config.yaml
 timesweeper plot_training -i k101_training_data.pkl -n Win_size_101 -o Win_size_101/images

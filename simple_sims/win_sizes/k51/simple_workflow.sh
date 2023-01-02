@@ -13,7 +13,7 @@
 conda activate blinx
 
 
-timesweeper summarize -n Win_size_51 -y config.yaml
+#timesweeper summarize -n Win_size_51 -y config.yaml
 timesweeper condense --hft -o k51_training_data.pkl -y config.yaml
 timesweeper train -i k51_training_data.pkl -d aft -n Win_size_51 -y config.yaml
 timesweeper train -i k51_training_data.pkl -d hft -n Win_size_51 -y config.yaml

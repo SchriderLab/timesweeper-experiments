@@ -18,7 +18,7 @@ hftfile = "../sample_size_10_benchmark/test_predictions/Sample_Size_10_benchmark
 
 
 ### ROC Curves
-#AFT
+# AFT
 aft_data = pd.read_csv(aftfile)
 # Coerce all ssvs into sweep binary pred
 labs = aft_data["true"]
@@ -30,7 +30,7 @@ fpr, tpr, thresh = roc_curve(labs, pred_probs)
 auc_val = auc(fpr, tpr)
 plt.plot(fpr, tpr, label=f"AFT Neutral vs Sweep AUC: {auc_val:.4}")
 
-#HFT
+# HFT
 hft_data = pd.read_csv(hftfile)
 # Coerce all ssvs into sweep binary pred
 labs = hft_data["true"]
@@ -42,11 +42,11 @@ fpr, tpr, thresh = roc_curve(labs, pred_probs)
 auc_val = auc(fpr, tpr)
 plt.plot(fpr, tpr, label=f"HFT Neutral vs Sweep AUC: {auc_val:.4}")
 
-#FIT
+# FIT
 fit_data = pd.read_csv(fitfile).dropna()
 
 # Plot ROC Curve
-fpr, tpr, thresh = roc_curve(fit_data["trues"], 1-fit_data["pvals"])
+fpr, tpr, thresh = roc_curve(fit_data["trues"], 1 - fit_data["pvals"])
 auc_val = auc(fpr, tpr)
 plt.plot(fpr, tpr, label=f"FIT Neutral vs Sweep AUC: {auc_val:.4}")
 
@@ -59,7 +59,7 @@ plt.clf()
 
 
 ### PR Curves
-#AFT
+# AFT
 aft_data = pd.read_csv(aftfile)
 # Coerce all ssvs into sweep binary pred
 labs = aft_data["true"]
@@ -71,7 +71,7 @@ prec, rec, thr = precision_recall_curve(labs, pred_probs)
 auc_val = auc(rec, prec)
 plt.plot(rec, prec, label=f"AFT Neutral vs Sweep AUC: {auc_val:.4}")
 
-#HFT
+# HFT
 hft_data = pd.read_csv(hftfile)
 # Coerce all ssvs into sweep binary pred
 labs = hft_data["true"]
@@ -83,11 +83,11 @@ prec, rec, thr = precision_recall_curve(labs, pred_probs)
 auc_val = auc(rec, prec)
 plt.plot(rec, prec, label=f"HFT Neutral vs Sweep AUC: {auc_val:.4}")
 
-#FIT
+# FIT
 fit_data = pd.read_csv(fitfile).dropna()
 
 # Plot ROC Curve
-prec, rec, thr = precision_recall_curve(fit_data["trues"], 1-fit_data["pvals"])
+prec, rec, thr = precision_recall_curve(fit_data["trues"], 1 - fit_data["pvals"])
 auc_val = auc(rec, prec)
 plt.plot(rec, prec, label=f"FIT Neutral vs Sweep AUC: {auc_val:.4}")
 
@@ -95,5 +95,6 @@ plt.title(f"PR Curves")
 plt.xlabel("FPR")
 plt.ylabel("TPR")
 plt.legend()
-plt.savefig("ss10_all_pr.pdf")
+plt.savefig("ss10_all_pr.tiff")
+plt.savefig("ss10_all_pr.png")
 plt.clf()

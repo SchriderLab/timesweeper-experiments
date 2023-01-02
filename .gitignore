@@ -33,3 +33,6 @@ mongolian_model
 mongolian_model
 spectralHMM/
 *.png
+*.tiff
+tmp/
+simple_sims/sample_size/ss_20/samp_size_sims/images/

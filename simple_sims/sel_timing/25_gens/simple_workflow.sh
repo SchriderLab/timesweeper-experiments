@@ -15,8 +15,9 @@ conda activate blinx
 source activate blinx
 
 
+timesweeper summarize -n 25_Gens_Post -y config.yaml
 
 timesweeper condense --hft -o 25gens_training_data.pkl -y config.yaml
-timesweeper train -i 25gens_training_data.pkl -d aft -n 0_Gens_Post -y config.yaml
-timesweeper train -i 25gens_training_data.pkl -d hft -n 0_Gens_Post -y config.yaml
-timesweeper plot_training -i 25gens_training_data.pkl -n 0_Gens_Post -o 25_Gens_Post/images
+timesweeper train -i 25gens_training_data.pkl -d aft -n 25_Gens_Post -y config.yaml
+timesweeper train -i 25gens_training_data.pkl -d hft -n 25_Gens_Post -y config.yaml
+timesweeper plot_training -i 25gens_training_data.pkl -n 25_Gens_Post -o 25_Gens_Post/images
