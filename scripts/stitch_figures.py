@@ -10,7 +10,12 @@ from tqdm import tqdm
 
 
 def extract_nums(filename):
-    return float(re.findall(r"[-+]?\d*\.\d+|\d+", filename)[-1])
+    if "neg" in filename:
+        ele = float(re.findall(r"[-+]?\d*\.\d+|\d+", filename)[-1])
+        return (0, ele, "")
+    else:
+        ele = float(re.findall(r"[-+]?\d*\.\d+|\d+", filename)[-1])
+        return (1, ele, "")
 
 
 def get_file_from_partial(partial_name, filelist):
@@ -46,15 +51,15 @@ def make_class_fig(pdfs, ids, data_types, class_plot_types, tmpdir, outdir):
         )
 
     subprocess.run(
-        f"convert -gravity center -quality 100 -append {' '.join(fig_rows)} {outdir}/final_classfigs.pdf",
-        shell=True,
-    )
-    subprocess.run(
         f"convert -gravity center -quality 100 -append {' '.join(fig_rows)} {outdir}/final_classfigs.tiff",
         shell=True,
     )
     subprocess.run(
         f"convert -gravity center -quality 100 -append {' '.join(fig_rows)} {outdir}/final_classfigs.png",
+        shell=True,
+    )
+    subprocess.run(
+        f"convert -quality 100 {outdir}/final_classfigs.tiff {outdir}/final_classfigs.png",
         shell=True,
     )
 
@@ -98,15 +103,15 @@ def make_reg_fig(
         )
 
     subprocess.run(
-        f"convert -gravity center -quality 100 -append {' '.join(fig_rows)} -quality 100 {outdir}/final_regfigs.pdf",
-        shell=True,
-    )
-    subprocess.run(
         f"convert -gravity center -quality 100 -append {' '.join(fig_rows)} -quality 100 {outdir}/final_regfigs.tiff",
         shell=True,
     )
     subprocess.run(
         f"convert -gravity center -quality 100 -append {' '.join(fig_rows)} {outdir}/final_regfigs.png",
+        shell=True,
+    )
+    subprocess.run(
+        f"convert -quality 100 {outdir}/final_regfigs.tiff {outdir}/final_regfigs.png",
         shell=True,
     )
 
@@ -175,6 +180,11 @@ if ua.mode == "model":
         set([i.split("/")[-1].split(filter_term)[0] for i in pdfs if filter_term in i])
     )
     ids.sort(key=extract_nums)
+    # Want absolute distance if working with timing
+    if "neg" in ids[0]:
+        ids[:3] = reversed(ids[:3])
+
+    print(ids)
 
     make_class_fig(pdfs, ids, data_types, class_plot_types, ua.tmpdir, ua.outdir)
     make_reg_fig(

@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --partition=general
 #SBATCH --constraint=rhel8
-#SBATCH --mem=16G
+#SBATCH --mem=32G
 #SBATCH -c 32
 #SBATCH --time=24:00:00
 #SBATCH -J workflow

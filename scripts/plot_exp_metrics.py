@@ -4,7 +4,7 @@ import os
 import re
 from glob import glob
 from pathlib import Path
-
+from tqdm import tqdm
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -113,9 +113,7 @@ def plot_roc(name, data, dtype, outdir):
     swp_fpr, swp_tpr, thresh = roc_curve(sweep_labs, sdn_probs, pos_label=2)
     swp_auc_val = auc(swp_fpr, swp_tpr)
     plt.plot(
-        swp_fpr,
-        swp_tpr,
-        label=f"{name.capitalize()} SDN vs SSV: {swp_auc_val:.4}",
+        swp_fpr, swp_tpr, label=f"{name.capitalize()} SDN vs SSV: {swp_auc_val:.4}",
     )
 
     # Coerce all ssvs into sweep binary pred
@@ -132,12 +130,8 @@ def plot_roc(name, data, dtype, outdir):
     plt.xlabel("FPR")
     plt.ylabel("TPR")
     plt.legend()
-    plt.savefig(
-        f"{outdir}/{name.replace(' ', '_')}_Timesweeper_Class_{dtype}_roc_curve.pdf"
-    )
-    plt.savefig(
-        f"{outdir}/{name.replace(' ', '_')}_Timesweeper_Class_{dtype}_roc_curve.png"
-    )
+    plt.savefig(f"{outdir}/{name.replace(' ', '_')}_Timesweeper_Class_{dtype}_roc.pdf")
+    plt.savefig(f"{outdir}/{name.replace(' ', '_')}_Timesweeper_Class_{dtype}_roc.png")
     plt.clf()
 
 
@@ -177,12 +171,8 @@ def plot_prec_recall(name, data, dtype, outdir):
     plt.legend()
     plt.xlabel("Recall")
     plt.ylabel("Precision")
-    plt.savefig(
-        f"{outdir}/{name.replace(' ', '_')}_Timesweeper_Class_{dtype}_pr_curve.pdf"
-    )
-    plt.savefig(
-        f"{outdir}/{name.replace(' ', '_')}_Timesweeper_Class_{dtype}_pr_curve.png"
-    )
+    plt.savefig(f"{outdir}/{name.replace(' ', '_')}_Timesweeper_Class_{dtype}_pr.pdf")
+    plt.savefig(f"{outdir}/{name.replace(' ', '_')}_Timesweeper_Class_{dtype}_pr.png")
     plt.clf()
 
 
@@ -222,6 +212,7 @@ def main():
         for t_file in glob(
             os.path.join(
                 ua.in_dir,
+                "test_predictions",
                 f"*Timesweeper_Class_{dtype}_class_test_predictions.csv",
             ),
             recursive=True,
