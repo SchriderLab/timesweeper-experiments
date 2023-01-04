@@ -14,6 +14,29 @@ plt.rcParams["font.size"] = "16"
 plt.rcParams["figure.figsize"] = (8, 8)
 
 
+def plot_sel_coeff_preds(pred_file, dtype, name, outdir, scenarios):
+    """Plot s predictions against true value, color by scenario."""
+
+    for g in np.unique(true_class):
+        i = np.where(true_class == g)
+        plt.scatter(s_true[i], s_pred[i], label=scenarios[g].upper())
+        plt.annotate(
+            f"r^2 of {scenarios[g].upper()}: {np.round(r2_score(s_true[i], s_pred[i]), 2)}",
+            (0.05, 0.27),
+        )
+
+    plt.legend()
+    plt.xlim((0, 0.3))
+    plt.ylim((0, 0.3))
+    plt.title("Predicted vs True Selection Coefficients")
+    plt.ylabel("Predicted S")
+    plt.xlabel("True S")
+
+    plt.savefig(f"{outdir}/{name.replace(' ', '_')}_Timesweeper_Class_{dtype}_roc.pdf")
+    plt.savefig(f"{outdir}/{name.replace(' ', '_')}_Timesweeper_Class_{dtype}_roc.png")
+    plt.clf()
+
+
 def plot_confusion_matrix(
     working_dir, cm, target_names, title="Confusion matrix", cmap=None, normalize=False
 ):
@@ -113,7 +136,9 @@ def plot_roc(name, data, dtype, outdir):
     swp_fpr, swp_tpr, thresh = roc_curve(sweep_labs, sdn_probs, pos_label=2)
     swp_auc_val = auc(swp_fpr, swp_tpr)
     plt.plot(
-        swp_fpr, swp_tpr, label=f"{name.capitalize()} SDN vs SSV: {swp_auc_val:.4}",
+        swp_fpr,
+        swp_tpr,
+        label=f"{name.capitalize()} SDN vs SSV: {swp_auc_val:.4}",
     )
 
     # Coerce all ssvs into sweep binary pred
@@ -212,6 +237,7 @@ def main():
         for t_file in glob(
             os.path.join(
                 ua.in_dir,
+                "*",
                 "test_predictions",
                 f"*Timesweeper_Class_{dtype}_class_test_predictions.csv",
             ),
@@ -242,6 +268,24 @@ def main():
                 title=f"{name}_Timesweeper_Class_{dtype}_confmat_unnormed",
                 normalize=False,
             )
+
+        datums = {}
+        for t_file in glob(
+            os.path.join(
+                ua.in_dir,
+                "*",
+                "test_predictions",
+                f"*Timesweeper_Reg_{dtype}_selcoeff_test_predictions.csv",
+            ),
+            recursive=True,
+        ):
+            run_name = re.split(r"_[tT]imesweeper", os.path.split(t_file)[1])[0]
+            data = pd.read_csv(t_file, header=0)
+
+            datums[run_name] = data
+
+        for (name, data) in datums.items():
+            plot_sel_coeff_preds(data, dtype, name, ua.outdir)
 
 
 if __name__ == "__main__":

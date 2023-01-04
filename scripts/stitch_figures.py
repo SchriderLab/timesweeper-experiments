@@ -168,7 +168,7 @@ data_types = ["aft", "hft"]
 reg_class_types = ["sdn", "ssv"]
 confmat_normed = ["normed", "unnormed"]
 class_plot_types = ["pr", "roc", "confmat_normed", "confmat_unnormed", "training"]
-reg_plot_types = ["selcoeffs", "corrected_selcoeffs", "reg_mse_training"]
+reg_plot_types = ["selcoeffs", "reg_mse_training"]
 
 if ua.mode == "model":
     pdfs = []

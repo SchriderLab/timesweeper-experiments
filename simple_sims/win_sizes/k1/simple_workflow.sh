@@ -16,7 +16,7 @@ source activate blinx
 
 
 
-#timesweeper condense --hft -o training_data.pkl -y config.yaml
+timesweeper condense --hft -o training_data.pkl -y config.yaml
 timesweeper train -i training_data.pkl -d aft -n Win_size_1 -y config.yaml
 timesweeper train -i training_data.pkl -d hft -n Win_size_1 -y config.yaml
 timesweeper plot_training -i training_data.pkl -n Win_size_1 -o Win_size_1/images

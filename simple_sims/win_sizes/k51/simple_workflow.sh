@@ -11,7 +11,7 @@
 #SBATCH --mail-user=lswhiteh@email.unc.edu
 
 conda activate blinx
-
+source activate blinx
 
 #timesweeper summarize -n Win_size_51 -y config.yaml
 timesweeper condense --hft -o k51_training_data.pkl -y config.yaml
