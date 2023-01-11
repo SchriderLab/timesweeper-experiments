@@ -12,7 +12,7 @@ win_size: 11
 
 num_sample_points : 20
 
-inds_per_tp : 1  # Diploid inds
+inds_per_tp : 10  # Diploid inds
 
 physLen : 5000000
 

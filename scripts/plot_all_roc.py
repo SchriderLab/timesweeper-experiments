@@ -11,10 +11,28 @@ from sklearn.metrics import (
     precision_recall_curve,
 )
 
+ap = argparse.ArgumentParser()
+ap.add_argument(
+    "-id",
+    "--in-dir",
+    dest="in_dir",
+    required=True,
+    type=Path,
+    help="Directory of experiments to glob through.",
+)
+ap.add_argument(
+    "-o",
+    "--output-dir",
+    dest="outdir",
+    required=True,
+    type=Path,
+    help="Path to write image files to write as plot.",
+)
 
-fitfile = "../sample_size_10_benchmark/test_predictions/fitvals.csv"
-aftfile = "../sample_size_10_benchmark/test_predictions/Sample_Size_10_benchmark_Timesweeper_aft_test_predictions.csv"
-hftfile = "../sample_size_10_benchmark/test_predictions/Sample_Size_10_benchmark_Timesweeper_hft_test_predictions.csv"
+args = ap.parse_args()
+
+if not os.path.exists(args.outdir):
+    os.makedirs(args.outdir)
 
 
 ### ROC Curves
@@ -42,6 +60,7 @@ fpr, tpr, thresh = roc_curve(labs, pred_probs)
 auc_val = auc(fpr, tpr)
 plt.plot(fpr, tpr, label=f"HFT Neutral vs Sweep AUC: {auc_val:.4}")
 
+"""
 # FIT
 fit_data = pd.read_csv(fitfile).dropna()
 
@@ -56,7 +75,7 @@ plt.ylabel("TPR")
 plt.legend()
 plt.savefig("ss10_all_roc.pdf")
 plt.clf()
-
+"""
 
 ### PR Curves
 # AFT

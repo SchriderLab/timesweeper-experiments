@@ -6,7 +6,7 @@ from glob import glob
 
 from tqdm import tqdm
 
-"""Requires Imagemagick < v7 and tiff2pdf"""
+"""Requires Imagemagick < v7 and pdf2pdf"""
 
 
 def extract_nums(filename):
@@ -36,30 +36,26 @@ def make_class_fig(pdfs, ids, data_types, class_plot_types, tmpdir, outdir):
                 imgfile = get_file_from_partial(f"{id}_Timesweeper_Class_{d}_{c}", pdfs)
                 imgs.append(imgfile)
 
-            _name = f"{tmpdir}/{id}_{d}_classfigs.tiff"
+            _name = f"{tmpdir}/{id}_{d}_classfigs.png"
             f_imgs.append(_name)
             subprocess.run(
-                f"convert -gravity center -quality 100 +append {' '.join(imgs)} {_name}",
+                f"convert -gravity center -quality 100 -density 500 +append {' '.join(imgs)} -resample 300 {_name}",
                 shell=True,
             )
 
-        _name = f"{tmpdir}/{id}_all_classfigs.tiff"
+        _name = f"{tmpdir}/{id}_all_classfigs.png"
         fig_rows.append(_name)
         subprocess.run(
-            f"convert -gravity center -quality 100 +append {' '.join(f_imgs)} {_name}",
+            f"convert -gravity center -quality 100 -density 500 +append {' '.join(f_imgs)} -resample 300 {_name}",
             shell=True,
         )
 
     subprocess.run(
-        f"convert -gravity center -quality 100 -append {' '.join(fig_rows)} {outdir}/final_classfigs.tiff",
+        f"convert -gravity center -quality 100 -density 150  -size 500 -colorspace sRGB -append {' '.join(fig_rows)} {outdir}/final_classfigs.png",
         shell=True,
     )
     subprocess.run(
-        f"convert -gravity center -quality 100 -append {' '.join(fig_rows)} {outdir}/final_classfigs.png",
-        shell=True,
-    )
-    subprocess.run(
-        f"convert -quality 100 {outdir}/final_classfigs.tiff {outdir}/final_classfigs.png",
+        f"convert {outdir}/final_classfigs.png {outdir}/final_classfigs.pdf",
         shell=True,
     )
 
@@ -81,37 +77,33 @@ def make_reg_fig(
                     )
                     s_imgs.append(imgfile)
 
-                _name = f"{tmpdir}/{id}_bothclass_{d}_{c}.tiff"
+                _name = f"{tmpdir}/{id}_bothclass_{d}_{c}.png"
                 c_imgs.append(_name)
                 subprocess.run(
-                    f"convert -gravity center -quality 100 +append {' '.join(s_imgs)} {_name}",
+                    f"convert -gravity center -quality 100 -density 150  -colorspace sRGB +append {' '.join(s_imgs)} {_name}",
                     shell=True,
                 )
 
-            _name = f"{tmpdir}/{id}_bothclass_{d}_all.tiff"
+            _name = f"{tmpdir}/{id}_bothclass_{d}_all.png"
             d_imgs.append(_name)
             subprocess.run(
-                f"convert -gravity center -quality 100 +append {' '.join(c_imgs)} {_name}",
+                f"convert -gravity center -quality 100 -density 150  -colorspace sRGB +append {' '.join(c_imgs)} {_name}",
                 shell=True,
             )
 
-        _name = f"{tmpdir}/{id}_all_regfigs.tiff"
+        _name = f"{tmpdir}/{id}_all_regfigs.png"
         fig_rows.append(_name)
         subprocess.run(
-            f"convert -gravity center -quality 100 +append {' '.join(d_imgs)} {_name}",
+            f"convert -gravity center -quality 100 -density 150  -colorspace sRGB +append {' '.join(d_imgs)} {_name}",
             shell=True,
         )
 
     subprocess.run(
-        f"convert -gravity center -quality 100 -append {' '.join(fig_rows)} -quality 100 {outdir}/final_regfigs.tiff",
+        f"convert -gravity center -quality 100 -density 150  -colorspace sRGB -append {' '.join(fig_rows)} {outdir}/final_regfigs.png",
         shell=True,
     )
     subprocess.run(
-        f"convert -gravity center -quality 100 -append {' '.join(fig_rows)} {outdir}/final_regfigs.png",
-        shell=True,
-    )
-    subprocess.run(
-        f"convert -quality 100 {outdir}/final_regfigs.tiff {outdir}/final_regfigs.png",
+        f"convert {outdir}/final_regfigs.png {outdir}/final_regfigs.png",
         shell=True,
     )
 

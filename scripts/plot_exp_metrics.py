@@ -8,32 +8,46 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from sklearn.metrics import auc, confusion_matrix, precision_recall_curve, roc_curve
+from sklearn.metrics import (
+    auc,
+    confusion_matrix,
+    precision_recall_curve,
+    roc_curve,
+    r2_score,
+)
 
 plt.rcParams["font.size"] = "16"
 plt.rcParams["figure.figsize"] = (8, 8)
 
 
-def plot_sel_coeff_preds(pred_file, dtype, name, outdir, scenarios):
+def plot_sel_coeff_preds(data, dtype, name, outdir, scenarios):
     """Plot s predictions against true value, color by scenario."""
+    if "ssv" in name:
+        true_class = "ssv"
+    elif "sdn" in name:
+        true_class = "sdn"
 
-    for g in np.unique(true_class):
-        i = np.where(true_class == g)
-        plt.scatter(s_true[i], s_pred[i], label=scenarios[g].upper())
-        plt.annotate(
-            f"r^2 of {scenarios[g].upper()}: {np.round(r2_score(s_true[i], s_pred[i]), 2)}",
-            (0.05, 0.27),
-        )
+    plt.scatter(
+        data["true_sel_coeff"], data["pred_sel_coeff"], label=true_class.upper()
+    )
+    plt.annotate(
+        f"""r^2 of {true_class.upper()}: {np.round(r2_score(data["true_sel_coeff"], data["pred_sel_coeff"]), 2)}""",
+        (0.05, 0.27),
+    )
 
     plt.legend()
     plt.xlim((0, 0.3))
     plt.ylim((0, 0.3))
-    plt.title("Predicted vs True Selection Coefficients")
+    plt.title(f"{name} \n Predicted vs True Selection Coefficients")
     plt.ylabel("Predicted S")
     plt.xlabel("True S")
 
-    plt.savefig(f"{outdir}/{name.replace(' ', '_')}_Timesweeper_Class_{dtype}_roc.pdf")
-    plt.savefig(f"{outdir}/{name.replace(' ', '_')}_Timesweeper_Class_{dtype}_roc.png")
+    plt.savefig(
+        f"{outdir}/{name.replace(' ', '_')}_Timesweeper_Reg_{dtype}_selcoeffs.pdf"
+    )
+    plt.savefig(
+        f"{outdir}/{name.replace(' ', '_')}_Timesweeper_Reg_{dtype}_selcoeffs.png"
+    )
     plt.clf()
 
 
@@ -117,7 +131,6 @@ def plot_confusion_matrix(
 
     plt.ylabel("True label")
     plt.xlabel(f"Predicted label\naccuracy={accuracy:0.4f}; misclass={misclass:0.4f}")
-
     plt.savefig(os.path.join(working_dir, outfile + ".pdf"))
     plt.savefig(os.path.join(working_dir, outfile + ".png"))
     plt.clf()
@@ -244,6 +257,8 @@ def main():
             recursive=True,
         ):
             run_name = re.split(r"_[tT]imesweeper", os.path.split(t_file)[1])[0]
+            print(run_name)
+
             data = pd.read_csv(t_file, header=0)
             data.true = [lab_conv[i] for i in data.true]
             data.pred = [lab_conv[i] for i in data.pred]
@@ -280,12 +295,12 @@ def main():
             recursive=True,
         ):
             run_name = re.split(r"_[tT]imesweeper", os.path.split(t_file)[1])[0]
+            print(run_name)
             data = pd.read_csv(t_file, header=0)
-
             datums[run_name] = data
 
         for (name, data) in datums.items():
-            plot_sel_coeff_preds(data, dtype, name, ua.outdir)
+            plot_sel_coeff_preds(data, dtype, name, ua.outdir, list(lab_conv.keys()))
 
 
 if __name__ == "__main__":

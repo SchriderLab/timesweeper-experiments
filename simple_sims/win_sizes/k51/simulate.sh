@@ -11,5 +11,5 @@
 #SBATCH --array=0-10000:50
 
 conda activate blinx
-
+source activate blinx
 timesweeper sim_custom --rep-range ${SLURM_ARRAY_TASK_ID} $((${SLURM_ARRAY_TASK_ID}+50)) -y config.yaml
