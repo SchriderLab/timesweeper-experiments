@@ -37,3 +37,4 @@ simple_sims/sample_size/ss_20/samp_size_sims/images/
 simple_sims/tps_vary/1_tp/timeSeriesSweeps
 spectralHMM/
 tmp/
+*fvec

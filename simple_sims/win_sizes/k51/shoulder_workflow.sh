@@ -14,6 +14,6 @@ conda activate blinx
 
 
 timesweeper condense --hft -o shoulder_k51_training_data.pkl -y config.yaml --allow-shoulders 700
-timesweeper train -i shoulder_k51_training_data.pkl -d aft -n Win_size_51 -y config.yaml
-timesweeper train -i shoulder_k51_training_data.pkl -d hft -n Win_size_51 -y config.yaml
-timesweeper plot_training -i shoulder_k51_training_data.pkl -n Win_size_51 -o Win_size_51/images
+timesweeper train -i shoulder_k51_training_data.pkl -d aft -n Shoulder_Win_size_51 -y config.yaml
+timesweeper train -i shoulder_k51_training_data.pkl -d hft -n Shoulder_Win_size_51 -y config.yaml
+timesweeper plot_training -i shoulder_k51_training_data.pkl -n Shoulder_Win_size_51 -o Shoulder_Win_size_51/images

@@ -176,14 +176,22 @@ def plot_roc(name, data, dtype, outdir):
 def plot_prec_recall(name, data, dtype, outdir):
     """Plot PR curve by binarizing neutral/sweep."""
     # Plot sdn/ssv distinction
-    sweep_idxs = np.transpose(np.array((data["true"] > 0)).nonzero())
-    sweep_labs = np.array(data["true"])[sweep_idxs]
+
+    filt_data = data[(data["sdn_scores"] > 0.0) & (data["ssv_scores"] > 0.0)]
+
+    sweep_idxs = np.transpose(np.array((filt_data["true"] > 0)).nonzero())
+    sweep_labs = np.array(filt_data["true"])[sweep_idxs]
 
     sweep_labs[sweep_labs == 1] = 0
     sweep_labs[sweep_labs == 2] = 1
 
-    if len(np.unique(data["true"])) > 2:
-        sdn_probs = data[data["true"] > 0]["sdn_scores"]
+    # TODO FIX THIS: divide score of sweep by summed sweep scores
+    # TODO FIlter out where probs of both scores are 0
+    if len(np.unique(filt_data["true"])) > 2:
+        sdn_probs = filt_data[filt_data["true"] > 0]["sdn_scores"] / (
+            filt_data[filt_data["true"] > 0]["sdn_scores"]
+            + filt_data[filt_data["true"] > 0]["ssv_scores"]
+        )
 
         swp_prec, swp_rec, swp_thresh = precision_recall_curve(
             sweep_labs.flatten(), sdn_probs
