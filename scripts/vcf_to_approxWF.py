@@ -1,12 +1,7 @@
 import argparse
-import math
-from pathlib import Path
-import multiprocessing as mp
 import allel
 import numpy as np
-from tqdm import tqdm
 import subprocess
-from itertools import cycle
 import os
 
 # type: ignore
@@ -17,68 +12,83 @@ Some calculations are done assuming you want 20% of the chromosome length sample
 """
 
 
-def converter(args):
-    vcffile, L, samp_sizes = args
-    try:
-        vcf = allel.read_vcf(
-            vcffile, fields=["variants/CHROM", "variants/POS", "calldata/GT"]
+def get_sweep(filename):
+    if "neut" in filename:
+        return "neut"
+    elif "sdn" in filename:
+        return "sdn"
+    elif "ssv" in filename:
+        return "ssv"
+    else:
+        return None
+
+
+def converter(vcffile, samp_sizes):
+    vcf = allel.read_vcf(
+        vcffile,
+        fields=[
+            "variants/CHROM",
+            "variants/POS",
+            "calldata/GT",
+            "variants/S",
+            "variants/MT",
+        ],
+    )
+    snps = list(
+        zip(
+            vcf["variants/CHROM"],
+            vcf["variants/POS"],
+            vcf["variants/MT"],
+            vcf["variants/S"],
         )
-        snps = list(zip(vcf["variants/CHROM"], vcf["variants/POS"]))
-        haps = allel.GenotypeArray(vcf["calldata/GT"]).to_haplotypes()
-        # Shape is now (snps, haps)
+    )
+    haps = allel.GenotypeArray(vcf["calldata/GT"]).to_haplotypes()
+    # Shape is now (snps, haps)
 
-        # Iterate through timepoints to get each row
-        tp_labels = list(range(10, 210, 10))
-        tp_counts = []
-        cur_samp = 0
-        for tp_idx in range(len(samp_sizes)):
-            tp_haps = haps[cur_samp : cur_samp + (2 * samp_sizes[tp_idx]) :]
-            cur_samp += 2 * samp_sizes[tp_idx]
-            counts = np.sum(tp_haps, axis=1).flatten()
-            tp_counts.append([f"{c}/{2*samp_sizes[tp_idx]}" for c in counts])
+    center_idx = int(haps.shape[1] / 2)
 
-        vcf_fullpath = os.path.abspath(vcffile)
-        if "neut" in vcf_fullpath:
-            tp_msOutfile = (
-                vcffile.split(".")[0] + f".neut.win_{windows[window_idx]}.msOut"
-            )
-        elif "sdn" in vcf_fullpath:
-            tp_msOutfile = (
-                vcffile.split(".")[0] + f".sdn.win_{windows[window_idx]}.msOut"
-            )
-        elif "ssv" in vcf_fullpath:
-            tp_msOutfile = (
-                vcffile.split(".")[0] + f".ssv.win_{windows[window_idx]}.msOut"
-            )
+    for i in range(len(snps)):
+        if str(snps[i][2]) == "2":
+            center_idx = i
+            break
         else:
-            print("Path doesn't have necessary sweep component")
-            continue
+            pass
 
-        if tp_idx == 0:
-            with open(tp_msOutfile, "w") as ofile:
-                ofile.write(
-                    f"ms {tp_haps.shape[0]} {len(samp_sizes)} -t {ua.theta}" + "\n"
-                )
-                ofile.write("\n")
-                ofile.write("//" + "\n")
-                ofile.write(f"segsites: {tp_haps.shape[1]}" + "\n")
-                ofile.write(
-                    f"positions: {' '.join([str(i) for i in positions])}" + "\n"
-                )
-                for hap in tp_haps:
-                    ofile.write("".join([str(int(i)) for i in hap]))
-                    ofile.write("\n")
+    sel_coeff = snps[center_idx][3]
+    target_hap = haps[center_idx, :]
 
-        fvec_name = tp_msOutfile.replace("msOut", "fvec")
-        subprocess.run(
-            f"diploSHIC fvecSim diploid {tp_msOutfile} {fvec_name}",
-            shell=True,
-            stderr=open(f"{tp_msOutfile}.shiclog.txt", "a"),
-            stdout=open(f"{tp_msOutfile}.shiclog.txt", "a"),
-        )
+    # Iterate through timepoints to get each row
+    tp_labels = list(range(10, 210, 10))
+    tp_counts = []
+    cur_samp = 0
+    for tp_idx in range(len(samp_sizes)):
+        tp_haps = target_hap[cur_samp : cur_samp + (2 * samp_sizes[tp_idx])]
+        cur_samp += 2 * samp_sizes[tp_idx]
+        counts = np.sum(tp_haps)
+        tp_counts.append(f"{counts}/{2*samp_sizes[tp_idx]}")
 
-    except Exception as e:
-        print(f"{vcffile} couldn't be converted due to: {e}")
+    sweep = get_sweep(os.path.abspath(vcffile))
+    locifile = vcffile + ".appWF_in.loci"
+    with open(locifile, "w") as ofile:
+        ofile.write("time\t" + "\t".join([str(i) for i in tp_labels]) + "\n")
+        ofile.write(f"{sweep}_{str(sel_coeff)}" + "\t" + "\t".join(tp_counts))
+
+    cmd = f"""/work/users/l/s/lswhiteh/timesweeper-experiments/approxwf/ApproxWF \
+        task=estimate \
+        loci={locifile} \
+        N=500 \
+        mutRate=1e-7 \
+        h=0 \
+        sampling=1000 \
+        MCMClength=100000 \
+        verbose"""
+
+    subprocess.run(
+        cmd,
+        shell=True,
+        stdout=open(f"{locifile}.mcmc.log", "w"),
+        stderr=open(f"{locifile}.mcmc.log", "w"),
+    )
 
 
 def get_ua():
@@ -96,14 +106,6 @@ def get_ua():
         help="Number of diploid individuals at each sampling timepoint to extract from the haplotypes.",
     )
     agp.add_argument(
-        "-id",
-        "--in-dir",
-        dest="in_dir",
-        type=str,
-        required=False,
-        help="Top-level vcf directory to search for VCFs in. E.g. samp_size_10/vcfs. Output will be in the same structure as VCFs if --outdir is unused with this option.",
-    )
-    agp.add_argument(
         "-i",
         "--in-vcf",
         dest="in_vcf",
@@ -111,50 +113,9 @@ def get_ua():
         required=False,
         help="Single VCF to convert.",
     )
-    agp.add_argument(
-        "--simulated",
-        dest="simmed",
-        type=bool,
-        default=True,
-        help="Whether VCF(s) are from SLiM or not and therefore whether to check for mutation type.",
-    )
-
-    agp.add_argument(
-        "--sim-chrom-size",
-        dest="chrom_size",
-        type=int,
-        required=False,
-        default=5000000,
-        help="Total size of simulated chromosomes used to output VCFs.",
-    )
-    agp.add_argument(
-        "--theta",
-        dest="theta",
-        type=float,
-        required=False,
-        default=4 * 500 * (1e-7),
-        help="Theta used for simulations.",
-    )
     return agp.parse_args()
 
 
 ua = get_ua()
 
-if ua.in_vcf:
-    vcflist = [ua.in_vcf]
-elif ua.in_dir:
-    path = Path(ua.in_dir)
-    vcflist = [str(i) for i in path.glob("**/*.vcf")]
-else:
-    raise ValueError("[Err] Must provide either in-vcf or in-dir.")
-
-mp_args = zip(vcflist, cycle([ua.chrom_size]), cycle([ua.samp_sizes]))
-
-with mp.Pool(mp.cpu_count()) as p:
-    _ = list(
-        tqdm(
-            p.imap_unordered(converter, mp_args, chunksize=4),
-            desc="Converting",
-            total=len(vcflist),
-        )
-    )
+converter(ua.in_vcf, ua.samp_sizes)

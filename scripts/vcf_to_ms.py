@@ -31,10 +31,10 @@ def converter(args):
 
         ### Iterate through window positions
         windows = list(range(11))
-        for window_idx in range(len(windows)):
+        for window in windows:
             win_start, win_end = (
-                windows[window_idx] * window_size,
-                windows[window_idx + 1] * window_size,
+                window * window_size,
+                (window + 1) * window_size,
             )
 
             snp_idxs = [
@@ -47,17 +47,11 @@ def converter(args):
 
             vcf_fullpath = os.path.abspath(vcffile)
             if "neut" in vcf_fullpath:
-                tp_msOutfile = (
-                    vcffile.split(".")[0] + f".neut.win_{windows[window_idx]}.msOut"
-                )
+                tp_msOutfile = vcffile.split(".")[0] + f".neut.win_{window}.msOut"
             elif "sdn" in vcf_fullpath:
-                tp_msOutfile = (
-                    vcffile.split(".")[0] + f".sdn.win_{windows[window_idx]}.msOut"
-                )
+                tp_msOutfile = vcffile.split(".")[0] + f".sdn.win_{window}.msOut"
             elif "ssv" in vcf_fullpath:
-                tp_msOutfile = (
-                    vcffile.split(".")[0] + f".ssv.win_{windows[window_idx]}.msOut"
-                )
+                tp_msOutfile = vcffile.split(".")[0] + f".ssv.win_{window}.msOut"
             else:
                 print("Path doesn't have necessary sweep component")
                 continue
@@ -65,7 +59,7 @@ def converter(args):
             # Iterate through timepoints for a time-resolved MS file
             cur_samp = 0
             for tp_idx in range(len(samp_sizes)):
-                tp_haps = haps[cur_samp : cur_samp + (2 * samp_sizes[tp_idx]) :]
+                tp_haps = haps[cur_samp : cur_samp + (2 * samp_sizes[tp_idx])]
                 cur_samp += 2 * samp_sizes[tp_idx]
 
                 # Remove monomorphic sites for last one to only get plausibly sampled SNPs
