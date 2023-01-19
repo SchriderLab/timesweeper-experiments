@@ -38,3 +38,4 @@ simple_sims/tps_vary/1_tp/timeSeriesSweeps
 spectralHMM/
 tmp/
 *fvec
+diploSHIC
