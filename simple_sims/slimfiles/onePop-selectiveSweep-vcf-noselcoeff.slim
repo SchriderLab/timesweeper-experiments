@@ -128,10 +128,10 @@ s4 10000:15000 late()
 
         cat("Done emitting sample\n");
 
-        //if (sim.generation == simEndTime)
-        //{
-        //    p1.outputVCFSample(size(p1.individuals), replace=F, filePath=outFileVCF+".final", append=F);
-        //}
+        if (sim.generation == simEndTime)
+        {
+            p1.outputVCFSample(size(p1.individuals), replace=F, filePath=outFileVCF+".final", append=F);
+        }
     }
 }
 

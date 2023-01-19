@@ -14,6 +14,6 @@ conda init bash
 conda activate blinx
 source activate blinx
 
-python vcf_to_ms.py -i /work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/benchmarks/benchmark_sims/vcfs/neut/${SLURM_ARRAY_TASK_ID}/merged.vcf
-python vcf_to_ms.py -i /work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/benchmarks/benchmark_sims/vcfs/sdn/${SLURM_ARRAY_TASK_ID}/merged.vcf
-python vcf_to_ms.py -i /work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/benchmarks/benchmark_sims/vcfs/ssv/${SLURM_ARRAY_TASK_ID}/merged.vcf
+python vcf_to_approxWF.py -i /work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/benchmarks/benchmark_sims/vcfs/neut/${SLURM_ARRAY_TASK_ID}/merged.vcf
+python vcf_to_approxWF.py -i /work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/benchmarks/benchmark_sims/vcfs/sdn/${SLURM_ARRAY_TASK_ID}/merged.vcf
+python vcf_to_approxWF.py -i /work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/benchmarks/benchmark_sims/vcfs/ssv/${SLURM_ARRAY_TASK_ID}/merged.vcf
