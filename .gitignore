@@ -39,3 +39,7 @@ spectralHMM/
 tmp/
 *fvec
 diploSHIC
+approxwf
+SF2
+foo*
+test.*

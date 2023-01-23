@@ -8,6 +8,7 @@ from tqdm import tqdm
 import subprocess
 from itertools import cycle
 import os
+import random
 
 # type: ignore
 
@@ -18,7 +19,7 @@ Some calculations are done assuming you want 20% of the chromosome length sample
 
 
 def converter(args):
-    vcffile, L, samp_sizes = args
+    vcffile, L, samp_size = args
     try:
         vcf = allel.read_vcf(
             vcffile, fields=["variants/CHROM", "variants/POS", "calldata/GT"]
@@ -26,6 +27,9 @@ def converter(args):
         raw_snps = list(zip(vcf["variants/CHROM"], vcf["variants/POS"]))
         raw_haps = allel.GenotypeArray(vcf["calldata/GT"]).to_haplotypes().T
         # Shape is now (haps, snps)
+        # Subsample to individuals requested
+        raw_haps = raw_haps[random.sample(range(raw_haps.shape[0]), samp_size * 2), :]
+        print(raw_haps.shape)
 
         window_size = L / 11
 
@@ -47,71 +51,39 @@ def converter(args):
 
             vcf_fullpath = os.path.abspath(vcffile)
             if "neut" in vcf_fullpath:
-                tp_msOutfile = vcffile.split(".")[0] + f".neut.win_{window}.msOut"
+                msOutfile = vcffile.split(".")[0] + f".final.neut.win_{window}.msOut"
             elif "sdn" in vcf_fullpath:
-                tp_msOutfile = vcffile.split(".")[0] + f".sdn.win_{window}.msOut"
+                msOutfile = vcffile.split(".")[0] + f".final.sdn.win_{window}.msOut"
             elif "ssv" in vcf_fullpath:
-                tp_msOutfile = vcffile.split(".")[0] + f".ssv.win_{window}.msOut"
+                msOutfile = vcffile.split(".")[0] + f".final.ssv.win_{window}.msOut"
             else:
                 print("Path doesn't have necessary sweep component")
                 continue
 
-            # Iterate through timepoints for a time-resolved MS file
-            cur_samp = 0
-            for tp_idx in range(len(samp_sizes)):
-                tp_haps = haps[cur_samp : cur_samp + (2 * samp_sizes[tp_idx])]
-                cur_samp += 2 * samp_sizes[tp_idx]
+            # Recalculate positions with filtered SNPs
+            # Scale position in window to 0-1
+            positions = [
+                ((snps[i][1] - win_start) / window_size) for i in range(len(snps))
+            ]
 
-                # Remove monomorphic sites for last one to only get plausibly sampled SNPs
-                # Get indices of monomorphs, remove from haplotypes and snp data
-                mono_inds = [
-                    i
-                    for i in range(tp_haps.shape[1])
-                    if len(np.unique(tp_haps[:, i])) == 1
-                ]
-                tp_haps = np.delete(tp_haps, mono_inds, axis=1)
-                filt_snps = [snps[i] for i in range(len(snps)) if i not in mono_inds]
+            with open(msOutfile, "w") as ofile:
+                ofile.write(f"ms {haps.shape[0]} 1 -t {ua.theta}" + "\n")
+                ofile.write("\n")
+                ofile.write("//" + "\n")
+                ofile.write(f"segsites: {haps.shape[1]}" + "\n")
+                ofile.write(
+                    f"positions: {' '.join([str(i) for i in positions])}" + "\n"
+                )
+                for hap in haps:
+                    ofile.write("".join([str(int(i)) for i in hap]))
+                    ofile.write("\n")
 
-                # Recalculate positions with filtered SNPs
-                # Scale position in window to 0-1
-                positions = [
-                    ((filt_snps[i][1] - win_start) / window_size)
-                    for i in range(len(filt_snps))
-                ]
-
-                if tp_idx == 0:
-                    with open(tp_msOutfile, "w") as ofile:
-                        ofile.write(
-                            f"ms {tp_haps.shape[0]} {len(samp_sizes)} -t {ua.theta}"
-                            + "\n"
-                        )
-                        ofile.write("\n")
-                        ofile.write("//" + "\n")
-                        ofile.write(f"segsites: {tp_haps.shape[1]}" + "\n")
-                        ofile.write(
-                            f"positions: {' '.join([str(i) for i in positions])}" + "\n"
-                        )
-                        for hap in tp_haps:
-                            ofile.write("".join([str(int(i)) for i in hap]))
-                            ofile.write("\n")
-                else:
-                    with open(tp_msOutfile, "a") as ofile:
-                        ofile.write("\n")
-                        ofile.write("//" + "\n")
-                        ofile.write(f"segsites: {tp_haps.shape[1]}" + "\n")
-                        ofile.write(
-                            f"positions: {' '.join([str(i) for i in positions])}" + "\n"
-                        )
-                        for hap in tp_haps:
-                            ofile.write("".join([str(int(i)) for i in hap]))
-                            ofile.write("\n")
-
-            fvec_name = tp_msOutfile.replace("msOut", "fvec")
+            fvec_name = msOutfile.replace("msOut", "fvec")
             subprocess.run(
-                f"diploSHIC fvecSim diploid {tp_msOutfile} {fvec_name}",
+                f"diploSHIC fvecSim diploid {msOutfile} {fvec_name}",
                 shell=True,
-                # stderr=open(f"{tp_msOutfile}.shiclog.txt", "a"),
-                # stdout=open(f"{tp_msOutfile}.shiclog.txt", "a"),
+                # stderr=open(f"{msOutfile}.shiclog.txt", "a"),
+                # stdout=open(f"{msOutfile}.shiclog.txt", "a"),
             )
 
     except Exception as e:
@@ -124,21 +96,20 @@ def get_ua():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     agp.add_argument(
-        "-s",
-        "--samp-sizes",
-        dest="samp_sizes",
-        nargs="+",
-        default=[10] * 20,
-        required=False,
-        help="Number of diploid individuals at each sampling timepoint to extract from the haplotypes.",
-    )
-    agp.add_argument(
         "-id",
         "--in-dir",
         dest="in_dir",
         type=str,
         required=False,
         help="Top-level vcf directory to search for VCFs in. E.g. samp_size_10/vcfs. Output will be in the same structure as VCFs if --outdir is unused with this option.",
+    )
+    agp.add_argument(
+        "-s",
+        "--samp-size",
+        dest="samp_size",
+        default=200,
+        required=False,
+        help="Number of diploid individuals to use.",
     )
     agp.add_argument(
         "-i",
@@ -181,11 +152,11 @@ if ua.in_vcf:
     vcflist = [ua.in_vcf]
 elif ua.in_dir:
     path = Path(ua.in_dir)
-    vcflist = [str(i) for i in path.glob("**/*.vcf")]
+    vcflist = [str(i) for i in path.glob("**/*.vcf") if "final" in i]
 else:
     raise ValueError("[Err] Must provide either in-vcf or in-dir.")
 
-mp_args = zip(vcflist, cycle([ua.chrom_size]), cycle([ua.samp_sizes]))
+mp_args = zip(vcflist, cycle([ua.chrom_size]), cycle([ua.samp_size]))
 
 with mp.Pool(mp.cpu_count()) as p:
     _ = list(

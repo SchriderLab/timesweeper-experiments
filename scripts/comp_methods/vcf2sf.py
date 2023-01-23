@@ -2,8 +2,9 @@ import gzip
 import csv
 import argparse
 import sys
+import subprocess
 
-"""https://gist.github.com/arundurvasula/30727385d4605fb26770"""
+"""Modified from https://gist.github.com/arundurvasula/30727385d4605fb26770"""
 
 parser = argparse.ArgumentParser(
     description="script to convert an all sites vcf to sweepfinder format. FASTA description will be the sample name in the VCF header.Only does one chromosome/region at a time."
@@ -22,8 +23,17 @@ parser.add_argument(
     "-c",
     "--chromosome",
     action="store",
-    required=True,
+    required=False,
+    default="1",
     help="Chromosome to output. Should be something in the first column of the vcf.",
+)
+parser.add_argument(
+    "-s",
+    "--sampsize",
+    action="store",
+    required=False,
+    default=200,
+    help="Number of individuals to sample if not using entire population.",
 )
 parser.add_argument(
     "-g",
@@ -38,6 +48,7 @@ args = parser.parse_args()
 vcf_in = args.vcf
 out_name = args.out
 out_chr = args.chromosome
+samp_size = args.sampsize
 
 sample_names = []
 sample_seqs = []
@@ -49,7 +60,7 @@ else:
 
 sweep_out = open(out_name, "w")
 sweep_out.write("position\tx\tn\tfolded\n")  # write header
-folded = "1"
+folded = "0"
 
 with opener(vcf_in, "r") as tsvin:
     tsvin = csv.reader(tsvin, delimiter="\t")
@@ -72,10 +83,13 @@ with opener(vcf_in, "r") as tsvin:
             alt_list = alt.split(",")
             x = 0
             n = 0
-            for index, haplotype in enumerate(haplotypes):
-                if haplotype.split(":")[0] != ".":
+            for index, haplotype in enumerate(haplotypes[: 2 * samp_size]):
+                if haplotype.replace("/", "|").split("|")[0] != ".":
                     n = n + 1  # count up the non missing calls
-                if haplotype.split(":")[0] != "0" and haplotype.split(":")[0] != ".":
+                if (
+                    haplotype.replace("/", "|").split("|")[0] != "0"
+                    and haplotype.replace("/", "|").split("|")[0] != "."
+                ):
                     x = x + 1  # count derived alleles = not reference and not missing
 
             if x != 0 and x != n:
@@ -84,3 +98,9 @@ with opener(vcf_in, "r") as tsvin:
                 )
         else:
             continue
+
+
+subprocess.run(
+    f"/work/users/l/s/lswhiteh/timesweeper-experiments/SF2/SweepFinder2 -s 1000 {sweep_out} {sweep_out}.sfres".split(),
+    shell=True,
+)
