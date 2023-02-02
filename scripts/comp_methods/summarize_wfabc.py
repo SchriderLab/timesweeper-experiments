@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import sys
 from pathlib import Path
 from tqdm import tqdm
@@ -26,7 +27,7 @@ in_dir = sys.argv[1]
 outfile = sys.argv[2]
 
 path = Path(in_dir)
-filelist = [str(i) for i in path.glob("**/*MCMC_output.txt")]
+filelist = [str(i) for i in path.glob("**/*WFABC_in_posterior_s.txt")]
 
 reps = []
 swps = []
@@ -35,15 +36,14 @@ est_means = []
 stddevs = []
 
 for f in tqdm(filelist):
-    df = pd.read_csv(f, sep="\t", header=0)
-    df = df[df["index"] > 10000]
-    label = list(df)[-1]
+    with open(f, 'r') as ifile:
+        sel_ests = [float(i) for i in ifile.readline().strip().split()]
 
     reps.append(f.split("/")[-2])
-    swps.append(get_sweep(label))
-    svals.append(float(label.split("_")[-1]))
-    est_means.append(df[label].mean())
-    stddevs.append(df[label].std())
+    swps.append(get_sweep(f))
+    svals.append(float(f.split("_")[-5].split("s")[-1]))
+    est_means.append(np.mean(sel_ests))
+    stddevs.append(np.std(sel_ests))
 
 res_df = pd.DataFrame(
     {"rep": reps, "sweep": swps, "s_val": svals, "estimated_s_mean": est_means, "est_std": stddevs}

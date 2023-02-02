@@ -43,3 +43,7 @@ approxwf
 SF2
 foo*
 test.*
+WFABC_v1.1/
+simple_sims/better_benchmark/benchmark_sims/
+__MACOSX/._WFABC_v1.1
+simple_sims/better_benchmark/test_data/comp_methods/ts_res/benchmark_sims/shic_data/

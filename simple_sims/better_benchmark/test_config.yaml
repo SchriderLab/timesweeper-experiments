@@ -1,6 +1,6 @@
 #General
-work dir: win_size_sims/
-slimfile: ../../slimfiles/onePop-selectiveSweep-vcf-noselcoeff.slim
+work dir: test_data/
+slimfile: /work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/slimfiles/onePop-selectiveSweep-vcf-noselcoeff.slim
 slim path: slim
 
 
@@ -20,4 +20,4 @@ sample sizes: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 1
 
 ploidy: 2
 
-reps: 30000
+reps: 10000

@@ -3,6 +3,7 @@ import csv
 import argparse
 import sys
 import subprocess
+from time import sleep
 
 """Modified from https://gist.github.com/arundurvasula/30727385d4605fb26770"""
 
@@ -98,9 +99,3 @@ with opener(vcf_in, "r") as tsvin:
                 )
         else:
             continue
-
-
-subprocess.run(
-    f"/work/users/l/s/lswhiteh/timesweeper-experiments/SF2/SweepFinder2 -s 1000 {sweep_out} {sweep_out}.sfres".split(),
-    shell=True,
-)

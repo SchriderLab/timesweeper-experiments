@@ -9,11 +9,21 @@
 #SBATCH -e logfiles/sf_conversion.%A.%a.err
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=lswhiteh@email.unc.edu
-#SBATCH --array=0-10000
+#SBATCH --array=0-3000
 conda init bash
 conda activate blinx
 source activate blinx
 
-python vcf2sf.py -v /work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/benchmark_sims/vcfs/neut/${SLURM_ARRAY_TASK_ID}.multivcf.final -o /work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/benchmark_sims/vcfs/neut/${SLURM_ARRAY_TASK_ID}.sf
-python vcf2sf.py -v  /work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/benchmark_sims/vcfs/sdn/${SLURM_ARRAY_TASK_ID}.multivcf.final -o  /work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/benchmark_sims/vcfs/sdn/${SLURM_ARRAY_TASK_ID}.sf
-python vcf2sf.py -v  /work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/benchmark_sims/vcfs/ssv/${SLURM_ARRAY_TASK_ID}.multivcf.final -o  /work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/benchmark_sims/vcfs/ssv/${SLURM_ARRAY_TASK_ID}.sf
+SLURM_ARRAY_TASK_ID=0
+for swp in neut sdn ssv
+do
+    ifile="/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/test_data/vcfs/${swp}/${SLURM_ARRAY_TASK_ID}/${SLURM_ARRAY_TASK_ID}.multivcf.final"
+    freqfile="/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/test_data/vcfs/${swp}/${SLURM_ARRAY_TASK_ID}/${SLURM_ARRAY_TASK_ID}.sf"
+    spectfile="${freqfile}.fspect"
+    resfile="${freqfile}.res"
+
+    python vcf2sf.py -v $ifile -o $freqfile
+
+    /work/users/l/s/lswhiteh/timesweeper-experiments/SF2/SweepFinder2 -f $freqfile $spectfile
+    /work/users/l/s/lswhiteh/timesweeper-experiments/SF2/SweepFinder2 -l 1000 $freqfile $spectfile $resfile
+done

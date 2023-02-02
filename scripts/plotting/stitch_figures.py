@@ -22,7 +22,7 @@ def get_file_from_partial(partial_name, filelist):
     # print(f"[debug] Head filelist: {filelist[:5]}")
     # print(f"[debug] Partial name: {partial_name}")
 
-    return [i for i in filelist if partial_name in i][0]
+    return [i for i in filelist if i.split("/")[-1].startswith(partial_name)][0]
 
 
 def make_class_fig(pdfs, ids, data_types, class_plot_types, tmpdir, outdir):
@@ -103,7 +103,7 @@ def make_reg_fig(
         shell=True,
     )
     subprocess.run(
-        f"convert {outdir}/final_regfigs.png {outdir}/final_regfigs.png",
+        f"convert {outdir}/final_regfigs.png {outdir}/final_regfigs.pdf",
         shell=True,
     )
 
@@ -156,7 +156,7 @@ ua = get_ua()
 os.makedirs(ua.tmpdir, exist_ok=True)
 os.makedirs(ua.outdir, exist_ok=True)
 
-data_types = ["aft", "hft"]
+data_types = ["aft"]  # , "hft"]
 reg_class_types = ["sdn", "ssv"]
 confmat_normed = ["normed", "unnormed"]
 class_plot_types = ["pr", "roc", "confmat_normed", "confmat_unnormed", "training"]
@@ -171,6 +171,7 @@ if ua.mode == "model":
     ids = list(
         set([i.split("/")[-1].split(filter_term)[0] for i in pdfs if filter_term in i])
     )
+    # ids = [i for i in ids if "Shoulder" not in i]
     ids.sort(key=extract_nums)
     # Want absolute distance if working with timing
     if "neg" in ids[0]:

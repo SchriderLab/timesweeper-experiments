@@ -64,36 +64,45 @@ def converter(vcffile, samp_sizes):
     for tp_idx in range(len(samp_sizes)):
         tp_haps = target_hap[cur_samp : cur_samp + (2 * samp_sizes[tp_idx])]
         cur_samp += 2 * samp_sizes[tp_idx]
-        counts = np.sum(tp_haps)
-        tp_counts.append(f"{counts}/{2*samp_sizes[tp_idx]}")
+        tp_counts.append(np.sum(tp_haps))
 
     sweep = get_sweep(os.path.abspath(vcffile))
-    locifile = vcffile + ".appWF_in.loci"
+    locifile = vcffile + f"_{sweep}_s{sel_coeff}_WFABC_in.txt"
     with open(locifile, "w") as ofile:
-        ofile.write("time\t" + "\t".join([str(i) for i in tp_labels]) + "\n")
-        ofile.write(f"{sweep}_{str(sel_coeff)}" + "\t" + "\t".join(tp_counts))
+        ofile.write("1" + "\t" + f"{str(len(tp_labels))}" + "\n")
+        ofile.write("\t".join([str(i) for i in tp_labels]) + "\n")
+        ofile.write("\t".join([str(i) for i in [20]*20]) + "\n")
+        ofile.write("\t".join([str(i) for i in tp_counts]))
 
-    cmd = f"""/work/users/l/s/lswhiteh/timesweeper-experiments/approxwf/ApproxWF \
-        task=estimate \
-        loci={locifile} \
-        N=500 \
-        mutRate=1e-7 \
-        h=0.5 \
-        sampling=100 \
-        MCMClength=100000 \
-        verbose"""
+    cmd1 = f"""/work/users/l/s/lswhiteh/timesweeper-experiments/WFABC_v1.1/binaries/Linux/wfabc_1 \
+        -nboots 0 \
+        {locifile} \
+        """
 
     subprocess.run(
-        cmd,
+        cmd1,
         shell=True,
-        stdout=open(f"{locifile}.mcmc.log", "w"),
-        stderr=open(f"{locifile}.mcmc.log", "w"),
+        stdout=open(f"{locifile}.wfabc.1.log", "w"),
+        stderr=open(f"{locifile}.wfabc.1.log", "w"),
     )
 
+    cmd2 = f"""/work/users/l/s/lswhiteh/timesweeper-experiments/WFABC_v1.1/binaries/Linux/wfabc_2 \
+        -fixed_N 500 \
+        -ploidy 2 \
+        -min_s 0 \
+        -max_s 0.25 \
+        {locifile} \
+        """
+
+    subprocess.run(
+        cmd2,
+        shell=True,
+        stdout=open(f"{locifile}.wfabc.2.log", "w"),
+        stderr=open(f"{locifile}.wfabc.2.log", "w"),
+    )
 
 def get_ua():
     agp = argparse.ArgumentParser(
-        description="Utility to convert VCFs to ms-style outputs. Output will be placed in the same location with identical filename as VCF with the `.msOut` suffix.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     agp.add_argument(
