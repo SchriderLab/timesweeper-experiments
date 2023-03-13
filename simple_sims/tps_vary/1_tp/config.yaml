@@ -1,9 +1,9 @@
 #General
-work dir: 1_tp_sims
+work dir: new_1_tp_sims
 slimfile: ../../slimfiles/onePop-selectiveSweep-vcf-noselcoeff.slim
 
 mut types: [2]
-scenarios: ["neut", "sdn", "ssv"]
+scenarios: ["neut", "ssv", "sdn"]
 win_size: 51
 
 num_sample_points : 1

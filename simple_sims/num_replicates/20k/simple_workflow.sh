@@ -12,9 +12,6 @@
 source activate blinx
 conda activate blinx
 
-
-
 #timesweeper condense --hft -o ../20tp_training_data.pkl -y config.yaml --subsample-reps 20000
-timesweeper train -i ../20tp_training_data.pkl -d aft -n Reps_Size_20k -y config.yaml --subsample-amount 20000
-timesweeper train -i ../20tp_training_data.pkl -d hft -n Reps_Size_20k -y config.yaml --subsample-amount 20000
-timesweeper plot_training -i ../20tp_training_data.pkl -n Reps_Size_20k -o Reps_Size_20k/images
+timesweeper train -i ../20tp_training_data.pkl --hft -y config.yaml --subsample-amount 20000
+timesweeper plot_training -i ../20tp_training_data.pkl

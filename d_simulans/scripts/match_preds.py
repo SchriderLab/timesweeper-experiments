@@ -5,11 +5,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random
 
-"""
-header = "Chromosome    position    -log10(p-value)_FET_rep1    -log10(p-value)_FET_rep2    -log10(p-value)_FET_rep3    -log10(p-value)_FET_rep4    -log10(p-value)_FET_rep5    -log10(p-value)_FET_rep6    -log10(p-value)_FET_rep7    -log10(p-value)_FET_rep8  -log10(p-value)_FET_rep9    -log10(p-value)_FET_rep10"
 
+header = "Chromosome    position    -log10(p-value)_FET_rep1    -log10(p-value)_FET_rep2    -log10(p-value)_FET_rep3    -log10(p-value)_FET_rep4    -log10(p-value)_FET_rep5    -log10(p-value)_FET_rep6    -log10(p-value)_FET_rep7    -log10(p-value)_FET_rep8  -log10(p-value)_FET_rep9    -log10(p-value)_FET_rep10"
+"""
 dict_list = []
-with open("/pine/scr/l/s/lswhiteh/timesweeper-experiments/d_simulans/pvals.tsv", 'r') as ifile:
+with open("../results/pvals.tsv", 'r') as ifile:
     for line in tqdm(ifile.readlines()):
         line = line.strip().split()
         for rep in range(1, 11):
@@ -19,15 +19,19 @@ with open("/pine/scr/l/s/lswhiteh/timesweeper-experiments/d_simulans/pvals.tsv",
             line_dict["rep"] = rep
             line_dict["fet"] = line[1 + rep]
             dict_list.append(line_dict)
-#exp_pvals = pd.DataFrame.from_records(dict_list)
-exp_pvals.to_csv("fet_all.tsv", sep="\t")
-#exp_pvals = pd.read_csv("fet_all.tsv", sep="\t")
 
+exp_pvals = pd.DataFrame.from_records(dict_list)
+exp_pvals.to_csv("fet_all.tsv", sep="\t")
+"""
+
+exp_pvals = pd.read_csv("fet_all.tsv", sep="\t")
+
+"""
 nn_list = []
 
 for rep in tqdm(range(1, 11)):
     aft_ifiles = glob(
-        f"/pine/scr/l/s/lswhiteh/timesweeper-experiments/d_simulans/ts_simulans/timesweeper_output/unif_velocity_0_thresh/aft_*_{rep}_preds.csv"
+        f"../d_simulans_output/aft_*_{rep}_preds.csv"
     )
     for aft_file in aft_ifiles:
         df = pd.read_csv(aft_file, header=0, sep="\t")
@@ -44,24 +48,25 @@ all_merged = aft_df.merge(
 )
 
 all_merged.to_csv("all_merged.tsv", sep="\t", header=True, index=False)
+
 """
 
+
 all_merged = pd.read_csv(
-    "/pine/scr/l/s/lswhiteh/timesweeper-experiments/d_simulans/results/all_merged.tsv",
+    "all_merged.tsv",
     sep="\t",
 )
 
+print(all_merged.head())
 all_merged = all_merged.replace("na", np.NaN)
 all_merged = all_merged.dropna()
 
 all_merged["fet"] = all_merged["fet"].astype(float)
-all_merged["SSV_Score"] = all_merged["SSSVScore"].astype(float)
+all_merged["SSV_Score"] = all_merged["SSV_Score"].astype(float)
 
 print("Calculating correlation")
 corr = all_merged[["fet", "SSV_Score"]].corr("spearman")
 print(f"Spearman's Correlation: \n {corr}")
-
-# top = all_merged.nlargest(100000, "SSV_Score")
 
 plot = False
 if plot:
@@ -83,7 +88,7 @@ bins.insert(-1, 0.99)
 ts_res_bins = []
 for i in tqdm(range(len(bins) - 1), desc="Summing over bins"):
     _df = all_merged[
-        (all_merged["SSV_Score"] > bins[i]) & (all_merged["SSSVScore"] <= bins[i + 1])
+        (all_merged["SSV_Score"] > bins[i]) & (all_merged["SSV_Score"] <= bins[i + 1])
     ]
     sp = _df["fet"].corr(_df["SSV_Score"], "spearman")
 
@@ -105,7 +110,7 @@ ts_res_df = pd.DataFrame(ts_res_bins)
 ts_res_df.to_csv("fet_by_ts.tsv", sep="\t", index=False, float_format="%.3f")
 
 bins = list(np.arange(0, 121, 5))
-print(bins)
+
 fet_res_bins = []
 for i in range(len(bins) - 1):
     _df = all_merged[(all_merged["fet"] > bins[i]) & (all_merged["fet"] <= bins[i + 1])]
@@ -115,10 +120,10 @@ for i in range(len(bins) - 1):
             "bin": (bins[i], bins[i + 1]),
             "num_calls": len(_df),
             "spearman": sp,
-            "max_SSV_Score": _df["SSSVScore"].max(),
-            "min_SSV_Score": _df["SSSVScore"].min(),
-            "mean_SSV_Score": _df["SSSVScore"].mean(),
-            "med_SSV_Score": _df["SSSVScore"].median(),
+            "max_SSV_Score": _df["SSV_Score"].max(),
+            "min_SSV_Score": _df["SSV_Score"].min(),
+            "mean_SSV_Score": _df["SSV_Score"].mean(),
+            "med_SSV_Score": _df["SSV_Score"].median(),
             "variance": _df["SSV_Score"].var(),
             "std": _df["SSV_Score"].std(),
         }

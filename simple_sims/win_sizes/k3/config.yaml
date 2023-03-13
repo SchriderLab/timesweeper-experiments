@@ -3,10 +3,11 @@ work dir: ../k51/win_size_sims/
 slimfile: ../../slimfiles/onePop-selectiveSweep-vcf-noselcoeff.slim
 slim path: slim
 
+experiment name: Win_size_3
 
 mut types: [2]
 
-scenarios: ["neut", "sdn", "ssv"]
+scenarios: ["neut", "ssv", "sdn"]
 
 win_size: 3
 

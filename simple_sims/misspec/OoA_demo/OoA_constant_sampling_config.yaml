@@ -1,0 +1,22 @@
+#General
+work dir: OoA
+slimfile: OoA3pop.slim
+pop: p2
+sample sizes: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+years sampled: [4750, 4500, 4250, 4000, 3750, 3500, 3250, 3000, 2750, 2500, 2250, 2000, 1750, 1500, 1250, 1000, 750, 500, 250, 0]
+ploidy: 2
+experiment name: OoA
+scenarios: ["neut", "ssv", "sdn"]
+mut types: [2]
+win_size: 51
+
+inds_per_tp: 10
+num_sample_points : 20
+
+#Simulation
+reps: 10000
+selection gen: 50 # Gens before first sampling
+selection coeff bounds: [0.00025, 0.25]
+mut rate: 1.29e-8
+slim path: slim
+gen time: 25

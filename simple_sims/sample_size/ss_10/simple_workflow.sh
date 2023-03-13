@@ -13,7 +13,7 @@
 conda activate blinx
 
 
-timesweeper condense --hft -o 10ss_training_data.pkl -y config.yaml --subsample-inds 10
+timesweeper condense --hft -o 10ss_training_data.pkl -y config.yaml --subsample-inds 10 --threads 16
 timesweeper train -i 10ss_training_data.pkl -d aft -n Sample_Size_10 -y config.yaml
 timesweeper train -i 10ss_training_data.pkl -d hft -n Sample_Size_10 -y config.yaml
 timesweeper plot_training -i 10ss_training_data.pkl -n Sample_Size_10 -o Sample_Size_10/images

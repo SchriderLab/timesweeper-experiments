@@ -9,18 +9,18 @@
 #SBATCH -e logfiles/sf_conversion.%A.%a.err
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=lswhiteh@email.unc.edu
-#SBATCH --array=0-3000
+#SBATCH --array=0-5000
 conda init bash
 conda activate blinx
 source activate blinx
 
-SLURM_ARRAY_TASK_ID=0
 for swp in neut sdn ssv
 do
-    ifile="/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/test_data/vcfs/${swp}/${SLURM_ARRAY_TASK_ID}/${SLURM_ARRAY_TASK_ID}.multivcf.final"
-    freqfile="/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/test_data/vcfs/${swp}/${SLURM_ARRAY_TASK_ID}/${SLURM_ARRAY_TASK_ID}.sf"
+    ifile="/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/test_benchmark/vcfs/${swp}/${SLURM_ARRAY_TASK_ID}/${SLURM_ARRAY_TASK_ID}.multivcf.final"
+    freqfile="/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/test_benchmark/vcfs/${swp}/${SLURM_ARRAY_TASK_ID}/${SLURM_ARRAY_TASK_ID}.sf"
     spectfile="${freqfile}.fspect"
     resfile="${freqfile}.res"
+    rm $resfile
 
     python vcf2sf.py -v $ifile -o $freqfile
 

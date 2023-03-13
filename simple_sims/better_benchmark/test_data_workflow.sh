@@ -12,6 +12,7 @@
 source activate blinx
 conda activate blinx
 
-timesweeper condense --hft -o testing_data.pkl -y test_config.yaml
-
-timesweeper plot_training -i testing_data.pkl -n Test_Data -o Benchmark/images
+timesweeper condense --hft -o testing_data.pkl -y test_config.yaml --threads 16
+timesweeper train -i testing_data.pkl -d aft -n testing_benchmark -y config.yaml
+timesweeper train -i testing_data.pkl -d hft -n testing_benchmark -y config.yaml
+timesweeper plot_training -i testing_data.pkl -n Test_Data -o test_benchmark/input_imgs

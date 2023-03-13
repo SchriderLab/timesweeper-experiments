@@ -16,27 +16,12 @@ source activate blinx
 
 cd ..
 
-configfile=d_simulans_config.-y
-
-##
-
-#0 threshold
 timesweeper condense --hft \
-    -o ts_simulans/d_simulans_log_uni_0_thresh_vel.pkl \
-    -y config.yaml
+    -o ts_simulans/d_simulans.pkl \
+    -y d_simulans_config.yaml \
+    --threads 16
     
-#timesweeper train \
-    -i ts_simulans/d_simulans_log_uni_0_thresh_vel.pkl \
-    -n d_simulans_log_uni_0_thresh_vel \
-    -y config.yaml
-
-#25 threshold
-#timesweeper condense --hft \
-    -f 0.25 \
-    -o ts_simulans/d_simulans_log_uni_25_thresh_vel.pkl \
-    -y config.yaml
-    
-#timesweeper train \
-    -i ts_simulans/d_simulans_log_uni_25_thresh_vel.pkl \
-    -n d_simulans_log_uni_25_thresh_vel \
-    -y config.yaml
+timesweeper train \
+    -i ts_simulans/d_simulans.pkl \
+    --hft \
+    -y d_simulans_config.yaml 

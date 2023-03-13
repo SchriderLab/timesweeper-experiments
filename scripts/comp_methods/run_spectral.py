@@ -6,6 +6,7 @@ from itertools import cycle
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.ticker import FormatStrFormatter
+import sys
 
 
 def make_list_from_str(list_str):
@@ -15,12 +16,30 @@ def make_list_from_str(list_str):
 def get_ua():
     ap = argparse.ArgumentParser()
     ap.add_argument(
-        "-p", "--test-preds", dest="test_pred_file", type=str, required=True
+        "-r",
+        "--replicate",
+        dest="rep",
+        type=int,
+        required=True,
+        help="Replicate ID to pull out from the dataset for parallelized runs",
+    )
+
+    ap.add_argument(
+        "-l",
+        "--slim-log",
+        dest="slim_logs",
+        type=str,
+        required=True,
+        default="/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/test_benchmark/Testing_params.tsv",
     )
     ap.add_argument(
-        "-t", "--training-data", dest="training_data_file", type=str, required=True
+        "-t",
+        "--training-data",
+        dest="training_data_file",
+        type=str,
+        required=True,
+        default="/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/test_benchmark/testing_data.pkl",
     )
-    ap.add_argument("-o", "--out-prefix", dest="out_prefix", type=str, required=True)
     ua = ap.parse_args()
     return ua
 
@@ -43,29 +62,27 @@ def main():
     with open(ua.training_data_file, "rb") as pklfile:
         train_d = pkl.load(pklfile)
 
-    test_preds = pd.read_csv(ua.test_pred_file, sep="\t")
+    log_info = pd.read_csv(ua.slim_logs, sep="\t")
 
     yearsPerGen = 25
     mutRate = 1e-7
     popSize = 500
     sampSize = 20
 
-    multiplex_lines = []
-    for idx in range(len(test_preds)):
+    for swp in ["neut", "sdn", "ssv"]:
+        multiplex_lines = []
 
-        numDerived = [
-            int(round(i * sampSize))
-            for i in train_d[test_preds["sweep"][idx]][str(test_preds["rep"][idx])][
-                "aft"
-            ][:, 25]
-        ]
+        s_df = log_info[(log_info["rep"] == ua.rep) & (log_info["sweep"] == swp)]
+        sel_coeff = s_df["selCoeff"].values[0]
 
         sampYears = [
-            (i - 10000) * yearsPerGen
-            for i in make_list_from_str(test_preds["sampGens"][idx])
+            (i) * yearsPerGen for i in make_list_from_str(s_df["sampGens"].values[0])
         ]
 
-        # print(sampYears)
+        selFreqs = train_d[swp][str(ua.rep)]["aft"][:, 25]
+        numDerived = [int(round(i * sampSize)) for i in selFreqs]
+        initFreq = selFreqs[0]
+
         multiplex_lines.append(
             " ".join(
                 [
@@ -74,65 +91,72 @@ def main():
                 ]
             )
         )
+        print(multiplex_lines)
 
-    with open("tmp.config", "w") as tmpfile:
-        tmpfile.writelines("\n".join(multiplex_lines))
+        spectral_config = f"/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/test_benchmark/vcfs/{swp}/{ua.rep}/{swp}_{ua.rep}_spectral.config"
+        with open(spectral_config, "w") as tmpfile:
+            tmpfile.writelines("\n".join(multiplex_lines))
 
-    cmd = f"""python ../runSpectralHMM.py \
-        --multiplex \
-        --inputFile tmp.config \
-        --mutToBenef {mutRate} \
-        --mutFromBenef {mutRate} \
-        --effPopSize {popSize} \
-        --yearsPerGen {yearsPerGen} \
-        --initFrequency 0.1 \
-        --initTime -10000 \
-        --hetF 0.0 \
-        --homF 0.0 \
-        --precision 40 \
-        --matrixCutoff 150 \
-        --maxM 140 \
-        --maxN 130"""
+        cmd = f"""python /work/users/l/s/lswhiteh/timesweeper-experiments/spectralHMM/runSpectralHMM.py \
+            -Xmx2g \
+            --multiplex \
+            --inputFile {spectral_config} \
+            --mutToBenef {mutRate} \
+            --mutFromBenef {mutRate} \
+            --effPopSize {popSize} \
+            --yearsPerGen {yearsPerGen} \
+            --initFrequency {initFreq} \
+            --initTime {sampYears[0] - s_df["sampOffset"]}.00 \
+            --selection [0.0:0.0025:0.25] \
+            --dominance 0.5 \
+            --precision 40 \
+            --matrixCutoff 150 \
+            --maxM 140 \
+            --maxN 130"""
 
-    likelihoods = []
-    p = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, text=True)
-    while (line := p.stdout.readline()) != "":
-        line = line.strip()
-        if "#" in line:
-            pass
-        else:
-            likelihoods.append(float(line.split("\t")[-1]))
+        scoeffs = []
+        likelihoods = []
+        p = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, text=True)
+        while (line := p.stdout.readline()) != "":
+            line = line.strip()
+            if "#" in line:
+                if "selection =" in line:
+                    scoeffs.append(float(line.strip().split()[3]))
+                pass
+            else:
+                likelihoods.append(float(line.split("\t")[-1]))
 
-    test_preds["spectral_likelihoods"] = likelihoods
+        max_likelihood = max(likelihoods)
+        best_scoeff = scoeffs[likelihoods.index(max_likelihood)]
 
-    ax = test_preds.plot(
-        x="spectral_likelihoods",
-        y="selCoeff",
-        kind="scatter",
-        title="SpectralHMM Likelihood vs Selection Coefficient",
-        xlabel="SpectralHMM Likelihood",
-        ylabel="Selection Coefficient",
-        ylim=(0.0, 0.25),
-    )
-    ax.xaxis.set_major_formatter(FormatStrFormatter("%.2E"))
-    plt.savefig(f"{ua.out_prefix}.spectral_vs_selcoeff.png")
-    plt.clf()
+        res_dict = {
+            "rep": ua.rep,
+            "sweep": swp,
+            "true_selCoeff": sel_coeff,
+            "est_selCoeff": best_scoeff,
+            "max_likelihood": max_likelihood,
+        }
 
-    ax = test_preds.plot(
-        x="spectral_likelihoods",
-        y="abs_error",
-        kind="scatter",
-        title="Timesweeper Absolute Error vs SpectralHMM Likelihood",
-        xlabel="SpectralHMM Likelihood",
-        ylabel="Timesweeper Absolute Error",
-        ylim=(0.0, 0.25),
-    )
-    ax.xaxis.set_major_formatter(FormatStrFormatter("%.2E"))
+        foo = pd.DataFrame(res_dict, index=[0])
+        foo.to_csv(
+            f"/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/test_benchmark/vcfs/{swp}/{ua.rep}/{swp}_{ua.rep}_spectralres.tsv",
+            index=False,
+            sep="\t",
+        )
 
-    plt.savefig(f"{ua.out_prefix}.tserr_vs_spectral.png")
-    plt.clf()
-
-    test_preds.to_csv(ua.out_prefix + ".tsv", index=False, sep="\t")
+        pd.DataFrame(
+            {
+                "rep": [ua.rep for i in range(len(likelihoods))],
+                "sweep": [swp for i in range(len(likelihoods))],
+                "true_selCoeff": [sel_coeff for i in range(len(likelihoods))],
+                "est_selCoeff": scoeffs,
+                "likelihood": likelihoods,
+            }
+        ).to_csv(
+            f"/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/test_benchmark/vcfs/{swp}/{ua.rep}/{swp}_{ua.rep}_all_spectralres.tsv",
+            index=False,
+            sep="\t",
+        )
 
 
 if __name__ == "__main__":

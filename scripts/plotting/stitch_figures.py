@@ -10,17 +10,19 @@ from tqdm import tqdm
 
 
 def extract_nums(filename):
-    if "neg" in filename:
-        ele = float(re.findall(r"[-+]?\d*\.\d+|\d+", filename)[-1])
-        return (0, ele, "")
-    else:
-        ele = float(re.findall(r"[-+]?\d*\.\d+|\d+", filename)[-1])
-        return (1, ele, "")
+    try:
+        if "neg" in filename:
+            ele = float(re.findall(r"[-+]?\d*\.\d+|\d+", filename)[-1])
+            return (0, ele, "")
+        else:
+            ele = float(re.findall(r"[-+]?\d*\.\d+|\d+", filename)[-1])
+            return (1, ele, "")
+    except:
+        return (2, filename, "")
 
 
 def get_file_from_partial(partial_name, filelist):
-    # print(f"[debug] Head filelist: {filelist[:5]}")
-    # print(f"[debug] Partial name: {partial_name}")
+    print(f"[debug] Partial name: {partial_name}")
 
     return [i for i in filelist if i.split("/")[-1].startswith(partial_name)][0]
 
@@ -29,6 +31,7 @@ def make_class_fig(pdfs, ids, data_types, class_plot_types, tmpdir, outdir):
     # Classification
     fig_rows = []
     for id in tqdm(ids, desc="Making classification figs"):
+        print(id)
         f_imgs = []
         for d in data_types:
             imgs = []
@@ -66,6 +69,7 @@ def make_reg_fig(
     # Regression
     fig_rows = []
     for id in tqdm(ids, desc="Making regression figs"):
+        print(id)
         d_imgs = []
         for d in data_types:
             c_imgs = []
@@ -156,7 +160,7 @@ ua = get_ua()
 os.makedirs(ua.tmpdir, exist_ok=True)
 os.makedirs(ua.outdir, exist_ok=True)
 
-data_types = ["aft"]  # , "hft"]
+data_types = ["aft", "hft"]
 reg_class_types = ["sdn", "ssv"]
 confmat_normed = ["normed", "unnormed"]
 class_plot_types = ["pr", "roc", "confmat_normed", "confmat_unnormed", "training"]
@@ -171,7 +175,7 @@ if ua.mode == "model":
     ids = list(
         set([i.split("/")[-1].split(filter_term)[0] for i in pdfs if filter_term in i])
     )
-    # ids = [i for i in ids if "Shoulder" not in i]
+    ids = [i for i in ids if "Shoulder" not in i]
     ids.sort(key=extract_nums)
     # Want absolute distance if working with timing
     if "neg" in ids[0]:

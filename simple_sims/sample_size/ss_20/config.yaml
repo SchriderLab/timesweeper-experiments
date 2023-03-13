@@ -5,7 +5,7 @@ slim path: slim
 
 
 mut types: [2]
-scenarios: ["neut", "sdn", "ssv"]
+scenarios: ["neut", "ssv", "sdn"]
 win_size: 51
 
 num_sample_points : 20

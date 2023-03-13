@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --partition=general
+#SBATCH --partition=dschridelab
 #SBATCH --constraint=rhel8 
 #SBATCH --mem=128G
 #SBATCH -c 16
@@ -13,7 +13,7 @@
 conda activate blinx
 source activate blinx
 
-timesweeper summarize -n 20_Timepoints -y config.yaml
+#timesweeper summarize -n 20_Timepoints -y config.yaml
 timesweeper condense --hft -o 20tp_training_data.pkl -y config.yaml
 timesweeper train -i 20tp_training_data.pkl -d aft -n 20_Timepoint -y config.yaml
 timesweeper train -i 20tp_training_data.pkl -d hft -n 20_Timepoint -y config.yaml

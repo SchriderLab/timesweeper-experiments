@@ -10,12 +10,8 @@
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=lswhiteh@email.unc.edu
 source activate blinx
-
 conda activate blinx
 
-
-
 #timesweeper condense --hft -o ../20tp_training_data.pkl -y config.yaml --subsample-reps 1000
-timesweeper train -i ../20tp_training_data.pkl -d aft -n Reps_Size_1k -y config.yaml --subsample-amount 1000
-timesweeper train -i ../20tp_training_data.pkl -d hft -n Reps_Size_1k -y config.yaml --subsample-amount 1000
-timesweeper plot_training -i ../20tp_training_data.pkl -n Reps_Size_1k -o Reps_Size_1k/images
+timesweeper train -i ../20tp_training_data.pkl --hft -y config.yaml --subsample-amount 1000
+timesweeper plot_training -i ../20tp_training_data.pkl 

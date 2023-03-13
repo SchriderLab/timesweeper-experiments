@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --partition=general
 #SBATCH --constraint=rhel8
-#SBATCH --mem=16G
+#SBATCH --mem=32G
 #SBATCH -c 32
 #SBATCH --time=24:00:00
 #SBATCH -J workflow
@@ -16,7 +16,7 @@ source activate blinx
 
 timesweeper summarize -n neg100_Gens_Post -y config.yaml
 
-timesweeper condense --hft -o neg100gens_training_data.pkl -y config.yaml
+timesweeper condense --hft -o neg100gens_training_data.pkl -y config.yaml --threads 32
 timesweeper train -i neg100gens_training_data.pkl -d aft -n neg100_Gens_Post -y config.yaml
 timesweeper train -i neg100gens_training_data.pkl -d hft -n neg100_Gens_Post -y config.yaml
 timesweeper plot_training -i neg100gens_training_data.pkl -n neg100_Gens_Post -o neg100_Gens_Post/images

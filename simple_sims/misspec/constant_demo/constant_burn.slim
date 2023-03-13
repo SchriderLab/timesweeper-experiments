@@ -1,0 +1,41 @@
+initialize()
+{
+    //remove these constants from your version since this stuff should all be set on the command line
+    defineConstant("mutLoc", asInteger(physLen/2));
+    defineConstant("sweepDuration", 200); //NOTE: everything will work so long as samplingInterval*numSamples is less than this value; so whatever the max value of that product will be of all the combinations you are using, just make sure this is >= to that
+    initializeMutationRate(1e-7);
+    initializeMutationType("m1", 0.5, "f", 0.0);
+    initializeGenomicElementType("g1", m1, 1.0);
+    initializeGenomicElement(g1, 0, physLen-1);
+    initializeRecombinationRate(1e-7);
+
+    
+    defineConstant("burnTime", 20*subpopSize);
+    defineConstant("mutTime", burnTime);
+    defineConstant("ssvTime", mutTime); 
+    defineConstant("simEndTime", burnTime+sampGens[size(sampGens)-1]);
+    defineConstant("samplingTime", burnTime+sampGens[0]); 
+    // introduced mutation's selection coefficient
+    initializeMutationType("m2", 0.5, "f", selCoeff);
+
+    defineConstant("restartTime", burnTime-subpopSize);
+    
+}
+
+s1 100 late()
+{
+    // save the state of the simulation 
+    cat("SAVING TO " + dumpFile + " at generation " + sim.generation + "\n");
+    sim.outputFull(dumpFile);  
+}
+
+
+1 {
+    // save this run's identifier, used to save and restore
+    defineConstant("simID", seed);
+    
+    // set up our subpop
+    sim.addSubpop("p1", burnPopSize);
+    
+    sim.rescheduleScriptBlock(s1, start=burnTime, end=burnTime); //  set far restart time
+}

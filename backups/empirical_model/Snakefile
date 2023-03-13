@@ -1,0 +1,153 @@
+import pandas as pd 
+
+qual_thresholds = [0, 10, 20]
+
+sorted_samps =  pd.read_csv("samp_data/filtered/sorted_samples.csv")
+bamfiles = list(sorted_samps["submitted_ftp"])
+
+sorted_ids = [i.split("/")[-1].split(".bam")[0] for i in bamfiles]
+#print(sorted_ids)
+
+rule all:
+    input:
+        expand("bams/stats/{id}.stats", id=sorted_ids),
+        expand("vcfs/merged/ts_merged.{qual}.calls.vcf.gz", qual=qual_thresholds),
+        expand("vcfs/merged/ts_merged.{qual}.filtered.calls.vcf.gz", qual=qual_thresholds),
+        expand("vcfs/merged/ts_merged.{qual}.filtered.stats", qual=qual_thresholds),
+        expand("vcfs/merged/ts_merged.{qual}.calls.stats", qual=qual_thresholds),
+        expand("vcfs/filtered/stats/{id}.{qual}.stats", id=sorted_ids, qual=qual_thresholds)
+
+rule download_ref:
+    output:
+        expand("ref/GRCh37-lite.fa.{suff}", suff=["bgz", "bgz.fai", "bgz.gzi", "gz"])
+    shell:
+        """
+        wget -P ref/ https://ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh37/special_requests/GRCh37-lite.fa.gz
+        gzip -cd ref/GRCh37-lite.fa.gz | bgzip -ci -I ref/GRCh37-lite.fa.gzi  > ref/GRCh37-lite.fa.gz
+        samtools faidx ref/GRCh37-lite.fa.gz
+        """
+
+rule sort_bams:
+    input:
+        "bams/raw/{id}.bam"
+    output:
+        "bams/sorted/{id}.sorted.bam"
+    threads: 2
+    shell:
+        """
+        samtools sort -@ {threads} --write-index -o {output} {input}
+        """
+
+rule bamstats:
+    input:
+        "bams/sorted/{id}.sorted.bam"
+    output:
+        "bams/stats/{id}.stats"
+    threads: 1
+    shell:
+        """
+        samtools stats {input} > {output}
+        """
+
+rule pileup:
+    input:
+        bam="bams/sorted/{id}.sorted.bam",
+        ref="ref/GRCh37-lite.fa.bgz"
+    output:
+        "vcfs/raw/{id}.vcf.gz"
+    shell:
+        """
+        bcftools mpileup -Oz -f {input.ref} {input.bam} > {output}
+        """
+
+rule call:
+    input:
+        "vcfs/raw/{id}.vcf.gz"
+    output:
+        "vcfs/calls/{id}.calls.vcf.gz"
+    threads: 4
+    shell:
+        """
+        bcftools call -m --threads {threads} {input} > {output}
+        """
+
+rule filter_calls:
+    input:
+        "vcfs/calls/{id}.calls.vcf.gz"
+    output:
+        "vcfs/filtered/{id}.{qual}.calls.vcf.gz"
+    threads: 4
+    shell:
+        """
+        bcftools filter -Oz -i '%QUAL>{wildcards.qual}' {input} > {output}
+        """
+
+rule index:
+    input:
+        "vcfs/filtered/{id}.{qual}.calls.vcf.gz"
+    output:
+        "vcfs/filtered/{id}.{qual}.calls.vcf.gz.csi"
+    threads: 2
+    shell:
+        """
+        bcftools index --threads {threads} {input}
+        """
+
+rule merge:
+    input:
+        vcfs = expand("vcfs/filtered/{id}.{{qual}}.calls.vcf.gz", id=sorted_ids),
+        indexes = expand("vcfs/filtered/{id}.{{qual}}.calls.vcf.gz.csi", id=sorted_ids),
+    output:
+        "vcfs/merged/ts_merged.{qual}.calls.vcf.gz"
+    threads: 32
+    shell:
+        """
+        bcftools merge -Oz --threads {threads} --force-samples {input.vcfs} > {output}
+        """
+
+rule filter_merged:
+    input:
+        "vcfs/merged/ts_merged.{qual}.calls.vcf.gz"
+    output:
+        "vcfs/merged/ts_merged.{qual}.filtered.calls.vcf.gz"
+    threads: int(workflow.cores/3)
+    shell:
+        """
+        bcftools view \
+        --threads={threads} -Oz \
+        --min-ac=1 \
+        --no-update \
+        {input} > {output}
+        """
+
+rule vcfstats:
+    input:
+        "vcfs/filtered/{id}.{qual}.calls.vcf.gz"
+    output:
+        "vcfs/filtered/stats/{id}.{qual}.stats"
+    shell:
+        """
+        bcftools stats {input} > {output}
+        """
+        
+rule merged_raw_vcfstats:
+    input:
+        "vcfs/merged/ts_merged.{qual}.calls.vcf.gz"
+    output:
+        "vcfs/merged/ts_merged.{qual}.calls.stats"
+    threads: 8
+    shell:
+        """
+        bcftools stats {input} > {output}
+        """
+
+rule merged_filtered_vcfstats:
+    input:
+        "vcfs/merged/ts_merged.{qual}.filtered.calls.vcf.gz"
+    output:
+        "vcfs/merged/ts_merged.{qual}.filtered.stats"
+    threads: workflow.cores
+    shell:
+        """
+        bcftools stats --threads {threads} {input} > {output}
+        """

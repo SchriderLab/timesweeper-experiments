@@ -12,17 +12,6 @@ from timesweeper.make_training_features import prep_ts_aft
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
-"""
-Time series:
--	FIT
--	FET
--	spectralHMM
-Single point: final timepoint
--	S/HIC
--	Fay and Wu’s H (windowed, from S/HIC) 
--	SweepFinder
-"""
-
 
 def fit(freqs, gens):
     """
@@ -84,82 +73,48 @@ def write_fit(fit_dict, outfile, benchmark):
     )
 
 
+def make_list_from_str(list_str):
+    return [int(i) for i in list_str.strip("[").strip("]").split(", ")]
+
+
 def get_ua():
-    parser = argparse.ArgumentParser(
-        description="""\
-            Module to run alternative selective sweep detection methods for both time series and single-timepoint data. 
-            Methods in this script include: 
-                Fisher's Exact Test (FET) + Frequency Increment Test (FIT)
-                SweepFinder2
-                spectralHMM
-        """
-    )
-    parser.add_argument(
-        "-v",
-        "--vcf",
-        required=True,
-        help="Multi-timepoint input VCF file formatted as required for Timesweeper.",
-    )
-    parser.add_argument(
-        "-o", "--out", action="store", required=True, help="Output CSV."
-    )
-    parser.add_argument(
-        "-b",
-        "--benchmark",
-        action="store_true",
-        help="Use this flag to denote the input_vcf is a simulated sample and the SLIM mutation type can be parsed.",
-    )
-    parser.add_argument(
-        "-m",
-        "--methods",
-        nargs="+",
-        choices=["FIT-FET", "SweepFinder2", "diploSHIC", "HMM"],
-        required=False,
-        help="Which methods to use.",
-    )
-    parser.add_argument(
-        "-dm",
-        "--diploshic-model",
-        required=False,
-        help="If using diploSHIC must provide a trained model.",
-    )
+    parser = argparse.ArgumentParser()
     parser.add_argument(
         "-s",
         "--sample-sizes",
         nargs="+",
-        required=True,
+        required=False,
+        default=[10] * 20,
         help="Number of sampled individuals at each timepoint separated by a space.",
     )
     parser.add_argument(
         "-g",
         "--gens-sampled",
         nargs="+",
+        required=False,
+        default=list(range(0, 200, 10)),
+        help="Number of sampled individuals at each timepoint separated by a space.",
+    )
+    parser.add_argument(
+        "-r",
+        "--replicate",
+        dest="rep",
+        type=int,
         required=True,
-        help="Generation of each sampling point. Relative spacing between values is only relevant aspect, so can be generations from present or from 0.",
+        help="Replicate ID to pull out from the dataset for parallelized runs",
     )
     return parser.parse_args()
 
 
 def main():
-    """
-    Load VCF
-    Iterate through SNPs
-    Calculate frequencies
-    Do tests
-
-    Convert VCF to SF input
-    Run SF2
-    """
-
     args = get_ua()
-    in_vcf = args.vcf
-    outfile = args.out
-    benchmark = args.benchmark
-    methods = args.methods
-    samp_sizes = [int(i) for i in args.sample_sizes]
+
+    benchmark = True
     gens_sampled = [int(i) for i in args.gens_sampled]
 
-    if "FIT-FET" in methods:
+    for swp in ["neut", "sdn", "ssv"]:
+        in_vcf = f"/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/test_benchmark/vcfs/{swp}/{args.rep}/merged.vcf"
+
         print("Running Frequency Increment Test (FIT) and Fisher's Exact Test (FET)")
         results_dict = {}
         vcf_iter = su.get_vcf_iter(in_vcf, benchmark)
@@ -167,14 +122,14 @@ def main():
             chunk = chunk[0]  # Why you gotta do me like that, skallel?
 
             genos, snps = su.vcf_to_genos(chunk, benchmark)
-            ts_aft = prep_ts_aft(genos, samp_sizes)
+            ts_aft = prep_ts_aft(genos, args.sample_sizes)
 
             # FIT
             for idx in tqdm(
                 range(len(snps)), desc=f"Calculating FIT for chunk {chunk_idx}"
             ):
                 results_dict[snps[idx]] = {}
-                results_dict[snps[idx]]["FIT"] = fit(
+                results_dict[snps[idx]]["FIT_pval"] = fit(
                     list(ts_aft[:, idx]), gens_sampled
                 )  # tval, pval
 
@@ -183,23 +138,25 @@ def main():
                 last_min_allele = ts_aft[:, idx][-1]
                 last_maj_allele = 1 - last_min_allele
 
-                results_dict[snps[idx]]["FET"] = stats.fisher_exact(
+                results_dict[snps[idx]]["FET_pval"] = stats.fisher_exact(
                     [
                         [first_maj_allele, last_maj_allele],
                         [first_min_allele, last_min_allele],
                     ]
                 )[1]
 
-    res_df = (
-        pd.Series(results_dict)
-        .rename_axis(["chrom", "bp"])
-        .reset_index(name="res_dict")
-    )
-    res_df = pd.concat(
-        [res_df.drop(["res_dict"], axis=1), res_df["res_dict"].apply(pd.Series)], axis=1
-    )
-    print(res_df)
-    res_df.to_csv(outfile)
+        res_df = (
+            pd.Series(results_dict)
+            .rename_axis(["chrom", "bp", "mut_type", "s_val"])
+            .reset_index(name="res_dict")
+        )
+        res_df = pd.concat(
+            [res_df.drop(["res_dict"], axis=1), res_df["res_dict"].apply(pd.Series)],
+            axis=1,
+        )
+
+        outfile = in_vcf.replace("merged.vcf", f"{args.rep}_{swp}_stat_methods.csv")
+        res_df.to_csv(outfile, index=False)
 
 
 if __name__ == "__main__":

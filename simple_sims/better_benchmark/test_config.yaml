@@ -1,8 +1,8 @@
 #General
-work dir: test_data/
+work dir: test_benchmark/
 slimfile: /work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/slimfiles/onePop-selectiveSweep-vcf-noselcoeff.slim
 slim path: slim
-
+experiment name: Testing_Benchmark
 
 mut types: [2]
 

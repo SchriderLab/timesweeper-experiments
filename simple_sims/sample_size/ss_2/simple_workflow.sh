@@ -11,9 +11,9 @@
 #SBATCH --mail-user=lswhiteh@email.unc.edu
 
 conda activate blinx
+source activate blinx
 
-
-timesweeper condense --hft -o 2ss_training_data.pkl -y config.yaml --subsample-inds 2
+timesweeper condense --hft -o 2ss_training_data.pkl -y config.yaml --subsample-inds 2 --threads 16
 timesweeper train -i 2ss_training_data.pkl -d aft -n Sample_Size_2 -y config.yaml
 timesweeper train -i 2ss_training_data.pkl -d hft -n Sample_Size_2 -y config.yaml
 timesweeper plot_training -i 2ss_training_data.pkl -n Sample_Size_2 -o sample_size_2/images

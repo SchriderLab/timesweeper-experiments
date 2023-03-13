@@ -12,7 +12,7 @@
 
 conda activate blinx
 
-
+tar -xzf vcfs.tar.gz
 timesweeper condense --hft -o 001selcoeff_training_data.pkl -y config.yaml
 timesweeper train -i 001selcoeff_training_data.pkl -d aft -n Sel_Coeff_0.01 -y config.yaml
 timesweeper train -i 001selcoeff_training_data.pkl -d hft -n Sel_Coeff_0.01 -y config.yaml

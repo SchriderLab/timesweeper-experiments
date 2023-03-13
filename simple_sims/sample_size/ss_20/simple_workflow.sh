@@ -14,8 +14,8 @@ conda init bash
 conda activate blinx
 source activate blinx
 
-timesweeper summarize -n Sample_Sizes -y config.yaml
-timesweeper condense --hft -o 20ss_training_data.pkl -y config.yaml
+#timesweeper summarize -n Sample_Sizes -y config.yaml
+timesweeper condense --hft -o 20ss_training_data.pkl -y config.yaml --threads 16
 timesweeper train -i 20ss_training_data.pkl -d aft -n Sample_Size_20 -y config.yaml
 timesweeper train -i 20ss_training_data.pkl -d hft -n Sample_Size_20 -y config.yaml
 timesweeper plot_training -i 20ss_training_data.pkl -n Sample_Size_20 -o input_images
