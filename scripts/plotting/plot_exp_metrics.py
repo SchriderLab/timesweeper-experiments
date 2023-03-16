@@ -144,7 +144,7 @@ def plot_roc(name, data, dtype, outdir):
     sweep_idxs = np.transpose(np.array((data["true"] > 0)).nonzero())
     sweep_labs = np.array(data["true"])[sweep_idxs]
 
-    sdn_probs = data[data["true"] > 0]["sdn_scores"]
+    sdn_probs = data[data["true"] > 0]["sdn_prob"]
 
     swp_fpr, swp_tpr, thresh = roc_curve(sweep_labs, sdn_probs, pos_label=2)
     swp_auc_val = auc(swp_fpr, swp_tpr)
@@ -157,13 +157,15 @@ def plot_roc(name, data, dtype, outdir):
     # Coerce all ssvs into sweep binary pred
     labs = np.array(data["true"])
     labs[labs > 1] = 1
-    pred_probs = np.sum(np.array([data["sdn_scores"], data["ssv_scores"]]).T, axis=1)
+    pred_probs = np.sum(np.array([data["sdn_prob"], data["ssv_prob"]]).T, axis=1)
 
     # Plot ROC Curve
     fpr, tpr, thresh = roc_curve(labs, pred_probs)
     auc_val = auc(fpr, tpr)
     plt.plot(fpr, tpr, label=f"{name.capitalize()} Neutral vs Sweep AUC: {auc_val:.2}")
-
+    
+    plt.ylim((0,1.1))
+    plt.xlim((0,1.1))
     plt.title(f"ROC Curve {name}")
     plt.xlabel("FPR")
     plt.ylabel("TPR")
@@ -177,24 +179,21 @@ def plot_prec_recall(name, data, dtype, outdir):
     """Plot PR curve by binarizing neutral/sweep."""
     # Plot sdn/ssv distinction
 
-    filt_data = data[(data["sdn_scores"] > 0.0) & (data["ssv_scores"] > 0.0)]
+    filt_data = data[(data["sdn_prob"] > 0.0) & (data["ssv_prob"] > 0.0)]
 
     sweep_idxs = np.transpose(np.array((filt_data["true"] > 0)).nonzero())
     sweep_labs = np.array(filt_data["true"])[sweep_idxs]
 
-    sweep_labs[sweep_labs == 1] = 0
-    sweep_labs[sweep_labs == 2] = 1
-
-    # TODO FIX THIS: divide score of sweep by summed sweep scores
-    # TODO FIlter out where probs of both scores are 0
+    # TODO FIX THIS: divide score of sweep by summed sweep prob
+    # TODO FIlter out where probs of both prob are 0
     if len(np.unique(filt_data["true"])) > 2:
-        sdn_probs = filt_data[filt_data["true"] > 0]["sdn_scores"] / (
-            filt_data[filt_data["true"] > 0]["sdn_scores"]
-            + filt_data[filt_data["true"] > 0]["ssv_scores"]
+        sdn_probs = filt_data[filt_data["true"] > 0]["sdn_prob"] / (
+            filt_data[filt_data["true"] > 0]["sdn_prob"]
+            + filt_data[filt_data["true"] > 0]["ssv_prob"]
         )
 
         swp_prec, swp_rec, swp_thresh = precision_recall_curve(
-            sweep_labs.flatten(), sdn_probs
+            sweep_labs.flatten(), sdn_probs, pos_label=2
         )
         swp_auc_val = auc(swp_rec, swp_prec)
         plt.plot(
@@ -206,7 +205,7 @@ def plot_prec_recall(name, data, dtype, outdir):
     # Coerce all ssvs into sweep binary pred
     labs = np.array(data["true"])
     labs[labs > 1] = 1
-    pred_probs = np.sum(np.array([data["sdn_scores"], data["ssv_scores"]]).T, axis=1)
+    pred_probs = np.sum(np.array([data["sdn_prob"], data["ssv_prob"]]).T, axis=1)
 
     # Plot PR Curve for binarized labs
     prec, rec, thresh = precision_recall_curve(labs, pred_probs)
@@ -217,6 +216,8 @@ def plot_prec_recall(name, data, dtype, outdir):
     plt.legend()
     plt.xlabel("Recall")
     plt.ylabel("Precision")
+    plt.ylim((0,1.1))
+    plt.xlim((0,1.1))
     plt.savefig(f"{outdir}/{name.replace(' ', '_')}_Timesweeper_Class_{dtype}_pr.pdf")
     plt.savefig(f"{outdir}/{name.replace(' ', '_')}_Timesweeper_Class_{dtype}_pr.png")
     plt.clf()

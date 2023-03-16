@@ -14,12 +14,12 @@ np.seterr(divide="ignore", invalid="ignore")
 agp = ArgumentParser()
 agp.add_argument("-i", "--indir", default="simple_sims/better_benchmark/test_benchmark/vcfs/")
 agp.add_argument("-o", "--outpre", default="zoomed")
-agp.add_argument("-n", "--num-flank-snps", default=500, type=int)
+agp.add_argument("-n", "--num-flank-snps", default=250, type=int)
 agp.add_argument("-r", "--reps", default=5000, type=int)
 
 ua = agp.parse_args()
 
-sizes = [1, 3, 11, 51, 101, 201]  # For shoulder testing
+sizes = [1, 3, 11, 51, 101]  # For shoulder testing
 fig, axes = plt.subplots(len(sizes), 6)
 
 for size_idx, win_size in tqdm(enumerate(sizes), total=len(sizes)):
@@ -36,15 +36,25 @@ for size_idx, win_size in tqdm(enumerate(sizes), total=len(sizes)):
         for i in tqdm(aft_filelist, desc="Loading AFT files"):
             if Path(i).is_file():
                 df = pd.read_csv(i, sep="\t")
-                if "Pred_Class" in df.columns:
-                    aft_dfs.append(df)
+                if swp != "Neut":
+                    if len(df["Mut_Type"].unique()) > 1:
+                        if (len(df) > 0) and ("Pred_Class" in df.columns):
+                            aft_dfs.append(df)
+                else:
+                   if (len(df) > 0) and ("Pred_Class" in df.columns):
+                        aft_dfs.append(df) 
 
         hft_dfs = []
         for i in tqdm(hft_filelist, desc="Loading HFT files"):
             if Path(i).is_file():
                 df = pd.read_csv(i, sep="\t")
-                if "Pred_Class" in df.columns:
-                    hft_dfs.append(df)
+                if swp != "Neut":
+                    if len(df["Mut_Type"].unique()) > 1:
+                        if (len(df) > 0) and ("Pred_Class" in df.columns):
+                            hft_dfs.append(df)
+                else:
+                   if (len(df) > 0) and ("Pred_Class" in df.columns):
+                        hft_dfs.append(df) 
                         
         aft_data_shape = (len(aft_dfs), ua.num_flank_snps*2+1)
         aft_bin_neut = np.zeros(aft_data_shape)
@@ -106,6 +116,9 @@ for size_idx, win_size in tqdm(enumerate(sizes), total=len(sizes)):
 
         axes[size_idx, swp_idx].set_xticks([0, int(ua.num_flank_snps / 2), ua.num_flank_snps])
         axes[size_idx, swp_idx + 3].set_xticks([0, int(ua.num_flank_snps / 2), ua.num_flank_snps])
+        
+        axes[size_idx, swp_idx].set_yscale("log")
+        axes[size_idx, swp_idx+3].set_yscale("log")
 
 axes[0, -1].legend(loc="center left", bbox_to_anchor=(1, 0.5))
 

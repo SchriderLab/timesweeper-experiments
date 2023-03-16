@@ -2,6 +2,7 @@
 work dir: neg50gens
 slimfile: ../../slimfiles/onePop-selectiveSweep-vcf-noselcoeff.slim
 slim path: slim
+experiment name: neg50_Gens_Post
 
 
 mut types: [2]

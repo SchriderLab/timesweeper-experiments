@@ -77,7 +77,7 @@ def make_reg_fig(
                 s_imgs = []
                 for s in reg_class_types:
                     imgfile = get_file_from_partial(
-                        f"{id}_{s}_minmax_Timesweeper_Reg_{d}_{c}", pdfs
+                        f"{id}_{s}_Timesweeper_Reg_{d}_{c}", pdfs
                     )
                     s_imgs.append(imgfile)
 
@@ -175,7 +175,7 @@ if ua.mode == "model":
     ids = list(
         set([i.split("/")[-1].split(filter_term)[0] for i in pdfs if filter_term in i])
     )
-    ids = [i for i in ids if "Shoulder" not in i]
+    print(ids)
     ids.sort(key=extract_nums)
     # Want absolute distance if working with timing
     if "neg" in ids[0]:

@@ -14,6 +14,5 @@ conda activate blinx
 
 
 timesweeper condense --hft -o 0005selcoeff_training_data.pkl -y config.yaml
-timesweeper train -i 0005selcoeff_training_data.pkl -d aft -n Sel_Coeff_0.005 -y config.yaml
-timesweeper train -i 0005selcoeff_training_data.pkl -d hft -n Sel_Coeff_0.005 -y config.yaml
+timesweeper train -i 0005selcoeff_training_data.pkl --hft -y config.yaml
 timesweeper plot_training -i 0005selcoeff_training_data.pkl -n Sel_Coeff_0.005 -o Sel_Coeff_0.005/images

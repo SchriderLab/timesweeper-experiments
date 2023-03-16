@@ -2,6 +2,7 @@
 work dir: samp_size_sims
 slimfile: ../../slimfiles/onePop-selectiveSweep-vcf-noselcoeff.slim
 slim path: slim
+experiment name: Sample_Size_2
 
 
 mut types: [2]

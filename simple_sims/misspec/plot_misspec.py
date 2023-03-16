@@ -93,8 +93,8 @@ def plot_prec_recall(data):
     sweep_idxs = np.transpose(np.array((filt_data["int_swp"] > 0)).nonzero())
     sweep_labs = np.array(filt_data["int_swp"])[sweep_idxs]
 
+    sweep_labs[sweep_labs == 2] = 0
     sweep_labs[sweep_labs == 1] = 0
-    sweep_labs[sweep_labs == 2] = 1
 
     # TODO FIX THIS: divide score of sweep by summed sweep prob
     # TODO FIlter out where probs of both prob are 0

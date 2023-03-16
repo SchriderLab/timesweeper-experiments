@@ -1,6 +1,7 @@
 #General
 work dir: tp_sims
 slimfile: ../../slimfiles/onePop-selectiveSweep-vcf-noselcoeff.slim
+experiment name: 5_Timepoint
 
 mut types: [2]
 scenarios: ["neut", "ssv", "sdn"]

@@ -20,7 +20,7 @@ agp.add_argument("-r", "--reps", default=5000, type=int)
 
 ua = agp.parse_args()
 
-sizes = [1, 3, 11, 51, 101, 201]  # For shoulder testing
+sizes = [1, 3, 11, 51, 101]  # For shoulder testing
 fig, axes = plt.subplots(len(sizes), 6)
 
 for size_idx, win_size in tqdm(enumerate(sizes), total=len(sizes)):
@@ -37,12 +37,12 @@ for size_idx, win_size in tqdm(enumerate(sizes), total=len(sizes)):
         ]
 
         aft_dfs = []
-        for i in tqdm(aft_filelist, desc="Loading AFT files"):
+        for i in aft_filelist:
             if Path(i).is_file():
                 aft_dfs.append(pd.read_csv(i, sep="\t"))
 
         hft_dfs = []
-        for i in tqdm(hft_filelist, desc="Loading HFT files"):
+        for i in hft_filelist:
             if Path(i).is_file():
                 hft_dfs.append(pd.read_csv(i, sep="\t"))
 
@@ -73,9 +73,7 @@ for size_idx, win_size in tqdm(enumerate(sizes), total=len(sizes)):
         hft_ssv_prop = np.zeros(hft_data_shape)
         hft_sdn_prop = np.zeros(hft_data_shape)
 
-        for idx, df in tqdm(
-            enumerate(aft_dfs), total=len(aft_dfs), desc="Binning AFT DFs"
-        ):
+        for idx, df in enumerate(aft_dfs) :
 
             aft_trues.extend(df["True_Class"].values)
             aft_preds.extend(df["Pred_Class"].values)
@@ -108,9 +106,7 @@ for size_idx, win_size in tqdm(enumerate(sizes), total=len(sizes)):
         aft_ssv_prop = np.nan_to_num(aft_bin_ssv / aft_bin_sizes)
         aft_sdn_prop = np.nan_to_num(aft_bin_sdn / aft_bin_sizes)
 
-        for idx, df in tqdm(
-            enumerate(hft_dfs), total=len(aft_dfs), desc="Binning HFT DFs"
-        ):
+        for idx, df in enumerate(hft_dfs):
             hft_trues.extend(df["True_Class"].values)
             hft_preds.extend(df["Pred_Class"].values)
             df["Bin"] = pd.cut(df["BP"], bins, labels=bins[1:])
@@ -155,9 +151,9 @@ for size_idx, win_size in tqdm(enumerate(sizes), total=len(sizes)):
         axes[size_idx, swp_idx].set_xticks([0, int(ua.num_bins / 2), ua.num_bins])
         axes[size_idx, swp_idx + 3].set_xticks([0, int(ua.num_bins / 2), ua.num_bins])
 
-    #plot_confusion_matrix(".", confusion_matrix(aft_trues, aft_preds), ["Neut", "SSV", "SDN"], f"k{win_size}_AFT_All_SNPs", normalize=False)
-    #plot_confusion_matrix(".", confusion_matrix(hft_trues, hft_preds), ["Neut", "SSV", "SDN"], f"k{win_size}_HFT_All_SNPs", normalize=False)
-        
+        axes[size_idx, swp_idx].set_yscale("log")
+        axes[size_idx, swp_idx+3].set_yscale("log")
+
 axes[0, -1].legend(loc="center left", bbox_to_anchor=(1, 0.5))
 
 cols = [f"{i} {j}" for i in ["AFT", "HFT"] for j in ["Neut", "SSV", "SDN"]]

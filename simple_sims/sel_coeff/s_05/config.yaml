@@ -2,6 +2,7 @@
 work dir: 0.05_selcoeff
 slimfile: onePop-selectiveSweep-s0.05.slim
 slim path: slim
+experiment name: Sel_Coeff_0.05
 
 
 mut types: [2]

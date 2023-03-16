@@ -1,8 +1,8 @@
 #General
-work dir: new_0gens
+work dir: 0gens
 slimfile: ../../slimfiles/onePop-selectiveSweep-vcf-noselcoeff.slim
 slim path: slim
-
+experiment name: 0_Gens_Post
 
 mut types: [2]
 scenarios: ["neut", "ssv", "sdn"]

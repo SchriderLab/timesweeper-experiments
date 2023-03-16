@@ -8,21 +8,21 @@ do
     python predict_data.py -i bottleneck_demo/bottleneck_test_data.pkl \
         -cm bottleneck_demo/bottleneck/trained_models/Bottleneck_Timesweeper_Class_${data_type} \
         -rm bottleneck_demo/bottleneck/trained_models/REG_Bottleneck_sdn_Timesweeper_Reg_${data_type} \
-        -s bottleneck_demo/bottleneck/Bottleneck_selcoeff_scaler.pkl \
+        -s bottleneck_demo/bottleneck/trained_models/Bottleneck_selcoeff_scaler.pkl \
         -o results/bottleneck_on_bottleneck_${data_type}.csv
 
     # Bottleneck on OoA
     python predict_data.py -i OoA_demo/OoA_test_data.pkl \
         -cm bottleneck_demo/bottleneck/trained_models/Bottleneck_Timesweeper_Class_${data_type} \
         -rm bottleneck_demo/bottleneck/trained_models/REG_Bottleneck_sdn_Timesweeper_Reg_${data_type} \
-        -s bottleneck_demo/bottleneck/Bottleneck_selcoeff_scaler.pkl \
+        -s bottleneck_demo/bottleneck/trained_models/Bottleneck_selcoeff_scaler.pkl \
         -o results/bottleneck_on_ooa_${data_type}.csv
 
     # Bottleneck on Constant
     python predict_data.py -i constant_demo/testing_data.pkl \
         -cm bottleneck_demo/bottleneck/trained_models/Bottleneck_Timesweeper_Class_${data_type} \
         -rm bottleneck_demo/bottleneck/trained_models/REG_Bottleneck_sdn_Timesweeper_Reg_${data_type} \
-        -s bottleneck_demo/bottleneck/Bottleneck_selcoeff_scaler.pkl \
+        -s bottleneck_demo/bottleneck/trained_models/Bottleneck_selcoeff_scaler.pkl \
         -o results/bottleneck_on_constant_${data_type}.csv
 
 
@@ -33,7 +33,7 @@ do
     python predict_data.py -i OoA_demo/OoA_test_data.pkl \
         -cm OoA_demo/OoA/trained_models/OoA_Timesweeper_Class_${data_type} \
         -rm OoA_demo/OoA/trained_models/REG_OoA_sdn_Timesweeper_Reg_${data_type} \
-        -s OoA_demo/OoA/OoA_constant_selcoeff_scaler\.pkl \
+        -s OoA_demo/OoA/trained_models/OoA_selcoeff_scaler\.pkl \
         -o results/ooa_on_ooa_${data_type}.csv
 
 
@@ -41,7 +41,7 @@ do
     python predict_data.py -i bottleneck_demo/bottleneck_test_data.pkl \
         -cm OoA_demo/OoA/trained_models/OoA_Timesweeper_Class_${data_type} \
         -rm OoA_demo/OoA/trained_models/REG_OoA_sdn_Timesweeper_Reg_${data_type} \
-        -s OoA_demo/OoA/OoA_constant_selcoeff_scaler\.pkl \
+        -s OoA_demo/OoA/trained_models/OoA_selcoeff_scaler\.pkl \
         -o results/ooa_on_bottleneck_${data_type}.csv
 
 
@@ -49,7 +49,7 @@ do
     python predict_data.py -i constant_demo/testing_data.pkl \
         -cm OoA_demo/OoA/trained_models/OoA_Timesweeper_Class_${data_type} \
         -rm OoA_demo/OoA/trained_models/REG_OoA_sdn_Timesweeper_Reg_${data_type} \
-        -s OoA_demo/OoA/OoA_constant_selcoeff_scaler\.pkl \
+        -s OoA_demo/OoA/trained_models/OoA_selcoeff_scaler\.pkl \
         -o results/ooa_on_constant_${data_type}.csv
 
 
