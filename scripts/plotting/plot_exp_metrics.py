@@ -151,7 +151,7 @@ def plot_roc(name, data, dtype, outdir):
     plt.plot(
         swp_fpr,
         swp_tpr,
-        label=f"{name.capitalize()} SDN vs SSV: {swp_auc_val:.4}",
+        label=f"{name.split('_')[0].capitalize()} SDN vs SSV: {swp_auc_val:.4}",
     )
 
     # Coerce all ssvs into sweep binary pred
@@ -162,11 +162,11 @@ def plot_roc(name, data, dtype, outdir):
     # Plot ROC Curve
     fpr, tpr, thresh = roc_curve(labs, pred_probs)
     auc_val = auc(fpr, tpr)
-    plt.plot(fpr, tpr, label=f"{name.capitalize()} Neutral vs Sweep AUC: {auc_val:.2}")
+    plt.plot(fpr, tpr, label=f"{name.split('_')[0].capitalize()} Neutral vs Sweep AUC: {auc_val:.2}")
     
     plt.ylim((0,1.1))
     plt.xlim((0,1.1))
-    plt.title(f"ROC Curve {name}")
+    plt.title(f"ROC Curve {name.split('_')[0]}")
     plt.xlabel("FPR")
     plt.ylabel("TPR")
     plt.legend()
@@ -199,7 +199,7 @@ def plot_prec_recall(name, data, dtype, outdir):
         plt.plot(
             swp_rec,
             swp_prec,
-            label=f"{name.capitalize()} SDN vs SSV AUC: {swp_auc_val:.2}",
+            label=f"{name.split('_')[0].capitalize()} SDN vs SSV AUC: {swp_auc_val:.2}",
         )
 
     # Coerce all ssvs into sweep binary pred
@@ -210,7 +210,7 @@ def plot_prec_recall(name, data, dtype, outdir):
     # Plot PR Curve for binarized labs
     prec, rec, thresh = precision_recall_curve(labs, pred_probs)
     auc_val = auc(rec, prec)
-    plt.plot(rec, prec, label=f"{name.capitalize()} Neutral vs Sweep AUC: {auc_val:.2}")
+    plt.plot(rec, prec, label=f"{name.split('_')[0].capitalize()} Neutral vs Sweep AUC: {auc_val:.2}")
 
     plt.title(f"PR Curve {name}")
     plt.legend()
@@ -259,14 +259,20 @@ def main():
         for t_file in glob(
             os.path.join(
                 ua.in_dir,
-                "*",
-                "test_predictions",
-                f"*Timesweeper_Class_{dtype}_class_test_predictions.csv",
+                #"*",
+                #"test_predictions",
+                f"*{dtype}*class_test_predictions.csv",
             ),
             recursive=True,
         ):
-            run_name = re.split(r"_[tT]imesweeper", os.path.split(t_file)[1])[0]
+            run_name = re.split(r"_[tT]imesweeper", os.path.split(t_file)[1])[0].split("_Training")[0]
+            if "2D" in run_name:
+                run_name = run_name.split("_2DTimesweeper")[0]
+            elif "Big_" in run_name:
+                run_name.replace("Big_", "")
+            
             print(run_name)
+            
 
             data = pd.read_csv(t_file, header=0)
             data.true = [lab_conv[i] for i in data.true]
@@ -293,22 +299,29 @@ def main():
                 normalize=False,
             )
 
+        print(os.path.join(
+                ua.in_dir,
+                f"*_{dtype}_selcoeff_test_predictions.csv",
+            ))
         datums = {}
         for t_file in glob(
             os.path.join(
                 ua.in_dir,
-                "*",
-                "test_predictions",
-                f"*Timesweeper_Reg_{dtype}_selcoeff_test_predictions.csv",
+                f"*_{dtype}_selcoeff_test_predictions.csv",
             ),
             recursive=True,
         ):
             run_name = re.split(r"_[tT]imesweeper", os.path.split(t_file)[1])[0]
-            print(run_name)
+            if "2D" in run_name:
+                run_name = run_name.split("_2DTimesweeper")[0]
+            elif "Big_" in run_name:
+                run_name = run_name.replace("Big_", "")
+
             data = pd.read_csv(t_file, header=0)
             datums[run_name] = data
 
         for (name, data) in datums.items():
+            print(name)
             plot_sel_coeff_preds(data, dtype, name, ua.outdir, list(lab_conv.keys()))
 
 

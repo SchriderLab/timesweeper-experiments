@@ -25,6 +25,7 @@ def get_sweep(filename):
 
 in_dir = sys.argv[1]
 outfile = sys.argv[2]
+params = pd.read_csv("/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/test_benchmark/Test_Benchmark_params.tsv", sep="\t")
 
 path = Path(in_dir)
 filelist = [str(i) for i in path.glob("**/*WFABC_in_posterior_s.txt")]
@@ -41,7 +42,7 @@ for f in tqdm(filelist):
 
     reps.append(f.split("/")[-2])
     swps.append(get_sweep(f))
-    svals.append(float(f.split("_")[-5].split("s")[-1]))
+    svals.append(params[(params["rep"] == int(f.split("/")[-2])) & (params["sweep"] == get_sweep(f))]["selCoeff"].values[0])
     est_means.append(np.mean(sel_ests))
     stddevs.append(np.std(sel_ests))
 

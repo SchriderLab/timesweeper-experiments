@@ -106,13 +106,9 @@ for size_idx, win_size in tqdm(enumerate(sizes), total=len(sizes)):
         hft_sdn_prop = np.sum(hft_bin_sdn, axis=0) / hft_bin_sdn.shape[0]
 
         # Plot
-        axes[size_idx, swp_idx].plot(aft_neut_prop, label="Neut")
-        axes[size_idx, swp_idx].plot(aft_ssv_prop, label="SSV")
-        axes[size_idx, swp_idx].plot(aft_sdn_prop, label="SDN")
+        axes[size_idx, swp_idx].plot(1 - aft_neut_prop, label="Sweep")
 
-        axes[size_idx, swp_idx + 3].plot(hft_neut_prop, label="Neut")
-        axes[size_idx, swp_idx + 3].plot(hft_ssv_prop, label="SSV")
-        axes[size_idx, swp_idx + 3].plot(hft_sdn_prop, label="SDN")
+        axes[size_idx, swp_idx + 3].plot(1 - hft_neut_prop, label="Sweep")
 
         #axes[size_idx, swp_idx].set_xticks([0, int(ua.num_flank_snps / 2), ua.num_flank_snps])
         #axes[size_idx, swp_idx + 3].set_xticks([0, int(ua.num_flank_snps / 2), ua.num_flank_snps])

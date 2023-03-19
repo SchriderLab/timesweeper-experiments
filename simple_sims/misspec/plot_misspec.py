@@ -93,9 +93,6 @@ def plot_prec_recall(data):
     sweep_idxs = np.transpose(np.array((filt_data["int_swp"] > 0)).nonzero())
     sweep_labs = np.array(filt_data["int_swp"])[sweep_idxs]
 
-    sweep_labs[sweep_labs == 2] = 0
-    sweep_labs[sweep_labs == 1] = 0
-
     # TODO FIX THIS: divide score of sweep by summed sweep prob
     # TODO FIlter out where probs of both prob are 0
     if len(np.unique(filt_data["int_swp"])) > 2:
@@ -105,7 +102,7 @@ def plot_prec_recall(data):
         )
 
         swp_prec, swp_rec, swp_thresh = precision_recall_curve(
-            sweep_labs.flatten(), sdn_probs
+            sweep_labs.flatten(), sdn_probs, pos_label=2
         )
         swp_auc_val = auc(swp_rec, swp_prec)
 

@@ -51,7 +51,7 @@ for f in tqdm(filelist):
                 continue
             reps.append(f.split("/")[-1].split(".")[0])
             swps.append(get_sweep(f))
-            selcoeff.append(sdf["s_val"])
+            selcoeff.append(sdf["s_val"].values[0])
             fit_pval.append(sdf["FIT_pval"].values[0])
             fet_pval.append(sdf["FET_pval"].values[0])
         except:

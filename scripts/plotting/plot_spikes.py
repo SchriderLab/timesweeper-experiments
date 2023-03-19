@@ -140,19 +140,22 @@ for size_idx, win_size in tqdm(enumerate(sizes), total=len(sizes)):
 
 
         # Plot
-        axes[size_idx, swp_idx].plot(aft_neut_prop.mean(axis=0), label="Neut")
-        axes[size_idx, swp_idx].plot(aft_ssv_prop.mean(axis=0), label="SSV")
-        axes[size_idx, swp_idx].plot(aft_sdn_prop.mean(axis=0), label="SDN")
+        axes[size_idx, swp_idx].plot(aft_neut_prop.mean(axis=0)[10:-10], label="Neut")
+        axes[size_idx, swp_idx].plot(aft_ssv_prop.mean(axis=0)[10:-10], label="SSV")
+        axes[size_idx, swp_idx].plot(aft_sdn_prop.mean(axis=0)[10:-10], label="SDN")
 
-        axes[size_idx, swp_idx + 3].plot(hft_neut_prop.mean(axis=0), label="Neut")
-        axes[size_idx, swp_idx + 3].plot(hft_ssv_prop.mean(axis=0), label="SSV")
-        axes[size_idx, swp_idx + 3].plot(hft_sdn_prop.mean(axis=0), label="SDN")
+        axes[size_idx, swp_idx + 3].plot(hft_neut_prop.mean(axis=0)[10:-10], label="Neut")
+        axes[size_idx, swp_idx + 3].plot(hft_ssv_prop.mean(axis=0)[10:-10], label="SSV")
+        axes[size_idx, swp_idx + 3].plot(hft_sdn_prop.mean(axis=0)[10:-10], label="SDN")
 
         axes[size_idx, swp_idx].set_xticks([0, int(ua.num_bins / 2), ua.num_bins])
         axes[size_idx, swp_idx + 3].set_xticks([0, int(ua.num_bins / 2), ua.num_bins])
 
         axes[size_idx, swp_idx].set_yscale("log")
         axes[size_idx, swp_idx+3].set_yscale("log")
+        
+        axes[size_idx, swp_idx].set_ylim((1e-2, 1.1))
+        axes[size_idx, swp_idx+3].set_ylim((1e-2, 1.1))
 
 axes[0, -1].legend(loc="center left", bbox_to_anchor=(1, 0.5))
 
@@ -167,4 +170,4 @@ for ax, row in zip(axes[:, 0], rows):
 
 fig.set_size_inches(20, 10)
 fig.tight_layout()
-plt.savefig(f"{ua.outpre}.png")
+plt.savefig(f"{ua.outpre}.pdf")
