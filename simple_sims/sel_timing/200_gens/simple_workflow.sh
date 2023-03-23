@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --partition=general
+#SBATCH --partition=dschridelab
 #SBATCH --constraint=rhel8
 #SBATCH --mem=32G
 #SBATCH -c 32
@@ -17,7 +17,6 @@ source activate blinx
 
 timesweeper summarize -n 200_Gens_Post -y config.yaml
 
-timesweeper condense --hft -o 50gens_training_data.pkl -y config.yaml --threads 32
-timesweeper train -i 50gens_training_data.pkl -d aft -n 200_Gens_Post -y config.yaml
-timesweeper train -i 50gens_training_data.pkl -d hft -n 200_Gens_Post -y config.yaml
+timesweeper condense --hft -o 200_gen.pkl -y config.yaml --threads 32 --paramsfile 200gens/200_Gens_Post_params.tsv
+timesweeper train -i 200_gen.pkl -y config.yaml
 timesweeper plot_training -i 50gens_training_data.pkl -n 200_Gens_Post -o 200_Gens_Post/images

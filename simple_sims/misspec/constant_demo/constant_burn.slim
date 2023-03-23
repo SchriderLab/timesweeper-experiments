@@ -10,7 +10,7 @@ initialize()
     initializeRecombinationRate(1e-7);
 
     
-    defineConstant("burnTime", 20*subpopSize);
+    defineConstant("burnTime", 20*subpopSize-51);
     defineConstant("mutTime", burnTime);
     defineConstant("ssvTime", mutTime); 
     defineConstant("simEndTime", burnTime+sampGens[size(sampGens)-1]);

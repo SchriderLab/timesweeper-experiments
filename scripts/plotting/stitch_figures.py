@@ -175,6 +175,7 @@ if ua.mode == "model":
     ids = list(
         set([i.split("/")[-1].split(filter_term)[0] for i in pdfs if filter_term in i])
     )
+    ids = [i for i in ids if "Timepoints" not in i]
     print(ids)
     ids.sort(key=extract_nums)
     # Want absolute distance if working with timing

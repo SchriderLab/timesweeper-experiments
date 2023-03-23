@@ -53,6 +53,7 @@ neut_clrs = [clrs[i] for i in range(len(clrs)) if swps[i] == "neut"]
 threshold = np.percentile(np.stack(neut_clrs).flatten(), 95)
 center_clrs = [i[int(len(i) / 2)] for i in clrs]
 
+#Neutral 95% CLR: 2.5516360499999995
 print(f"Neutral 95% CLR: {threshold}")
 
 pred = []

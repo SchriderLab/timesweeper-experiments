@@ -16,7 +16,7 @@ initialize()
     defineConstant("simEndTime", burnTime+sampGens[size(sampGens)-1]);
     defineConstant("samplingTime", burnTime+sampGens[0]); 
     // introduced mutation's selection coefficient
-    defineConstant("selCoeff", 0.1);
+    defineConstant("selCoeff", 0.5);
     initializeMutationType("m2", 0.5, "f", selCoeff);
 
     defineConstant("restartTime", burnTime-subpopSize);
@@ -68,9 +68,9 @@ s2 1000 late()
             cat(simID + ": failed to switch from neutral to beneficial at gen " + sim.generation + "\n");
         }
     }
+        
     m1.convertToSubstitution = F;
     m2.convertToSubstitution = F;
-    
 }
 
 s3 1000:10000 late()

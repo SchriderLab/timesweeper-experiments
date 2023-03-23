@@ -259,8 +259,8 @@ def main():
         for t_file in glob(
             os.path.join(
                 ua.in_dir,
-                #"*",
-                #"test_predictions",
+                "*",
+                "test_predictions",
                 f"*{dtype}*class_test_predictions.csv",
             ),
             recursive=True,
@@ -270,9 +270,6 @@ def main():
                 run_name = run_name.split("_2DTimesweeper")[0]
             elif "Big_" in run_name:
                 run_name.replace("Big_", "")
-            
-            print(run_name)
-            
 
             data = pd.read_csv(t_file, header=0)
             data.true = [lab_conv[i] for i in data.true]
@@ -299,10 +296,6 @@ def main():
                 normalize=False,
             )
 
-        print(os.path.join(
-                ua.in_dir,
-                f"*_{dtype}_selcoeff_test_predictions.csv",
-            ))
         datums = {}
         for t_file in glob(
             os.path.join(
@@ -321,7 +314,6 @@ def main():
             datums[run_name] = data
 
         for (name, data) in datums.items():
-            print(name)
             plot_sel_coeff_preds(data, dtype, name, ua.outdir, list(lab_conv.keys()))
 
 

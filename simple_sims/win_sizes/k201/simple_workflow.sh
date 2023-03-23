@@ -15,6 +15,5 @@ conda activate blinx
 source activate blinx
 
 timesweeper condense --hft -o k201_training_data.pkl -y config.yaml
-timesweeper train -i k201_training_data.pkl -d aft -n Win_size_201 -y config.yaml
-timesweeper train -i k201_training_data.pkl -d hft -n Win_size_201 -y config.yaml
-timesweeper plot_training -i k201_training_data.pkl -n Win_size_201 -o Win_size_201/images
+timesweeper train -i k201_training_data.pkl --hft -y config.yaml
+timesweeper plot_training -i k201_training_data.pkl  -o Win_size_201/images

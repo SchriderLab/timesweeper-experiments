@@ -1,5 +1,5 @@
 #General
-work dir: 2_tp_sims
+work dir: new_2_tp_sims
 slimfile: ../../slimfiles/onePop-selectiveSweep-vcf-noselcoeff.slim
 experiment name: 2_Timepoint
 
@@ -8,7 +8,7 @@ scenarios: ["neut", "ssv", "sdn"]
 win_size: 51
 
 num_sample_points : 2
-inds_per_tp : 200  # Diploid inds
+inds_per_tp : 100  # Diploid inds
 physLen : 5000000
 
 sample sizes: [100, 100]

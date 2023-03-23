@@ -9,7 +9,7 @@ initialize()
     initializeGenomicElement(g1, 0, physLen-1);
     initializeRecombinationRate(1e-7);
     
-    defineConstant("burnTime", 20*subpopSize);
+    defineConstant("burnTime", 20*subpopSize-51);
     defineConstant("mutTime", burnTime);
     defineConstant("ssvTime", mutTime); 
     defineConstant("simEndTime", burnTime+sampGens[size(sampGens)-1]);
@@ -59,6 +59,8 @@ s1 1000 late()
             cat(simID + ": failed to switch from neutral to beneficial at gen " + sim.generation + "\n");
         }
     }
+    m1.convertToSubstitution = F;
+    m2.convertToSubstitution = F;
 }
 
 s2 1000:10000 late()
@@ -87,13 +89,11 @@ s2 1000:10000 late()
             }
         }
     }
+
 }
 
 s3 10000:15000 late()
 {
-    m1.convertToSubstitution = F;
-    m2.convertToSubstitution = F;
-    
     if (any(mutTime+sampGens==sim.generation))
     {
         if (sweep == "sdn" | sweep == "ssv")

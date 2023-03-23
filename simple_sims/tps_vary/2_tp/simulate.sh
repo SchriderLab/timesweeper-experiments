@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --partition=general
 #SBATCH --constraint=rhel8
-#SBATCH --mem=32G
+#SBATCH --mem=4G
 #SBATCH -c 2
 #SBATCH --time=4-00:00:00
 #SBATCH -J 2tp_sim

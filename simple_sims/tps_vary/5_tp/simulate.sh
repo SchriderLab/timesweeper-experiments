@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --partition=general
 #SBATCH --constraint=rhel8
-#SBATCH --mem=8G
+#SBATCH --mem=4G
 #SBATCH -c 4
 #SBATCH --time=2:00:00
 #SBATCH -J 5tp_sim
@@ -15,4 +15,4 @@ conda activate blinx
 source activate blinx
 
 
-timesweeper sim_custom --rep-range ${SLURM_ARRAY_TASK_ID} $((${SLURM_ARRAY_TASK_ID}+50)) -y config.yaml
+timesweeper sim_custom --rep-range ${SLURM_ARRAY_TASK_ID} $((${SLURM_ARRAY_TASK_ID}+50)) -y config.yaml --threads 4

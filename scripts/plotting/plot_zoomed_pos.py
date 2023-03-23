@@ -109,9 +109,6 @@ for size_idx, win_size in tqdm(enumerate(sizes), total=len(sizes)):
         axes[size_idx, swp_idx].plot(1 - aft_neut_prop, label="Sweep")
 
         axes[size_idx, swp_idx + 3].plot(1 - hft_neut_prop, label="Sweep")
-
-        #axes[size_idx, swp_idx].set_xticks([0, int(ua.num_flank_snps / 2), ua.num_flank_snps])
-        #axes[size_idx, swp_idx + 3].set_xticks([0, int(ua.num_flank_snps / 2), ua.num_flank_snps])
         
         axes[size_idx, swp_idx].set_yscale("log")
         axes[size_idx, swp_idx+3].set_yscale("log")
