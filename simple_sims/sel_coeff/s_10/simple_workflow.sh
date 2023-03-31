@@ -11,6 +11,7 @@
 #SBATCH --mail-user=lswhiteh@email.unc.edu
 
 conda activate blinx
+source activate blinx
 
 
 timesweeper condense --hft -o 01selcoeff_training_data.pkl -y config.yaml

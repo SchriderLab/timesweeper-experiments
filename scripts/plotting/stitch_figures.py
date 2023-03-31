@@ -180,7 +180,7 @@ if ua.mode == "model":
     ids.sort(key=extract_nums)
     # Want absolute distance if working with timing
     if "neg" in ids[0]:
-        ids[:3] = reversed(ids[:3])
+        ids[:2] = reversed(ids[:2])
 
     print(ids)
 

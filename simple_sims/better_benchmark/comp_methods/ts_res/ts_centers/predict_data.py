@@ -26,21 +26,21 @@ agp.add_argument(
     "--trained-class-model",
     dest="class_model",
     help="Trained Keras classification model to use for prediction.",
-    default="/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/train_benchmark/trained_models/Training_Benchmark_Timesweeper_Class_hft",
+    default="/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/train_benchmark/trained_models/Train_Benchmark_Timesweeper_Class_aft",
 )
 agp.add_argument(
     "-rm",
     "--trained-reg-model",
     dest="reg_model",
     help="Trained Keras regression model to use for prediction. Either SSV or SDN work.",
-    default="/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/train_benchmark/trained_models/REG_Training_Benchmark_sdn_minmax_Timesweeper_Reg_hft",
+    default="/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/train_benchmark/trained_models/REG_Train_Benchmark_sdn_Timesweeper_Reg_aft",
 )
 agp.add_argument(
     "-s",
     "--scaler",
     dest="mm_scaler",
-    help="MinMax Scaler used during model training.",
-    default="/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/train_benchmark/Training_Benchmark_selcoeff_scaler.pkl",
+    help="MinMax Scaler used during model Train.",
+    default="/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/train_benchmark/trained_models/Train_Benchmark_selcoeff_scaler.pkl",
 )
 
 ua = agp.parse_args()
@@ -64,7 +64,7 @@ for sweep in pikl_dict.keys():
     sweep_types.append(sweep)
     for rep in pikl_dict[sweep].keys():
         try:
-            data_list.append(np.expand_dims(np.array(pikl_dict[sweep][rep]["hft"]), 0))
+            data_list.append(np.expand_dims(np.array(pikl_dict[sweep][rep]["aft"]), 0))
             sweep_list.append(sweep)
             rep_list.append(rep)
             sel_coeffs.append(pikl_dict[sweep][rep]["sel_coeff"])
@@ -101,4 +101,4 @@ pd.DataFrame(
         "sdn_sval": sdn_s,
         "ssv_sval": ssv_s,
     }
-).to_csv("hft_Timesweeper_res.csv", index=False)
+).to_csv("aft_Timesweeper_res.csv", index=False)

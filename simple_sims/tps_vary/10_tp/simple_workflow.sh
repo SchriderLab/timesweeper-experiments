@@ -15,5 +15,4 @@ conda activate blinx
 timesweeper summarize -n 10_Timepoints -y config.yaml
 timesweeper condense --hft -o 10tp_training_data.pkl -y config.yaml
 timesweeper train -i 10tp_training_data.pkl -d aft -n 10_Timepoint -y config.yaml
-timesweeper train -i 10tp_training_data.pkl -d hft -n 10_Timepoint -y config.yaml
 timesweeper plot_training -i 10tp_training_data.pkl -n 10_Timepoint -o 10_Timepoint/images

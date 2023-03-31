@@ -113,7 +113,7 @@ def main():
     gens_sampled = [int(i) for i in args.gens_sampled]
 
     for swp in ["neut", "sdn", "ssv"]:
-        in_vcf = f"/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/misspec/bottleneck_demo/test_bottleneck/vcfs/{swp}/{args.rep}/merged.vcf"
+        in_vcf = f"/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/test_benchmark/vcfs/{swp}/{args.rep}/merged.vcf"
 
         print("Running Frequency Increment Test (FIT) and Fisher's Exact Test (FET)")
         results_dict = {}

@@ -2,7 +2,7 @@
 work dir: train_benchmark/
 slimfile: /work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/slimfiles/onePop-selectiveSweep-vcf-noselcoeff.slim
 slim path: slim
-experiment name: Transformer
+experiment name: Train_Benchmark
 
 mut types: [2]
 

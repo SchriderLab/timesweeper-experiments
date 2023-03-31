@@ -300,6 +300,8 @@ def main():
         for t_file in glob(
             os.path.join(
                 ua.in_dir,
+                #"*",
+                "test_predictions",
                 f"*_{dtype}_selcoeff_test_predictions.csv",
             ),
             recursive=True,

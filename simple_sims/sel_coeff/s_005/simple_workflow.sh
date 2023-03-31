@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --partition=general
 #SBATCH --constraint=rhel8 
-#SBATCH --mem=32G
+#SBATCH --mem=64G
 #SBATCH -c 16
 #SBATCH --time=24:00:00
 #SBATCH -J s0.005workflow
@@ -11,6 +11,7 @@
 #SBATCH --mail-user=lswhiteh@email.unc.edu
 
 conda activate blinx
+source activate blinx
 
 
 timesweeper condense --hft -o 0005selcoeff_training_data.pkl -y config.yaml

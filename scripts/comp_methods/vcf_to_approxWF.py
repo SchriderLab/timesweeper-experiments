@@ -73,7 +73,7 @@ def converter(vcffile, samp_sizes):
         ofile.write("time\t" + "\t".join([str(i) for i in tp_labels]) + "\n")
         ofile.write(f"{sweep}_{str(sel_coeff)}" + "\t" + "\t".join(tp_counts))
 
-    cmd = f"""/work/users/l/s/lswhiteh/timesweeper-experiments/approxwf/ApproxWF \
+    cmd = f"""/work/users/l/s/lswhiteh/timesweeper-experiments/comp_tools/approxwf/ApproxWF \
         task=estimate \
         loci={locifile} \
         N=500 \

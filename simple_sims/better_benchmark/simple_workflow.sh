@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --partition=general
 #SBATCH --constraint=rhel8 
-#SBATCH --mem=128G
+#SBATCH --mem=64G
 #SBATCH -c 16
 #SBATCH --time=24:00:00
 #SBATCH -J bmworkflow
@@ -12,7 +12,6 @@
 source activate blinx
 conda activate blinx
 
-#timesweeper condense --hft -o training_benchmark_data.pkl -y config.yaml --threads 16
-timesweeper train -i training_benchmark_data.pkl -d aft -n 2DCNN_Training_Benchmark -y config.yaml
-timesweeper train -i training_benchmark_data.pkl -d hft -n 2DCNN_Training_Benchmark -y config.yaml
+timesweeper condense --hft -o training_benchmark_data.pkl -y config.yaml --threads 16
+timesweeper train -i training_benchmark_data.pkl --hft -y config.yaml
 #timesweeper plot_training -i training_benchmark_data.pkl -n 2DCNN_Training_Benchmark -o train_benchmark/2DCNN_input_images

@@ -9,7 +9,7 @@
 #SBATCH -e logfiles/shic_conversion.%A.%a.err
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=lswhiteh@email.unc.edu
-#SBATCH --array=0-5000
+#SBATCH --array=0-10000
 conda init bash
 conda activate diploshic
 source activate diploshic

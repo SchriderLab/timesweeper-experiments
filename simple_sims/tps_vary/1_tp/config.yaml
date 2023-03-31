@@ -1,5 +1,5 @@
 #General
-work dir: new_1_tp_sims
+work dir: 1_tp_sims
 slimfile: ../../slimfiles/onePop-selectiveSweep-vcf-noselcoeff.slim
 experiment name: 1_Timepoint
 mut types: [2]

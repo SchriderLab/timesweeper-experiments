@@ -1,5 +1,6 @@
 train_vcf_dir=/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/train_benchmark/vcfs/
 train_data_dir=/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/train_benchmark/shic_data
+mkdir $train_data_dir
 
 head -n 1 ${train_vcf_dir}/neut/0/0.final.neut.win_5.fvec -n 1 > ${train_data_dir}/neuts.fvec
 head -n 1 ${train_vcf_dir}/neut/0/0.final.neut.win_5.fvec -n 1 > ${train_data_dir}/hard.fvec

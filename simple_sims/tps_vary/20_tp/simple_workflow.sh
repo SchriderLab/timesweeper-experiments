@@ -15,6 +15,5 @@ source activate blinx
 
 #timesweeper summarize -n 20_Timepoints -y config.yaml
 timesweeper condense --hft -o 20tp_training_data.pkl -y config.yaml
-timesweeper train -i 20tp_training_data.pkl -d aft -n 20_Timepoint -y config.yaml
-timesweeper train -i 20tp_training_data.pkl -d hft -n 20_Timepoint -y config.yaml
+timesweeper train -i 20tp_training_data.pkl --hft -y config.yaml -s 10000
 timesweeper plot_training -i 20tp_training_data.pkl -n 20_Timepoint -o 20_Timepoint/images

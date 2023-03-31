@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --partition=general
+#SBATCH --partition=dschridelab
 #SBATCH --constraint=rhel8 
 #SBATCH --mem=32G
 #SBATCH -c 16
@@ -11,8 +11,8 @@
 #SBATCH --mail-user=lswhiteh@email.unc.edu
 
 conda activate blinx
+source activate blinx
 
-tar -xzf vcfs.tar.gz
 timesweeper condense --hft -o 005selcoeff_training_data.pkl -y config.yaml --threads 16
 timesweeper train -i 005selcoeff_training_data.pkl --hft -y config.yaml
 timesweeper plot_training -i 005selcoeff_training_data.pkl -n Sel_Coeff_0.05 -o Sel_Coeff_0.05/images

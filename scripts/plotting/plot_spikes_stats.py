@@ -34,7 +34,7 @@ for swp_idx, swp in enumerate(["neut", "ssv", "sdn"]):
         f"{ua.indir}/{swp}/{rep}/{rep}.sf.res" for rep in range(ua.reps)
     ]
     ts_filelist = [
-        f"{ua.indir}/{swp}/{rep}/k51_res_aft.csv" for rep in range(ua.reps)
+        f"{ua.indir}/{swp}/{rep}/20_Timepoint_aft.csv" for rep in range(ua.reps)
     ]
     ts_dfs = []
     for i in ts_filelist:
@@ -110,7 +110,7 @@ for swp_idx, swp in enumerate(["neut", "ssv", "sdn"]):
         )
 
     for idx, df in enumerate(ts_dfs):
-        df["Sweep_Pred"] = np.where(df["Pred_Class"] == "Neut", "Neut", "Sweep")
+        df["Sweep_Pred"] = np.where(df["Pred_Class"] == "neut", "Neut", "Sweep")
         df["Bin"] = pd.cut(df["BP"], bins, labels=bins[1:])
         
         if swp != "neut":
@@ -128,7 +128,11 @@ for swp_idx, swp in enumerate(["neut", "ssv", "sdn"]):
     fit_prop = np.nan_to_num(bin_fit / stat_bin_sizes)
     fet_prop = np.nan_to_num(bin_fet / stat_bin_sizes)
     sf_prop = np.nan_to_num(bin_sf / sf_bin_sizes)
+    
+    print(bin_ts, ts_bin_sizes)
+    
     ts_prop = np.nan_to_num(bin_ts / ts_bin_sizes)
+    print(ts_prop)
 
     # Plot
 

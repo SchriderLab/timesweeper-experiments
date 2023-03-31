@@ -35,7 +35,7 @@ for swp_idx, swp in enumerate(["neut", "ssv", "sdn"]):
         f"{ua.indir}/{swp}/{rep}/{rep}.sf.res" for rep in range(ua.reps)
     ]
     ts_filelist = [
-        f"{ua.indir}/{swp}/{rep}/k51_res_aft.csv" for rep in range(ua.reps)
+        f"{ua.indir}/{swp}/{rep}/20_Timepoint_aft.csv" for rep in range(ua.reps)
     ]
     ts_dfs = []
     for i in ts_filelist:
@@ -108,7 +108,7 @@ for swp_idx, swp in enumerate(["neut", "ssv", "sdn"]):
         
         df = df.loc[(swp_loc - ua.num_flank_snps) : (swp_loc + ua.num_flank_snps), :]
 
-        df["Sweep_Pred"] = np.where(df["Pred_Class"] == "Neut", "Neut", "Sweep")
+        df["Sweep_Pred"] = np.where(df["Pred_Class"] == "neut", "Neut", "Sweep")
         
         bin_ts[idx] += np.where(df["Sweep_Pred"] == "Neut", 0, 1)
 
@@ -132,7 +132,7 @@ for swp_idx, swp in enumerate(["neut", "ssv", "sdn"]):
     axes[swp_idx].plot(ts_prop, label="Timesweeper")
 
 
-    axes[swp_idx].set_xticks([0, int(ua.num_flank_snps / 2), ua.num_flank_snps])
+    axes[swp_idx].set_xticks([0, ua.num_flank_snps, 2*ua.num_flank_snps])
     axes[swp_idx].set_yscale("log")
     axes[swp_idx].set_ylim((1e-2, 1.1))
     #axes[swp_idx].set_ylim((0, 1))

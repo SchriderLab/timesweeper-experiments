@@ -5,8 +5,8 @@
 #SBATCH -c 1
 #SBATCH --time=2:00:00
 #SBATCH -J wf_convert
-#SBATCH -o logfiles/wf_conversion.%A.%a.out
-#SBATCH -e logfiles/wf_conversion.%A.%a.err
+#SBATCH -o logfiles/wfabc_conversion.%A.%a.out
+#SBATCH -e logfiles/wfabc_conversion.%A.%a.err
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=lswhiteh@email.unc.edu
 #SBATCH --array=0-5000

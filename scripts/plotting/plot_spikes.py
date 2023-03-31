@@ -20,20 +20,17 @@ agp.add_argument("-r", "--reps", default=5000, type=int)
 
 ua = agp.parse_args()
 
-sizes = [1, 3, 11, 51, 101]  # For shoulder testing
+sizes = [1, 3, 11, 51, 101, 201]  # For shoulder testing
 fig, axes = plt.subplots(len(sizes), 6)
 
 for size_idx, win_size in tqdm(enumerate(sizes), total=len(sizes)):
-    aft_trues, aft_preds = [], []
-    hft_trues, hft_preds = [], []
-    
     for swp_idx, swp in enumerate(["neut", "ssv", "sdn"]):
         print("[INFO] Globbing files")
         aft_filelist = [
-            f"{ua.indir}/{swp}/{rep}/k{win_size}_res_aft.csv" for rep in range(ua.reps)
+            f"{ua.indir}/{swp}/{rep}/Win_size_{win_size}_aft.csv" for rep in range(ua.reps)
         ]
         hft_filelist = [
-            f"{ua.indir}/{swp}/{rep}/k{win_size}_res_hft.csv" for rep in range(ua.reps)
+            f"{ua.indir}/{swp}/{rep}/Win_size_{win_size}_hft.csv" for rep in range(ua.reps)
         ]
 
         aft_dfs = []
@@ -57,96 +54,54 @@ for size_idx, win_size in tqdm(enumerate(sizes), total=len(sizes)):
             
         aft_data_shape = (len(aft_dfs), len(bins) - 1)
         aft_bin_sizes = np.zeros(aft_data_shape)
-        aft_bin_neut = np.zeros(aft_data_shape)
-        aft_bin_ssv = np.zeros(aft_data_shape)
-        aft_bin_sdn = np.zeros(aft_data_shape)
-        aft_neut_prop = np.zeros(aft_data_shape)
-        aft_ssv_prop = np.zeros(aft_data_shape)
-        aft_sdn_prop = np.zeros(aft_data_shape)
+        aft_bin = np.zeros(aft_data_shape)
+        aft_prop = np.zeros(aft_data_shape)
 
         hft_data_shape = (len(hft_dfs), len(bins) - 1)
         hft_bin_sizes = np.zeros(hft_data_shape)
-        hft_bin_neut = np.zeros(hft_data_shape)
-        hft_bin_ssv = np.zeros(hft_data_shape)
-        hft_bin_sdn = np.zeros(hft_data_shape)
-        hft_neut_prop = np.zeros(hft_data_shape)
-        hft_ssv_prop = np.zeros(hft_data_shape)
-        hft_sdn_prop = np.zeros(hft_data_shape)
+        hft_bin = np.zeros(hft_data_shape)
+        hft_prop = np.zeros(hft_data_shape)
+
 
         for idx, df in enumerate(aft_dfs) :
-
-            aft_trues.extend(df["True_Class"].values)
-            aft_preds.extend(df["Pred_Class"].values)
+            df["Sweep_Pred"] = np.where(df["Pred_Class"] == "neut", "Neut", "Sweep")
             df["Bin"] = pd.cut(df["BP"], bins, labels=bins[1:])
 
             if swp != "neut":
                 df.loc[df["Mut_Type"] == 2, "Bin"] = swp_bin
             
-            aft_bin_sizes[idx] = df.groupby("Bin").count()["Pred_Class"].values
-            aft_bin_neut[idx] += (
-                df[df["Pred_Class"] == "Neut"]
-                .groupby("Bin")
-                .count()["Pred_Class"]
-                .values
-            )
-            aft_bin_ssv[idx] += (
-                df[df["Pred_Class"] == "SSV"]
-                .groupby("Bin")
-                .count()["Pred_Class"]
-                .values
-            )
-            aft_bin_sdn[idx] += (
-                df[df["Pred_Class"] == "SDN"]
+            aft_bin_sizes[idx] = df.groupby("Bin").count()["Sweep_Pred"].values
+            aft_bin[idx] += (
+                df[df["Sweep_Pred"] == "Sweep"]
                 .groupby("Bin")
                 .count()["Pred_Class"]
                 .values
             )
 
-        aft_neut_prop = np.nan_to_num(aft_bin_neut / aft_bin_sizes)
-        aft_ssv_prop = np.nan_to_num(aft_bin_ssv / aft_bin_sizes)
-        aft_sdn_prop = np.nan_to_num(aft_bin_sdn / aft_bin_sizes)
+
+        aft_prop = np.nan_to_num(aft_bin / aft_bin_sizes)
 
         for idx, df in enumerate(hft_dfs):
-            hft_trues.extend(df["True_Class"].values)
-            hft_preds.extend(df["Pred_Class"].values)
+            df["Sweep_Pred"] = np.where(df["Pred_Class"] == "neut", "Neut", "Sweep")
             df["Bin"] = pd.cut(df["BP"], bins, labels=bins[1:])
 
             if swp != "neut":
                 df.loc[df["Mut_Type"] == 2, "Bin"] = swp_bin
             
-            hft_bin_sizes[idx] = df.groupby("Bin").count()["Pred_Class"].values
-            hft_bin_neut[idx] += (
-                df[df["Pred_Class"] == "Neut"]
-                .groupby("Bin")
-                .count()["Pred_Class"]
-                .values
-            )
-            hft_bin_ssv[idx] += (
-                df[df["Pred_Class"] == "SSV"]
-                .groupby("Bin")
-                .count()["Pred_Class"]
-                .values
-            )
-            hft_bin_sdn[idx] += (
-                df[df["Pred_Class"] == "SDN"]
+            hft_bin_sizes[idx] = df.groupby("Bin").count()["Sweep_Pred"].values
+            hft_bin[idx] += (
+                df[df["Sweep_Pred"] == "Sweep"]
                 .groupby("Bin")
                 .count()["Pred_Class"]
                 .values
             )
 
-        hft_neut_prop = np.nan_to_num(hft_bin_neut / hft_bin_sizes)
-        hft_ssv_prop = np.nan_to_num(hft_bin_ssv / hft_bin_sizes)
-        hft_sdn_prop = np.nan_to_num(hft_bin_sdn / hft_bin_sizes)
-
+        hft_prop = np.nan_to_num(hft_bin / hft_bin_sizes)
 
         # Plot
-        axes[size_idx, swp_idx].plot(aft_neut_prop.mean(axis=0)[10:-10], label="Neut")
-        axes[size_idx, swp_idx].plot(aft_ssv_prop.mean(axis=0)[10:-10], label="SSV")
-        axes[size_idx, swp_idx].plot(aft_sdn_prop.mean(axis=0)[10:-10], label="SDN")
+        axes[size_idx, swp_idx].plot(aft_prop.mean(axis=0)[10:-10], label="Neut")
 
-        axes[size_idx, swp_idx + 3].plot(hft_neut_prop.mean(axis=0)[10:-10], label="Neut")
-        axes[size_idx, swp_idx + 3].plot(hft_ssv_prop.mean(axis=0)[10:-10], label="SSV")
-        axes[size_idx, swp_idx + 3].plot(hft_sdn_prop.mean(axis=0)[10:-10], label="SDN")
+        axes[size_idx, swp_idx + 3].plot(hft_prop.mean(axis=0)[10:-10], label="Neut")
 
         axes[size_idx, swp_idx].set_xticks([0, int(ua.num_bins / 2), ua.num_bins])
         axes[size_idx, swp_idx + 3].set_xticks([0, int(ua.num_bins / 2), ua.num_bins])
@@ -160,7 +115,7 @@ for size_idx, win_size in tqdm(enumerate(sizes), total=len(sizes)):
 axes[0, -1].legend(loc="center left", bbox_to_anchor=(1, 0.5))
 
 cols = [f"{i} {j}" for i in ["AFT", "HFT"] for j in ["Neut", "SSV", "SDN"]]
-rows = [f"k{i}" for i in sizes]
+rows = [f"l={i}" for i in sizes]
 
 for ax, col in zip(axes[0], cols):
     ax.set_title(col)

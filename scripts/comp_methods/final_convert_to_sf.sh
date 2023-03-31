@@ -24,6 +24,6 @@ do
 
     python vcf2sf.py -v $ifile -o $freqfile
 
-    /work/users/l/s/lswhiteh/timesweeper-experiments/SF2/SweepFinder2 -f $freqfile $spectfile
-    /work/users/l/s/lswhiteh/timesweeper-experiments/SF2/SweepFinder2 -l 1000 $freqfile $spectfile $resfile
+    /work/users/l/s/lswhiteh/timesweeper-experiments/comp_tools/SF2/SweepFinder2 -f $freqfile $spectfile
+    /work/users/l/s/lswhiteh/timesweeper-experiments/comp_tools/SF2/SweepFinder2 -l 1000 $freqfile $spectfile $resfile
 done

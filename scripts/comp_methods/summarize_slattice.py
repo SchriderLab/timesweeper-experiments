@@ -28,7 +28,7 @@ outfile = sys.argv[2]
 path = Path(in_dir)
 filelist = [str(i) for i in path.glob("**/*slattice.csv.out")]
 
-params = pd.read_csv("/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/test_benchmark/Test_Benchmark_params.tsv", sep="\t")
+params = pd.read_csv("/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/test_benchmark/Testing_Benchmark_params.tsv", sep="\t")
 print(params.head())
 reps = []
 swps = []

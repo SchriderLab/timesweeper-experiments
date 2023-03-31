@@ -23,8 +23,8 @@ do
         #/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/test_benchmark/vcfs/${swp}/${SLURM_ARRAY_TASK_ID}/${SLURM_ARRAY_TASK_ID}.final.${swp}.win_${win}.fvec
 
         diploSHIC predict --simData \
-            /work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/train_benchmark/shic_model.json \
-            /work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/train_benchmark/shic_model.weights.hdf5 \
+            /work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/train_benchmark/trained_shic_model.json \
+            /work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/train_benchmark/trained_shic_model.weights.hdf5 \
             /work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/test_benchmark/vcfs/${swp}/${SLURM_ARRAY_TASK_ID}/${SLURM_ARRAY_TASK_ID}.final.${swp}.win_${win}.fvec \
             /work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/test_benchmark/vcfs/${swp}/${SLURM_ARRAY_TASK_ID}/${SLURM_ARRAY_TASK_ID}.final.${swp}.win_${win}.shicres.csv
     done

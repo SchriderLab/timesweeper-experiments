@@ -18,6 +18,5 @@ source activate blinx
 
 
 timesweeper condense --hft -o 1ss_training_data.pkl -y config.yaml --subsample-inds 1
-timesweeper train -i 1ss_training_data.pkl -d aft -n Sample_Size_1 -y config.yaml
-timesweeper train -i 1ss_training_data.pkl -d hft -n Sample_Size_1 -y config.yaml
+timesweeper train -i 1ss_training_data.pkl --hft -y config.yaml
 timesweeper plot_training -i 1ss_training_data.pkl -n Sample_Size_1 -o sample_size_1/images

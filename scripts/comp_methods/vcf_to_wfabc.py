@@ -74,7 +74,7 @@ def converter(vcffile, samp_sizes):
         ofile.write("\t".join([str(i) for i in [20]*20]) + "\n")
         ofile.write("\t".join([str(i) for i in tp_counts]))
 
-    cmd1 = f"""/work/users/l/s/lswhiteh/timesweeper-experiments/WFABC_v1.1/binaries/Linux/wfabc_1 \
+    cmd1 = f"""/work/users/l/s/lswhiteh/timesweeper-experiments/comp_tools/WFABC_v1.1/binaries/Linux/wfabc_1 \
         -nboots 0 \
         {locifile} \
         """
@@ -86,7 +86,7 @@ def converter(vcffile, samp_sizes):
         stderr=open(f"{locifile}.wfabc.1.log", "w"),
     )
 
-    cmd2 = f"""/work/users/l/s/lswhiteh/timesweeper-experiments/WFABC_v1.1/binaries/Linux/wfabc_2 \
+    cmd2 = f"""/work/users/l/s/lswhiteh/timesweeper-experiments/comp_tools/WFABC_v1.1/binaries/Linux/wfabc_2 \
         -fixed_N 500 \
         -ploidy 2 \
         -min_s 0 \

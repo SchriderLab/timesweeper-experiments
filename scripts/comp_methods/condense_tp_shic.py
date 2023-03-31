@@ -5,10 +5,10 @@ import pandas as pd
 from tqdm import tqdm
 
 target_path = "/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/test_benchmark/vcfs"
-paramfile = "/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/test_benchmark/Test_Benchmark_params.tsv"
+paramfile = "/work/users/l/s/lswhiteh/timesweeper-experiments/simple_sims/better_benchmark/test_benchmark/Testing_Benchmark_params.tsv"
 params = pd.read_csv(paramfile, header=0, usecols=[0, 1, 2], sep="\t")
 
-reps = list(range(10001))
+reps = list(range(5001))
 swps = ["neut", "sdn", "ssv"]
 
 data_reps = []
@@ -16,7 +16,7 @@ data_swps = []
 arrs = []
 selcoeffs = []
 
-for rep in tqdm(list(range(10001))):
+for rep in tqdm(reps):
     for swp in swps:
         try:
             arrs.append(

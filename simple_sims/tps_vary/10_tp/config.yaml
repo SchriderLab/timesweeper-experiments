@@ -1,5 +1,5 @@
 #General
-work dir: tp_sims
+work dir: 10_tp_sims
 slimfile: ../../slimfiles/onePop-selectiveSweep-vcf-noselcoeff.slim
 experiment name: 10_Timepoint
 

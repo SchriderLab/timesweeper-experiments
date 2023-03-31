@@ -1,5 +1,5 @@
 #General
-work dir: samp_size_sims
+work dir: ../ss_20/samp_size_sims
 slimfile: ../../slimfiles/onePop-selectiveSweep-vcf-noselcoeff.slim
 
 mut types: [2]

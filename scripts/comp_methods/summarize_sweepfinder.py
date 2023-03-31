@@ -72,6 +72,6 @@ res_df = pd.DataFrame(
         "pred": pred,
     }
 )
+
 res_df.to_csv(outfile, index=False, header=True)
 
-all_df = pd.DataFrame({"rep": big_reps, "sweep": big_sweeps, "clr": big_clrs})
