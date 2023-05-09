@@ -3,6 +3,7 @@
 Repo for experiments for the TimeSweeper manuscript.
 
 The source code for the Timesweeper package can be found here: https://github.com/SchriderLab/Timesweeper
+Associated model weights are stored here: https://zenodo.org/record/7909337
 
 **Note:** All code here was run using the `blinx.yaml` conda environment found in the Timesweeper repo
 
